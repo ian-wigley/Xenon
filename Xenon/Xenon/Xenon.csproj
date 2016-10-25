@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.Default.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <ProjectGuid>{D0890704-754F-49E5-BE14-DE5F10B9DDCC}</ProjectGuid>
+    <ProjectTypeGuids>{349c5851-65df-11da-9384-00065b846f21};{fae04ec0-301f-11d3-bf4b-00c04f79efbc}</ProjectTypeGuids>
+    <OutputType>Library</OutputType>
+    <OutputPath>bin</OutputPath>
+    <TargetFrameworkVersion>v4.5</TargetFrameworkVersion>
+    <DebugType>full</DebugType>
+    <DebugSymbols>true</DebugSymbols>
+    <TypeScriptToolsVersion>1.8</TypeScriptToolsVersion>
+    <UseIISExpress>true</UseIISExpress>
+    <IISExpressSSLPort />
+    <IISExpressAnonymousAuthentication />
+    <IISExpressWindowsAuthentication />
+    <IISExpressUseClassicPipelineMode />
+  </PropertyGroup>
+  <ItemGroup>
+    <Content Include="app.css" />
+    <Content Include="index.html" />
+    <Content Include="require.js" />
+    <Content Include="web.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <TypeScriptCompile Include="Actor.ts" />
+    <TypeScriptCompile Include="ActorInfo.ts" />
+    <TypeScriptCompile Include="ActorInfoList.ts" />
+    <TypeScriptCompile Include="BigExplosion.ts" />
+    <TypeScriptCompile Include="Bullet.ts" />
+    <TypeScriptCompile Include="Clone.ts" />
+    <TypeScriptCompile Include="CloneEngine.ts" />
+    <TypeScriptCompile Include="Controls.ts" />
+    <TypeScriptCompile Include="Engine.ts" />
+    <TypeScriptCompile Include="Enums.ts" />
+    <TypeScriptCompile Include="Explosion.ts" />
+    <TypeScriptCompile Include="Image.ts" />
+    <TypeScriptCompile Include="Level.ts" />
+    <TypeScriptCompile Include="main.ts" />
+    <TypeScriptCompile Include="Map.ts" />
+    <TypeScriptCompile Include="MediumExplosion.ts" />
+    <TypeScriptCompile Include="Missile.ts" />
+    <TypeScriptCompile Include="MissileWeapon.ts" />
+    <TypeScriptCompile Include="PlayGameState.ts" />
+    <TypeScriptCompile Include="Rectangle.ts" />
+    <TypeScriptCompile Include="require.d.ts" />
+    <TypeScriptCompile Include="RetroEngine.ts" />
+    <TypeScriptCompile Include="Scene.ts" />
+    <TypeScriptCompile Include="Screen.ts" />
+    <TypeScriptCompile Include="Ship.ts" />
+    <TypeScriptCompile Include="ShipEngine.ts" />
+    <TypeScriptCompile Include="SmallExplosion.ts" />
+    <TypeScriptCompile Include="Sprite.ts" />
+    <TypeScriptCompile Include="Starfield.ts" />
+    <TypeScriptCompile Include="TiledImage.ts" />
+    <TypeScriptCompile Include="Timer.ts" />
+    <TypeScriptCompile Include="Upgrade.ts" />
+    <TypeScriptCompile Include="Vector.ts" />
+    <TypeScriptCompile Include="Weapon.ts" />
+    <TypeScriptCompile Include="Wingtip.ts" />
+    <TypeScriptCompile Include="Xenon.ts" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="web.Debug.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+    <None Include="web.Release.config">
+      <DependentUpon>web.config</DependentUpon>
+    </None>
+  </ItemGroup>
+  <PropertyGroup>
+    <VisualStudioVersion Condition="'$(VisualStudioVersion)' == ''">12.0</VisualStudioVersion>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace>Xenon</RootNamespace>
+  </PropertyGroup>
+  <Import Project="$(MSBuildBinPath)\Microsoft.CSharp.targets" />
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\WebApplications\Microsoft.WebApplication.targets')" />
+  <ProjectExtensions>
+    <VisualStudio>
+      <FlavorProperties GUID="{349c5851-65df-11da-9384-00065b846f21}">
+        <WebProjectProperties>
+          <UseIIS>True</UseIIS>
+          <AutoAssignPort>True</AutoAssignPort>
+          <DevelopmentServerPort>17693</DevelopmentServerPort>
+          <DevelopmentServerVPath>/</DevelopmentServerVPath>
+          <IISUrl>http://localhost:17693/</IISUrl>
+          <NTLMAuthentication>False</NTLMAuthentication>
+          <UseCustomServer>False</UseCustomServer>
+          <CustomServerUrl>
+          </CustomServerUrl>
+          <SaveServerSettingsInUserFile>False</SaveServerSettingsInUserFile>
+        </WebProjectProperties>
+      </FlavorProperties>
+    </VisualStudio>
+  </ProjectExtensions>
+  <PropertyGroup Condition="'$(Configuration)' == 'Debug'">
+    <TypeScriptRemoveComments>false</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>true</TypeScriptSourceMap>
+    <TypeScriptModuleKind>amd</TypeScriptModuleKind>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)' == 'Release'">
+    <TypeScriptRemoveComments>true</TypeScriptRemoveComments>
+    <TypeScriptSourceMap>false</TypeScriptSourceMap>
+  </PropertyGroup>
+  <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets" Condition="Exists('$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\TypeScript\Microsoft.TypeScript.targets')" />
+</Project>

@@ -1,0 +1,4 @@
+﻿class gsCMap {
+}
+
+export = gsCMap;

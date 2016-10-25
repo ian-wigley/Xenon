@@ -1,0 +1,117 @@
+﻿<!DOCTYPE html>
+
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <title>TypeScript Xenon</title>
+    <link rel="stylesheet" href="app.css" type="text/css" />
+
+    <style>
+        body {
+            background-color: black;
+        }
+
+        #container {
+            width: 1024px;
+            height: 768px;
+            border: 1px black;
+            margin: 0px auto;
+            text-align: center;
+        }
+
+        #canvas {
+            border: 1px black;
+            width: 640px;
+            height: 480px;
+        }
+    </style>
+
+</head>
+<body>
+
+    <div id="container">
+        <canvas id="canvas" width="640" height="480"></canvas>
+    </div>
+
+    <img id="bblogo" src="images/bblogo.png" style="display: none;" />
+    <img id="blocks" src="images/blocks.png" style="display: none;" />
+    <img id="bosseyes" src="images/bosseyes.png" style="display: none;" />
+    <img id="bosseyes2" src="images/bosseyes2.png" style="display: none;" />
+    <img id="Burner1" src="images/Burner1.png" style="display: none;" />
+    <img id="Burner2" src="images/Burner2.png" style="display: none;" />
+    <img id="Burner3" src="images/Burner3.png" style="display: none;" />
+    <img id="Burner4" src="images/Burner4.png" style="display: none;" />
+    <img id="Burner5" src="images/Burner5.png" style="display: none;" />
+    <img id="Burner6" src="images/Burner6.png" style="display: none;" />
+    <img id="Clone1" src="images/Clone1.png" style="display: none;" />
+    <img id="clonejet" src="images/clonejet.png" style="display: none;" />
+    <img id="destroyable" src="images/destroyable.png" style="display: none;" />
+    <img id="drone" src="images/drone.png" style="display: none;" />
+    <img id="EnWeap6" src="images/EnWeap6.png" style="display: none;" />
+    <img id="explode16" src="images/explode16.png" style="display: none;" />
+    <img id="explode32" src="images/explode32.png" style="display: none;" />
+    <img id="explode64" src="images/explode64.png" style="display: none;" />
+    <img id="font16x16" src="images/font16x16.png" style="display: none;" />
+    <img id="Font8x8" src="images/Font8x8.png" style="display: none;" />
+    <img id="galaxy2" src="images/galaxy2.png" style="display: none;" />
+    <img id="GAster32" src="images/GAster32.png" style="display: none;" />
+    <img id="GAster64" src="images/GAster64.png" style="display: none;" />
+    <img id="GAster96" src="images/GAster96.png" style="display: none;" />
+    <img id="GDust" src="images/GDust.png" style="display: none;" />
+    <img id="GShoot" src="images/GShoot.png" style="display: none;" />
+    <img id="hmissile" src="images/hmissile.png" style="display: none;" />
+    <img id="Homing" src="images/Homing.png" style="display: none;" />
+    <img id="HomProjc" src="images/HomProjc.png" style="display: none;" />
+    <img id="list.txt" src="images/list.txt" style="display: none;" />
+    <img id="logo" src="images/logo.png" style="display: none;" />
+    <img id="LonerA" src="images/LonerA.png" style="display: none;" />
+    <img id="LonerB" src="images/LonerB.png" style="display: none;" />
+    <img id="LonerC" src="images/LonerC.png" style="display: none;" />
+    <img id="MAster32" src="images/MAster32.png" style="display: none;" />
+    <img id="MAster64" src="images/MAster64.png" style="display: none;" />
+    <img id="MAster96" src="images/MAster96.png" style="display: none;" />
+    <img id="MDust" src="images/MDust.png" style="display: none;" />
+    <img id="missile" src="images/missile.png" style="display: none;" />
+    <img id="pcflogo" src="images/pcflogo.png" style="display: none;" />
+    <img id="PCFlogo1" src="images/PCFlogo1.png" style="display: none;" />
+    <img id="PCFlogo2" src="images/PCFlogo2.png" style="display: none;" />
+    <img id="playerjet" src="images/playerjet.png" style="display: none;" />
+    <img id="pod" src="images/pod.png" style="display: none;" />
+    <img id="pspbrwse" src="images/pspbrwse.png" style="display: none;" />
+    <img id="PUDive" src="images/PUDive.png" style="display: none;" />
+    <img id="PUInvuln" src="images/PUInvuln.png" style="display: none;" />
+    <img id="PULaser" src="images/PULaser.png" style="display: none;" />
+    <img id="PULife" src="images/PULife.png" style="display: none;" />
+    <img id="PUMissil" src="images/PUMissil.png" style="display: none;" />
+    <img id="PUScore" src="images/PUScore.png" style="display: none;" />
+    <img id="PUShield" src="images/PUShield.png" style="display: none;" />
+    <img id="PUSpeed" src="images/PUSpeed.png" style="display: none;" />
+    <img id="PUWeapon" src="images/PUWeapon.png" style="display: none;" />
+    <img id="Retros" src="images/retros.png" style="display: none;" />
+    <img id="rusher" src="images/rusher.png" style="display: none;" />
+    <img id="SAster32" src="images/SAster32.png" style="display: none;" />
+    <img id="SAster64" src="images/SAster64.png" style="display: none;" />
+    <img id="SAster96" src="images/SAster96.png" style="display: none;" />
+    <img id="SDust" src="images/SDust.png" style="display: none;" />
+    <img id="Ship1" src="images/Ship1.png" style="display: none;" />
+    <img id="Ship2" src="images/Ship2.png" style="display: none;" />
+    <img id="smoke" src="images/smoke.png" style="display: none;" />
+    <img id="spinners" src="images/spinners.png" style="display: none;" />
+    <img id="SporesA" src="images/SporesA.png" style="display: none;" />
+    <img id="SporesB" src="images/SporesB.png" style="display: none;" />
+    <img id="SporesC" src="images/SporesC.png" style="display: none;" />
+    <img id="SporesD" src="images/SporesD.png" style="display: none;" />
+    <img id="star" src="images/star.png" style="display: none;" />
+    <img id="wallhugger" src="images/wallhugger.png" style="display: none;" />
+    <img id="Wingtip" src="images/Wingtip.png" style="display: none;" />
+    <!--<img id="xenon2000.FMP" src="images/xenon2000.FMP" style="display: none;" />-->
+    <img id="Xlogo" src="images/Xlogo.png" style="display: none;" />
+    <!--<img id="_24bit" src="images/_24bit" style="display: none;" />
+    <img id="_8bit" src="images/_8bit" style="display: none;" />-->
+    <img id="_galaxy2" src="images/_galaxy2.png" style="display: none;" />
+
+
+    <script data-main="main" src="require.js"></script>
+
+</body>
+</html>
