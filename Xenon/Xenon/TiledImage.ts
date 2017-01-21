@@ -2,10 +2,11 @@
 import gsCScreen = require("Screen");
 import gsCRectangle = require("Rectangle");
 import gsCVector = require("Vector");
+import Point = require("Point");
 
 class gsCTiledImage extends gsCImage {
 
-    private m_tile_size: gsCVector;
+    private m_tile_size: Point;//gsCVector;
     private m_num_tiles: number;
     private m_source_rects: Array<gsCRectangle>;
     private m_imageTiles: HTMLImageElement;
@@ -26,8 +27,8 @@ class gsCTiledImage extends gsCImage {
 
         this.m_num_tiles = 0;
 
-        if (this.m_tile_size.x == 0 ||
-            this.m_tile_size.y == 0) {
+        if (this.m_tile_size.X == 0 ||
+            this.m_tile_size.Y == 0) {
             return false;
         }
 
@@ -36,15 +37,15 @@ class gsCTiledImage extends gsCImage {
             return false;
         }
 
-        var horiz: number = this.getSize().x / this.m_tile_size.x;
-        var vert: number = this.getSize().y / this.m_tile_size.y;
+        var horiz: number = this.getSize().x / this.m_tile_size.X;
+        var vert: number = this.getSize().y / this.m_tile_size.Y;
         this.m_num_tiles = horiz * vert;
         this.m_source_rects = [];
         var i: number = 0;
 
-        for (var y = 0; y + this.m_tile_size.y <= this.getSize().y; y += this.m_tile_size.y) {
-            for (var x = 0; x + this.m_tile_size.x <= this.getSize().x; x += this.m_tile_size.x) {
-                this.m_source_rects.push(new gsCRectangle(x, y, this.m_tile_size.x, this.m_tile_size.y));
+        for (var y = 0; y + this.m_tile_size.Y <= this.getSize().y; y += this.m_tile_size.Y) {
+            for (var x = 0; x + this.m_tile_size.X <= this.getSize().x; x += this.m_tile_size.X) {
+                this.m_source_rects.push(new gsCRectangle(x, y, this.m_tile_size.X, this.m_tile_size.Y));
 
                 i++;
             }
@@ -55,7 +56,7 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    public setTileSize(tile_size: gsCVector) {
+    public setTileSize(tile_size: Point) { //gsCVector) {
         this.m_tile_size = tile_size;
         return this.calculateSourceRects();
     }
@@ -76,7 +77,7 @@ class gsCTiledImage extends gsCImage {
 
     // Draw the tiles !! <gsCTiledImage>
     public draw(tile: number, position: gsCVector, ctx: CanvasRenderingContext2D) {
-        var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.x, position.y + this.m_tile_size.y);
+        var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
         var screen: gsCScreen = new gsCScreen;
 
         if (screen.contains(dest)) {

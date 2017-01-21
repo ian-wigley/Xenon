@@ -13,6 +13,7 @@ import CShip = require("Ship");
 import CPlayGameState = require("PlayGameState");
 import CLevel = require("Level");
 import enums = require("Enums");
+import Point = require("Point");
 
 class CScene {
 
@@ -70,7 +71,7 @@ class CScene {
                 if (temp[0].toLowerCase() == filename.toLowerCase()) {
                     // gsCTiledImage tile = new gsCTiledImage(name.Value, m_font);
                     var tile: gsCTiledImage = new gsCTiledImage(this.m_textures[i]);
-                    tile.setTileSize(new gsCVector(this.m_listOfActors.GetTileWidth(i), this.m_listOfActors.GetTileHeight(i)));
+                    tile.setTileSize(new Point(this.m_listOfActors.GetTileWidth(i), this.m_listOfActors.GetTileHeight(i)));
                     //this.m_image_list.Add(tile);
                     return tile;
                 }

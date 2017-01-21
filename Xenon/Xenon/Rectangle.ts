@@ -28,6 +28,11 @@
         return this.m_bottom;
     }
 
+    public IsEmpty(): boolean {
+
+        return (this.m_left >= this.m_right) || (this.m_top >= this.m_bottom);
+    }
+
     //public Width() {
     //    return this.m_width;
     //}

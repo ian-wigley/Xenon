@@ -38,22 +38,26 @@ class BLKSTR {						/* Structure for data blocks */
     public unused3;// : 1;
 };
 
-class gsCMap {
-    constructor() {
-    }
-    public setMapTile(point: Point, mapTile: gsCMapTile, num: number) {
-    }
-}
+//class gsCMap {
+//    constructor() {
+//    }
+//    public setMapTile(point: Point, mapTile: gsCMapTile, num: number) {
+//    }
+//}
 
-class gsCMapTile {
-    constructor() {
-    }
-}
+//class gsCMapTile {
+//    constructor() {
+//    }
+//}
 
-class Point {
-    constructor(x: number, y: number) {
-    }
-}
+//class Point {
+//    constructor(x: number, y: number) {
+//    }
+//}
+
+import gsCMap = require("Map");
+import Point = require("Point");
+import gsCMapTile = require("MapTile");
 
 class CLevel {
 
@@ -250,9 +254,9 @@ class CLevel {
                                     var ii = 0;
                                 }
 
-                                //var sizeBLKSTR = System.Runtime.InteropServices.Marshal.SizeOf(typeof (BLKSTR));
-                                //sizeBLKSTR /= 2;
-                                //BLKSTR block = m_blocks[tile / sizeBLKSTR];
+                                var sizeBLKSTR = 32;//typeof(BLKSTR);
+                                sizeBLKSTR /= 2;
+                                var block: BLKSTR  = m_blocks[tile / sizeBLKSTR];
                                 //var tilesize = m_header.blockheight * m_header.blockwidth * m_header.blockdepth / 8;
                                 ////        tile = (gsUWORD) (block->bgoff / tilesize);
                                 //tile = block.bgoff / tilesize;
@@ -264,20 +268,20 @@ class CLevel {
                                     //mt.setHidden(true);
                                 }
                                 else {
-                                    //mt.setEmpty(false);
-                                    //mt.setUserData(0, (block.user1 & 0xFF));
-                                    //mt.setUserData(1, (block.user2 & 0xFF));
-                                    //mt.setUserData(2, (block.user3 & 0xFF));
-                                    //mt.setUserData(3, (block.user4 & 0xFF));
-                                    //var cflags = 0;    //            gsUBYTE cflags = 0;
-                                    //if (block.tl != 0) {
-                                    //    cflags |= COLLIDE_WITH_SHIP;
-                                    //}
-                                    //if (block.tr != 0) {
-                                    //    cflags |= COLLIDE_WITH_BULLETS;
-                                    //}
+                                    mt.setEmpty(false);
+                                    mt.setUserData(0, (block.user1 & 0xFF));
+                                    mt.setUserData(1, (block.user2 & 0xFF));
+                                    mt.setUserData(2, (block.user3 & 0xFF));
+                                    mt.setUserData(3, (block.user4 & 0xFF));
+                                    var cflags = 0;    //            gsUBYTE cflags = 0;
+                                    if (block.tl != 0) {
+                                        cflags |= this.COLLIDE_WITH_SHIP;
+                                    }
+                                    if (block.tr != 0) {
+                                        cflags |= this.COLLIDE_WITH_BULLETS;
+                                    }
 
-                                    //mt.setCollisionFlags(cflags);
+                                    mt.setCollisionFlags(cflags);
                                 }
 
                                 if (id == this.CHUNK_BODY) {

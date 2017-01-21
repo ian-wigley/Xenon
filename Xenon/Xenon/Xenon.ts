@@ -5,6 +5,7 @@ import CStarfield = require("Starfield");
 import CActorInfoList = require("ActorInfoList");
 import CShip = require("Ship");
 import CPlayGameState = require("PlayGameState");
+import CLevel = require("Level");
 
 class Point {
     public X: number;
@@ -29,6 +30,7 @@ class Xenon {
     m_scene: CScene;
     m_stars: CStarfield;
     m_listOfActors: CActorInfoList;
+    m_level: CLevel;
 
     m_screenWidth: number;
     m_screenHeight: number;
@@ -69,7 +71,10 @@ class Xenon {
         setInterval(() => this.Update(), 10);
     }
 
-    private LoadContent(): void {
+   private LoadContent(): void {
+
+       this.m_level = new CLevel();
+
         //this.shipTexture = <HTMLImageElement>document.getElementById("Ship1");
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
         this.engineTexture = <HTMLImageElement>document.getElementById("Burner1");

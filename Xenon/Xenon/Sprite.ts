@@ -35,7 +35,7 @@ class gsCSprite {
             else {
                 //Point p = new Point(m_position.X - m_hotspot.X, m_position.Y - m_hotspot.Y);
                 var p: gsCVector = new gsCVector(this.m_position.x - this.m_hotspot.x, this.m_position.y - this.m_hotspot.y)
-                this.m_rect = new gsCRectangle(p.x, p.y, p.x + this.m_image.getTileSize().x, p.y + this.m_image.getTileSize().y);
+                this.m_rect = new gsCRectangle(p.x, p.y, p.x + this.m_image.getTileSize().X, p.y + this.m_image.getTileSize().Y);
             }
             this.m_rect_valid = true;
         }
