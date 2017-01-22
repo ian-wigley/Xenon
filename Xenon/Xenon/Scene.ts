@@ -180,7 +180,7 @@ class CScene {
     //-------------------------------------------------------------
     // Draw all active game actors - prioritized
 
-    public drawAllActors(ctx: CanvasRenderingContext2D) {
+    public drawAllActors(ctx: CanvasRenderingContext2D, map: gsCMap) {
         this.m_frame_count++;
         //m_collision_list.clear();
         var total = this.m_actor_list.length;//.getSize();

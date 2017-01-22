@@ -73,7 +73,7 @@ class Xenon {
 
    private LoadContent(): void {
 
-       this.m_level = new CLevel();
+       //this.m_level = new CLevel();
 
         //this.shipTexture = <HTMLImageElement>document.getElementById("Ship1");
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
@@ -180,7 +180,7 @@ class Xenon {
         this.ctx.beginPath();
         this.ctx.drawImage(this.backgroundTexture, 0, 0);
         this.m_stars.Draw(this.ctx);
-        this.m_scene.drawAllActors(this.ctx);
+        //this.m_scene.drawAllActors(this.ctx);
         //this.gsCMap mapFrontLayer = m_scene.getMapFrontLayer();
         //this.gsCMap mapBackLayer = m_scene.getMapBackLayer();
         //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);

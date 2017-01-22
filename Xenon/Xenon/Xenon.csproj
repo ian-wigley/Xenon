@@ -35,6 +35,7 @@
     <TypeScriptCompile Include="Engine.ts" />
     <TypeScriptCompile Include="Enums.ts" />
     <TypeScriptCompile Include="Explosion.ts" />
+    <TypeScriptCompile Include="GameState.ts" />
     <TypeScriptCompile Include="MapTile.ts" />
     <TypeScriptCompile Include="Image.ts" />
     <TypeScriptCompile Include="Level.ts" />

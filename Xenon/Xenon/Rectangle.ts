@@ -16,16 +16,32 @@
         return this.m_left;
     }
 
+    public set Left(value: number) {
+        this.m_left = value;
+    }
+
     public get Top(): number {
         return this.m_top;
+    }
+
+    public set Top(value: number) {
+        this.m_top = value;
     }
 
     public get Right(): number {
         return this.m_right;
     }
 
+    public set Right(value: number) {
+        this.m_right = value;
+    }
+
     public get Bottom(): number {
         return this.m_bottom;
+    }
+
+    public set Bottom(value: number) {
+        this.m_bottom = value;
     }
 
     public IsEmpty(): boolean {

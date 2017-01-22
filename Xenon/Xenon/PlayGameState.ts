@@ -1,6 +1,7 @@
 ﻿import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import CActorInfoList = require("ActorInfoList");
+import CGameState = require("GameState");
 import CShip = require("Ship");
 import gsCPoint = require("Point");
 import gsCTimer = require("Timer");
@@ -8,8 +9,7 @@ import gsCVector = require("Vector");
 import CLevel = require("Level");
 import enums = require("Enums");
 
-class CPlayGameState// : CGameState
-{
+class CPlayGameState extends CGameState { 
     private m_ship: CShip;
     private m_scene: CScene;
     private m_starfield: CStarfield;
@@ -26,9 +26,13 @@ class CPlayGameState// : CGameState
     private even: boolean = true;		//TEMP
 
     constructor(ship: CShip, scene: CScene, starfield: CStarfield) {
+        super();
+
+        this.m_level = new CLevel();
+
         //this.m_ship = ship;
         this.m_scene = scene;
-        this.m_level = this.m_scene.GetLevel();
+        //this.m_level = this.m_scene.GetLevel();
 
         // temp!
         this.createPlayer();
@@ -206,12 +210,12 @@ class CPlayGameState// : CGameState
             ////	controls.firePressed = controls.fire = true;
             ////#endif
 
-            //m_scene.updateAllActors(&controls);
+            //this.m_scene.updateAllActors(controls);
             this.m_level.m_back_layer.drawMap(ctx);
-            //m_scene.drawAllActors(&m_level.m_front_layer);
-            //m_scene.checkActorCollisions();
-            //m_scene.checkMapCollisions(&m_level.m_front_layer);
-            //m_scene.removeDeadActors();
+            //this.m_scene.drawAllActors(this.m_level.m_front_layer);
+            //this.m_scene.checkActorCollisions();
+            //this.m_scene.checkMapCollisions(m_level.m_front_layer);
+            //this.m_scene.removeDeadActors();
           }
 
             //testDebugKeys(key);
