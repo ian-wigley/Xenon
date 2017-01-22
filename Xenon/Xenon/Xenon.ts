@@ -163,6 +163,10 @@ class Xenon {
     }
 
     private Update(): void {
+
+        this.m_gameState.update(this.ctx);
+
+
         //m_gameState.update();
         this.m_timer.update();
         this.m_stars.Update(4);

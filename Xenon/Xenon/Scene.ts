@@ -185,18 +185,36 @@ class CScene {
         //m_collision_list.clear();
         var total = this.m_actor_list.length;//.getSize();
         var ship = this.findShip();
-        //        this.drawActorsOfType(ActorType.ACTOR_TYPE_EFFECT, total, ctx);
-        //        this.drawActorsOfType(ActorType.ACTOR_TYPE_PICKUP, total, ctx);
-        //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIEN, total, ctx);//
-        //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
-        this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BULLET, total, ctx);
-        this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ENGINE, total, ctx);
-        this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);//
-        //this.drawActorsOfType(ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
-        // this.drawActorsOfType(ActorType.ACTOR_TYPE_WEAPON, total, ctx);
-        //        this.drawActorsOfType(ActorType.ACTOR_TYPE_LABEL, total, ctx);
-    }
 
+        this.m_ship_is_cloaked = ship && ship.isCloaked();
+
+        if (ship && ship.getDiveLevel() != 0) {
+            //drawActorsOfType(ACTOR_TYPE_ENGINE, total);
+            //drawActorsOfType(ACTOR_TYPE_SHIP, total);
+            //drawActorsOfType(ACTOR_TYPE_UPGRADE, total);
+            this.m_map.drawMap(ctx);
+            //drawActorsOfType(ACTOR_TYPE_EFFECT, total);
+            //drawActorsOfType(ACTOR_TYPE_PICKUP, total);
+            //drawActorsOfType(ACTOR_TYPE_ALIEN, total);
+            //drawActorsOfType(ACTOR_TYPE_ALIENBULLET, total);
+            //drawActorsOfType(ACTOR_TYPE_BULLET, total);
+            //drawActorsOfType(ACTOR_TYPE_WEAPON, total);
+            //drawActorsOfType(ACTOR_TYPE_LABEL, total);
+        }
+        else {
+            this.m_map.drawMap(ctx);
+            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_EFFECT, total, ctx);
+            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_PICKUP, total, ctx);
+            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIEN, total, ctx);//
+            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BULLET, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ENGINE, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);//
+            //this.drawActorsOfType(ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
+            // this.drawActorsOfType(ActorType.ACTOR_TYPE_WEAPON, total, ctx);
+            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_LABEL, total, ctx);
+        }
+    }
     // Main draw method for all Actors
     drawActorsOfType(type: enums.ActorType, total: number, ctx: CanvasRenderingContext2D) {
         for (var j = 0; j < this.m_actor_list.length; j++) {

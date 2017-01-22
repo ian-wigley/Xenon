@@ -218,7 +218,7 @@ class gsCMap {
 
     //-------------------------------------------------------------
 
-    public draw(spriteBatch): void {
+    public drawMap(ctx: CanvasRenderingContext2D): void {
 
         this.debugCounter++;
 
