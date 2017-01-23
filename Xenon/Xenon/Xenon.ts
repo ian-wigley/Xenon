@@ -164,8 +164,6 @@ class Xenon {
 
     private Update(): void {
 
-        this.m_gameState.update(this.ctx);
-
 
         //m_gameState.update();
         this.m_timer.update();
@@ -180,7 +178,11 @@ class Xenon {
         this.ctx.beginPath();
         this.ctx.drawImage(this.backgroundTexture, 0, 0);
         this.m_stars.Draw(this.ctx);
-        //this.m_scene.drawAllActors(this.ctx);
+        //this.m_scene.drawAllActors(this.ctx, null);
+
+        this.m_gameState.update(this.ctx);
+
+
         //this.gsCMap mapFrontLayer = m_scene.getMapFrontLayer();
         //this.gsCMap mapBackLayer = m_scene.getMapBackLayer();
         //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);

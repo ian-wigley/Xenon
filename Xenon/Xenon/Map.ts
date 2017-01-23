@@ -294,25 +294,28 @@ class gsCMap {
             var pos: Vector2;
             var step: Vector2;
 
-            //// top edge clipped
-            //map_tile = this.getMapTile(new Point(left, top));
-            //pos = m_position + new Vector2(left, top) * m_tile_size;
+            // top edge clipped
+            map_tile = this.getMapTile(new Point(left, top));
+            pos.x = this.m_position.X + new Vector2(left, top).x * this.m_tile_size.X;
+            pos.y = this.m_position.Y + new Vector2(left, top).y * this.m_tile_size.Y;
             //points.Add(pos);//debugging! 25/2/15
             //collectedTiles.Add(map_tile);//debugging! 25/2/15
 
-            //step = new Vector2(1, 0) * m_tile_size;
-            //for (x = left; x <= right; x++) {
-            //    if (map_tile.isDrawable()) {
-            //        m_image.draw(map_tile.getTile(), pos, spriteBatch, m_title);
-            //        drawcall.Add(1);//debugging! 25/2/15
-            //    }
-            //    testCounter++;
-            //    map_tile = m_map_tiles[testCounter];
-            //    pos += step;
+            //step = new Vector2(1, 0) * this.m_tile_size;
+            step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
+            for (x = left; x <= right; x++) {
+                if (map_tile.isDrawable()) {
+                    this.m_image.draw(map_tile.getTile(), pos, ctx);//, this.m_title);
+                    //drawcall.Add(1);//debugging! 25/2/15
+                }
+                this.testCounter++;
+                map_tile = this.m_map_tiles[this.testCounter];
+                pos.x += step.x;
+                pos.y += step.y;
 
-            //    this.points.push(pos);//debugging! 25/2/15
-            //    this.collectedTiles.push(map_tile);//debugging! 25/2/15
-            //}
+                //this.points.push(pos);//debugging! 25/2/15
+                //this.collectedTiles.push(map_tile);//debugging! 25/2/15
+            }
 
             //// bottom edge clipped
             //map_tile = getMapTile(new Point(left, bottom));

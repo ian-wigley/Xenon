@@ -146,18 +146,6 @@ class CPlayGameState extends CGameState {
 
 
 
-
-
-
-
-
-
-
-
-
-
-
-
         var loop: number = 1;
 
         if (this.m_fast_forward) {
@@ -212,7 +200,7 @@ class CPlayGameState extends CGameState {
 
             //this.m_scene.updateAllActors(controls);
             this.m_level.m_back_layer.drawMap(ctx);
-            //this.m_scene.drawAllActors(this.m_level.m_front_layer);
+            this.m_scene.drawAllActors(ctx, this.m_level.m_front_layer);
             //this.m_scene.checkActorCollisions();
             //this.m_scene.checkMapCollisions(m_level.m_front_layer);
             //this.m_scene.removeDeadActors();
