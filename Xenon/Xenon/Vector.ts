@@ -26,6 +26,30 @@
     public set y(value: number) {
         this.m_y = value;
     }
+
+    public add(vector: gsCVector): gsCVector {
+        this.m_x += vector.x;
+        this.m_y += vector.y;
+        return this;
+    }
+
+    public subtract(vector: gsCVector): gsCVector {
+        this.m_x -= vector.x;
+        this.m_y -= vector.y;
+        return this;
+    }
+
+    public multiply(vector: gsCVector): gsCVector {
+        this.m_x *= vector.x;
+        this.m_y *= vector.y;
+        return this;
+    }
+
+    public divide(vector: gsCVector): gsCVector {
+        this.m_x /= vector.x;
+        this.m_y /= vector.y;
+        return this;
+    }
 }
 
 export = gsCVector;
