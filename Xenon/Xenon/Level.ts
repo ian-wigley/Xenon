@@ -1,38 +1,38 @@
-﻿class MPHD {						/* Map header structure */
-    public mapverhigh;  //char 		/* map version number to left of . (ie X.0). */
-    public mapverlow;   //char 		/* map version number to right of . (ie 0.X). */
-    public lsb;         //char 		/* if 1, data stored LSB first, otherwise MSB first. */
+﻿class MPHD {                                    /* Map header structure */
+    public mapverhigh;  //char           /* map version number to left of . (ie X.0). */
+    public mapverlow;   //char           /* map version number to right of . (ie 0.X). */
+    public lsb;         //char           /* if 1, data stored LSB first, otherwise MSB first. */
     public reserved;    //char 
-    public mapwidth;    //ushort 	/* width in blocks. */
-    public mapheight;   //ushort 	/* height in blocks. */
+    public mapwidth;    //ushort /* width in blocks. */
+    public mapheight;   //ushort /* height in blocks. */
     public reserved1;   //ushort 
     public reserved2;   //ushort 
-    public blockwidth;  //ushort 	/* width of a block (tile) in pixels. */
-    public blockheight; //ushort 	/* height of a block (tile) in pixels. */
-    public blockdepth;  //ushort 	/* depth of a block (tile) in planes (ie. 256 colours is 8) */
-    public blockstrsize;//ushort 	/* size of a block data structure */
-    public numblockstr; //ushort 	/* Number of block structures in BKDT */
-    public numblockgfx; //ushort 	/* Number of 'blocks' in graphics (BGFX) */
+    public blockwidth;  //ushort /* width of a block (tile) in pixels. */
+    public blockheight; //ushort /* height of a block (tile) in pixels. */
+    public blockdepth;  //ushort /* depth of a block (tile) in planes (ie. 256 colours is 8) */
+    public blockstrsize;//ushort /* size of a block data structure */
+    public numblockstr; //ushort /* Number of block structures in BKDT */
+    public numblockgfx; //ushort /* Number of 'blocks' in graphics (BGFX) */
 };
 
 
-class BLKSTR {						/* Structure for data blocks */
+class BLKSTR {                                         /* Structure for data blocks */
     public bgoff;
-    public fgoff;			        /* offsets from start of graphic blocks */
+    public fgoff;                         /* offsets from start of graphic blocks */
     public fgoff2;
-    public fgoff3; 		            /* more overlay blocks */
+    public fgoff3;                     /* more overlay blocks */
     public user1;
-    public user2;		            /* user long data */
+    public user2;                      /* user long data */
     public user3;
-    public user4;	                /* user short data */
+    public user4;                    /* user short data */
     public user5;
     public user6;
-    public user7;	                /* user byte data */
-    public tl;// : 1;				/* bits for collision detection */
+    public user7;                    /* user byte data */
+    public tl;// : 1;                           /* bits for collision detection */
     public tr;// : 1;
     public bl;// : 1;
     public br;// : 1;
-    public trigger;// : 1;			/* bit to trigger an event */
+    public trigger;// : 1;               /* bit to trigger an event */
     public unused1;// : 1;
     public unused2;// : 1;
     public unused3;// : 1;
@@ -58,13 +58,14 @@ class BLKSTR {						/* Structure for data blocks */
 import gsCMap = require("Map");
 import Point = require("Point");
 import gsCMapTile = require("MapTile");
+import gsCTiledImage = require("TiledImage");
+
 
 class CLevel {
 
     levelData: Array<Uint8Array> = [];
 
     decodedData: string;
-
     LevelBytes: string;
 
     //-------------------------------------------------------------
@@ -73,8 +74,8 @@ class CLevel {
     public COLLIDE_WITH_SHIP: number = 1;
     public COLLIDE_WITH_BULLETS: number = 2;
 
-    m_back_layer: gsCMap;
-    m_front_layer: gsCMap;
+    public m_back_layer: gsCMap;
+    public m_front_layer: gsCMap;
 
     private m_scan_y: number;
     private m_boss_active: boolean;
@@ -83,6 +84,11 @@ class CLevel {
     private LevelCounter: number = 0;
     private m_header: MPHD;
     private m_blocks: BLKSTR[];
+
+
+    private m_imageTiles: HTMLImageElement;
+    //private m_font: SpriteFont;
+    private m_image: gsCTiledImage;
 
     loaded: boolean = false;
 
@@ -110,6 +116,8 @@ class CLevel {
         var done = false;
         var levelBytes;
 
+        var _this = this;
+
         var xhr = new XMLHttpRequest();
         //var file = "leveldata.fmp";
         xhr.open('GET', 'xenon2000.png', true);
@@ -120,7 +128,10 @@ class CLevel {
             levelBytes = new Uint8Array(this.response);
             done = true;
         };
-
+        xhr.onloadend = function () {
+            _this.LevelBytes = levelBytes;
+            _this.parseLevel();
+        };
         xhr.send();
     }
 
@@ -163,8 +174,8 @@ class CLevel {
                     this.m_header = new MPHD();
                     var size = 24;//System.Runtime.InteropServices.Marshal.SizeOf(typeof (MPHD));
                     this.FileRead(this.m_header, size);
-                    ////				if (m_file.read(&m_header,sizeof(MPHD)) != sizeof(MPHD))
-                    ////					return error();
+                    ////                        if (m_file.read(&m_header,sizeof(MPHD)) != sizeof(MPHD))
+                    ////                               return error();
 
                     if (this.m_header.blockdepth != 24) {
                         //this.error();
@@ -202,12 +213,12 @@ class CLevel {
                         ////if (!m_image.load("blocks.bmp"))
                         ////    return error();
 
-                        //this.m_image = new gsCTiledImage(m_imageTiles, m_font);
-                        //m_image.setTileSize(new Point(32, 32));
-                        //m_image.enableColourKey();//gsCColour(gsMAGENTA));
+                        this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
+                        this.m_image.setTileSize(new Point(32, 32));
+                        this.m_image.enableColourKey();//gsCColour(gsMAGENTA));
 
-                        //this.m_back_layer.setImage(m_image);
-                        //this.m_front_layer.setImage(m_image);
+                        this.m_back_layer.setImage(this.m_image);
+                        this.m_front_layer.setImage(this.m_image);
 
                         loaded_tiles = true;
                         break;
@@ -219,8 +230,7 @@ class CLevel {
                         var tile = 0;
 
                         // Create a new tile
-                        var mt: gsCMapTile = new gsCMapTile();
-
+                        //var mt: gsCMapTile = new gsCMapTile();
                         //gsCMapTile[] mt = m_back_layer.getListOfMapTiles();
 
                         var fudge = 0;
@@ -256,16 +266,16 @@ class CLevel {
 
                                 var sizeBLKSTR = 32;//typeof(BLKSTR);
                                 sizeBLKSTR /= 2;
-                                var block: BLKSTR  = m_blocks[tile / sizeBLKSTR];
-                                //var tilesize = m_header.blockheight * m_header.blockwidth * m_header.blockdepth / 8;
+                                var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
+                                var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
                                 ////        tile = (gsUWORD) (block->bgoff / tilesize);
-                                //tile = block.bgoff / tilesize;
+                                tile = block.bgoff / tilesize;
                                 //tileList.Add(tile);
-                                //mt.setTile(tile);
+                                mt.setTile(tile);
 
                                 if (tile == 0) {
-                                    //mt.setEmpty(true);
-                                    //mt.setHidden(true);
+                                    mt.setEmpty(true);
+                                    mt.setHidden(true);
                                 }
                                 else {
                                     mt.setEmpty(false);
@@ -345,7 +355,7 @@ class CLevel {
     private readUWORD() {
 
         var bytes = this.GetTwoBytes();
-        //w =	(((gsUWORD) b[0]) << 8) + ((gsUWORD) b[1]);
+        //w = (((gsUWORD) b[0]) << 8) + ((gsUWORD) b[1]);
         var temp = 0;
         // temp = ((bytes[0]) << 8) + (bytes[1]);
         var w = temp;
@@ -525,7 +535,7 @@ class CLevel {
     public reset() {
         //m_boss_active = false;
 
-        //m_scan_y = (int)(-m_front_layer.getPosition().Y - 1 + 480) / m_image.getTileSize().Y;	//TEMP
+        //m_scan_y = (int)(-m_front_layer.getPosition().Y - 1 + 480) / m_image.getTileSize().Y; //TEMP
 
         // hide special tiles
         // unhide everything else
@@ -547,7 +557,7 @@ class CLevel {
         //                        break;
         //                    case (byte)TileId.ID_DESTROYABLE_TILE:
         //                        mt.setHidden(false);
-        //        mt.setUserData(3, 0);	// reset hit count
+        //        mt.setUserData(3, 0);  // reset hit count
         //                        break;
         //                    default:
         //        mt.setHidden(false);

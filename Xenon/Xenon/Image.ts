@@ -8,11 +8,14 @@ class gsCImage {
     constructor() {
     }
 
-    public setSize(rect: gsCRectangle) {
+    public enableColourKey(): void { //gsCColour(gsMAGENTA));
+    }
+
+    public setSize(rect: gsCRectangle): void {
         this.m_rect = rect;
     }
 
-    public getSize() {
+    public getSize(): gsCVector {
         return new gsCVector(this.m_rect.Right - this.m_rect.Left, this.m_rect.Bottom - this.m_rect.Top);
     }
 }
