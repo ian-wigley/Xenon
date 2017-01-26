@@ -1,38 +1,38 @@
-﻿class MPHD {                                    /* Map header structure */
-    public mapverhigh;  //char           /* map version number to left of . (ie X.0). */
-    public mapverlow;   //char           /* map version number to right of . (ie 0.X). */
-    public lsb;         //char           /* if 1, data stored LSB first, otherwise MSB first. */
+﻿class MPHD {						/* Map header structure */
+    public mapverhigh;  //char 		/* map version number to left of . (ie X.0). */
+    public mapverlow;   //char 		/* map version number to right of . (ie 0.X). */
+    public lsb;         //char 		/* if 1, data stored LSB first, otherwise MSB first. */
     public reserved;    //char 
-    public mapwidth;    //ushort /* width in blocks. */
-    public mapheight;   //ushort /* height in blocks. */
+    public mapwidth;    //ushort 	/* width in blocks. */
+    public mapheight;   //ushort 	/* height in blocks. */
     public reserved1;   //ushort 
     public reserved2;   //ushort 
-    public blockwidth;  //ushort /* width of a block (tile) in pixels. */
-    public blockheight; //ushort /* height of a block (tile) in pixels. */
-    public blockdepth;  //ushort /* depth of a block (tile) in planes (ie. 256 colours is 8) */
-    public blockstrsize;//ushort /* size of a block data structure */
-    public numblockstr; //ushort /* Number of block structures in BKDT */
-    public numblockgfx; //ushort /* Number of 'blocks' in graphics (BGFX) */
+    public blockwidth;  //ushort 	/* width of a block (tile) in pixels. */
+    public blockheight; //ushort 	/* height of a block (tile) in pixels. */
+    public blockdepth;  //ushort 	/* depth of a block (tile) in planes (ie. 256 colours is 8) */
+    public blockstrsize;//ushort 	/* size of a block data structure */
+    public numblockstr; //ushort 	/* Number of block structures in BKDT */
+    public numblockgfx; //ushort 	/* Number of 'blocks' in graphics (BGFX) */
 };
 
 
-class BLKSTR {                                         /* Structure for data blocks */
+class BLKSTR {						/* Structure for data blocks */
     public bgoff;
-    public fgoff;                         /* offsets from start of graphic blocks */
+    public fgoff;			        /* offsets from start of graphic blocks */
     public fgoff2;
-    public fgoff3;                     /* more overlay blocks */
+    public fgoff3; 		            /* more overlay blocks */
     public user1;
-    public user2;                      /* user long data */
+    public user2;		            /* user long data */
     public user3;
-    public user4;                    /* user short data */
+    public user4;	                /* user short data */
     public user5;
     public user6;
-    public user7;                    /* user byte data */
-    public tl;// : 1;                           /* bits for collision detection */
+    public user7;	                /* user byte data */
+    public tl;// : 1;				/* bits for collision detection */
     public tr;// : 1;
     public bl;// : 1;
     public br;// : 1;
-    public trigger;// : 1;               /* bit to trigger an event */
+    public trigger;// : 1;			/* bit to trigger an event */
     public unused1;// : 1;
     public unused2;// : 1;
     public unused3;// : 1;
@@ -174,15 +174,15 @@ class CLevel {
                     this.m_header = new MPHD();
                     var size = 24;//System.Runtime.InteropServices.Marshal.SizeOf(typeof (MPHD));
                     this.FileRead(this.m_header, size);
-                    ////                        if (m_file.read(&m_header,sizeof(MPHD)) != sizeof(MPHD))
-                    ////                               return error();
+                    ////				if (m_file.read(&m_header,sizeof(MPHD)) != sizeof(MPHD))
+                    ////					return error();
 
                     if (this.m_header.blockdepth != 24) {
                         //this.error();
                     }
 
-                    //this.m_back_layer.setSize(new Point(m_header.mapwidth, m_header.mapheight));
-                    //this.m_front_layer.setSize(new Point(m_header.mapwidth, m_header.mapheight));
+                    this.m_back_layer.setSize(new Point(this.m_header.mapwidth, this.m_header.mapheight));
+                    this.m_front_layer.setSize(new Point(this.m_header.mapwidth, this.m_header.mapheight));
 
                     break;
 
@@ -309,10 +309,12 @@ class CLevel {
 
                     }
 
-                    if (id == this.CHUNK_BODY)
+                    if (id == this.CHUNK_BODY) {
                         loaded_back_layer = true;
-                    else
+                    }
+                    else {
                         loaded_front_layer = true;
+                    }
                     break;
 
                 // ignored chunks
@@ -323,11 +325,12 @@ class CLevel {
 
             if (loaded_back_layer &&
                 loaded_front_layer &&
-                loaded_tiles)
+                loaded_tiles) {
                 break;
+            }
 
             // Set the file position to the end of the chunk
-            this.LevelCounter = chunk_end;// / 4;
+            this.LevelCounter = chunk_end;
             //if (!m_file.setPosition(chunk_end))
             //    return error();
         }
@@ -355,7 +358,7 @@ class CLevel {
     private readUWORD() {
 
         var bytes = this.GetTwoBytes();
-        //w = (((gsUWORD) b[0]) << 8) + ((gsUWORD) b[1]);
+        //w =	(((gsUWORD) b[0]) << 8) + ((gsUWORD) b[1]);
         var temp = 0;
         // temp = ((bytes[0]) << 8) + (bytes[1]);
         var w = temp;
@@ -535,7 +538,7 @@ class CLevel {
     public reset() {
         //m_boss_active = false;
 
-        //m_scan_y = (int)(-m_front_layer.getPosition().Y - 1 + 480) / m_image.getTileSize().Y; //TEMP
+        //m_scan_y = (int)(-m_front_layer.getPosition().Y - 1 + 480) / m_image.getTileSize().Y;	//TEMP
 
         // hide special tiles
         // unhide everything else
@@ -557,7 +560,7 @@ class CLevel {
         //                        break;
         //                    case (byte)TileId.ID_DESTROYABLE_TILE:
         //                        mt.setHidden(false);
-        //        mt.setUserData(3, 0);  // reset hit count
+        //        mt.setUserData(3, 0);	// reset hit count
         //                        break;
         //                    default:
         //        mt.setHidden(false);

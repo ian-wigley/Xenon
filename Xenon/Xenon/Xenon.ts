@@ -43,6 +43,9 @@ class Xenon {
 
     m_timer: gsCTimer = new gsCTimer();
 
+
+    private m_gameOn: boolean = false; //TEMP!
+
     constructor() {
         this.m_timer = new gsCTimer();
     }
@@ -63,7 +66,7 @@ class Xenon {
         this.Initialize();
     }
 
-   private Initialize(): void {
+    private Initialize(): void {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
         this.LoadContent();
@@ -71,9 +74,9 @@ class Xenon {
         setInterval(() => this.Update(), 10);
     }
 
-   private LoadContent(): void {
+    private LoadContent(): void {
 
-       //this.m_level = new CLevel();
+        //this.m_level = new CLevel();
 
         //this.shipTexture = <HTMLImageElement>document.getElementById("Ship1");
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
@@ -139,6 +142,9 @@ class Xenon {
             case 40:
                 this.m_ctrl.down = true;
                 break;
+            case 88:
+                this.m_gameOn = true;
+                break;
         }
     }
 
@@ -164,11 +170,13 @@ class Xenon {
 
     private Update(): void {
 
+        if (this.m_gameOn) {
+            //m_gameState.update();
+            this.m_timer.update();
+            this.m_stars.Update(4);
+            this.m_scene.updateAllActors(this.m_ctrl, this.m_timer);
+        }
 
-        //m_gameState.update();
-        this.m_timer.update();
-        this.m_stars.Update(4);
-        this.m_scene.updateAllActors(this.m_ctrl, this.m_timer);
         this.Draw(10);
     }
 
@@ -176,16 +184,21 @@ class Xenon {
         this.ctx.fillStyle = "black";
         this.rect(0, 0, this.WIDTH, this.HEIGHT);
         this.ctx.beginPath();
-        this.ctx.drawImage(this.backgroundTexture, 0, 0);
-        this.m_stars.Draw(this.ctx);
-        //this.m_scene.drawAllActors(this.ctx, null);
 
-        this.m_gameState.update(this.ctx);
-
-
-        //this.gsCMap mapFrontLayer = m_scene.getMapFrontLayer();
-        //this.gsCMap mapBackLayer = m_scene.getMapBackLayer();
-        //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);
+        if (this.m_gameOn) {
+            this.ctx.drawImage(this.backgroundTexture, 0, 0);
+            this.m_stars.Draw(this.ctx);
+            //this.m_scene.drawAllActors(this.ctx, null);
+            this.m_gameState.update(this.ctx);
+            //this.gsCMap mapFrontLayer = m_scene.getMapFrontLayer();
+            //this.gsCMap mapBackLayer = m_scene.getMapBackLayer();
+            //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);
+        }
+        else {
+            this.ctx.font = "20px Arial";
+            this.ctx.fillStyle = "yellow";
+            this.ctx.fillText("Press X to Start the game", 400, 240);
+        }
     }
 }
 
