@@ -28,11 +28,11 @@ class CPlayGameState extends CGameState {
     constructor(ship: CShip, scene: CScene, starfield: CStarfield) {
         super();
 
-        this.m_level = new CLevel();
+        //this.m_level = new CLevel();
 
         //this.m_ship = ship;
         this.m_scene = scene;
-        //this.m_level = this.m_scene.GetLevel();
+        this.m_level = this.m_scene.GetLevel();
 
         // temp!
         this.createPlayer();

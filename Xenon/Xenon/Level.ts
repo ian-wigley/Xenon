@@ -109,7 +109,8 @@ class CLevel {
     //CHUNK_BODY: number = 1112491097;
     //CHUNK_LYR1: number = 1280922161;
 
-    constructor() {
+    constructor(imageTiles: HTMLImageElement) {
+        this.m_imageTiles = imageTiles;
         this.m_back_layer = new gsCMap();
         this.m_front_layer = new gsCMap();
 
@@ -196,7 +197,7 @@ class CLevel {
 
                         for (var i = 0; i < this.m_header.numblockstr; i++) {
                             size = this.m_header.blockstrsize;
-                            this.FileRead2(m_blocks[i], size);
+                            m_blocks[i] =  this.FileRead2(m_blocks[i], size);
 
                             //    gsUDWORD size = (gsUDWORD) m_header.blockstrsize;
                             //    if (m_file.read(&m_blocks[i],size) != size)
@@ -265,7 +266,7 @@ class CLevel {
                                 }
 
                                 var sizeBLKSTR = 32;//typeof(BLKSTR);
-                                sizeBLKSTR /= 2;
+                                //sizeBLKSTR /= 2;
                                 var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
                                 var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
                                 ////        tile = (gsUWORD) (block->bgoff / tilesize);
@@ -430,10 +431,10 @@ class CLevel {
         m_header.numblockgfx = this.ByteConverterToUInt16(bytes);//BitConverter.ToUInt16(bytes, 0);
     }
 
+    //    private FileRead2(m_blocks: BLKSTR, size: number): BLKSTR {// void {
+    private FileRead2(blocks: BLKSTR, size: number): BLKSTR {// void {
 
-    private FileRead2(m_blocks: BLKSTR, size: number): void {
-
-        m_blocks = new BLKSTR();
+        var m_blocks = new BLKSTR();
         var bytes = new Array<string>(4);
         bytes[0] = this.LevelBytes[this.LevelCounter++];//[0];
         bytes[1] = this.LevelBytes[this.LevelCounter++];//[1];
@@ -496,6 +497,9 @@ class CLevel {
         //            m_blocks.unused2 = (char)LevelBytes[LevelCounter][1];
         //            m_blocks.unused3 = (char)LevelBytes[LevelCounter][2];
         //            LevelCounter += 1;
+
+        return m_blocks;
+
     }
 
 

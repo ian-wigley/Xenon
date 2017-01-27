@@ -53,7 +53,7 @@ class CScene {
         this.m_actor_list = [];
         //m_collision_list = new gsCCollisionList();
         //m_screen = new gsCScreen();
-        //lev = new CLevel(image, font);
+        this.lev = new CLevel(image);//, font);
         //lev.load("");
     }
 
