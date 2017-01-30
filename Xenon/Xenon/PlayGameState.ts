@@ -174,7 +174,7 @@ class CPlayGameState extends CGameState {
 
             if (!this.m_reached_boss) {
                 //if (CBossControl::isStarted()) {
-                this.m_reached_boss = true;
+               // this.m_reached_boss = true;
                 //playMusic(MUSIC_BOSS);
                 //}
             }
