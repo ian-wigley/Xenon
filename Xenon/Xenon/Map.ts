@@ -29,14 +29,10 @@ class gsCMap {
     m_tile_size: Point;
     m_total_size: Point;
 
-    //Texture2D m_imageTiles;
-    m_imageTiles;
-
+    m_imageTiles: HTMLImageElement;
     m_title: string = "";
 
-    //constructor(Texture2D image, string title) {
-    //   constructor()
-    constructor(image?, title?) {
+    constructor(image?: HTMLImageElement, title?: string) {
         this.m_imageTiles = image;
         this.m_title = title;
         //m_image = 0;
@@ -45,7 +41,6 @@ class gsCMap {
         this.m_position = new Point(0, 0);
         this.m_tile_size = new Point(0, 0);
         this.m_total_size = new Point(0, 0);
-
         this.indexes = [];
     }
 
@@ -60,11 +55,9 @@ class gsCMap {
             //    return;
         }
 
-        //m_map_tiles = new gsCMapTile[m_size.X * m_size.Y];
-        //m_map_tiles.r.Add (new gsCMapTile[m_size.X * m_size.Y]);
         this.m_map_tiles = new Array<gsCMapTile>(this.m_size.X * this.m_size.Y);
         for (var i = 0; i < (this.m_size.X * this.m_size.Y); i++) {
-            this.m_map_tiles.push(null);
+            this.m_map_tiles[i] = null;
         }
         this.clear(0, true);
     }
@@ -110,7 +103,6 @@ class gsCMap {
 
     public setImage(image: gsCTiledImage): void {
         this.m_image = image;
-
         this.calculateTotalSize();
     }
 
@@ -131,16 +123,15 @@ class gsCMap {
         var p: gsCMapTile = this.getMapTile(coords);
 
         // Store the new tile values into the array of tiles
-        //this.m_map_tiles.RemoveAt(this.testCounter);
-        //this.m_map_tiles.Insert(this.testCounter, map_tile);
-        this.m_map_tiles.push(map_tile);
+        // counter parameter not currently used
+        this.m_map_tiles[this.testCounter] = map_tile;
 
         return true;
     }
 
     //-------------------------------------------------------------
 
-    public setPosition(position: Point): void {
+    public setPosition(position: Point) {//: void {
         this.m_position = position;
     }
 
@@ -172,8 +163,13 @@ class gsCMap {
             return null;
         }
         else {
+            // Test ONLY counter currently used to update correct Tile only !
             this.testCounter = this.m_size.X * coords.Y + coords.X;
-            this.indexes.push(this.testCounter);
+            //this.indexes.push(this.testCounter);
+
+            //var overflow = this.m_size.X * coords.Y + coords.X;
+            //console.log("Overflow index : " + overflow);
+
             return this.m_map_tiles[this.m_size.X * coords.Y + coords.X];
         }
     }
@@ -193,27 +189,21 @@ class gsCMap {
     //    return m_map_tiles;
     //}
 
-    //public void updateListOfMapTiles(gsCMapTile[] mt)
-    //{
-    //    m_map_tiles = mt;
-    //}
+    public updateListOfMapTiles(mt: gsCMapTile[]): void {
+        this.m_map_tiles = mt;
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public getPosition(): Point { //Vector2 {
         return this.m_position;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public move(offset: Point): void {
-        //this.m_position += offset;
         this.m_position.X += offset.X;
         this.m_position.Y += offset.Y;
-        //position_counter.Add(m_position);
-        //if (m_position.Y > 0) {
-        //    int jklm = 0;
-        //}
     }
 
     //-------------------------------------------------------------
@@ -232,24 +222,19 @@ class gsCMap {
         //    return;
 
         // clip map against screen
-
-        var screen_rect: Rectangle = new Rectangle(0, 0, 640, 480);// screen->getRect();
+        var screen_rect: Rectangle = new Rectangle(0, 0, 640, 480);
 
         // get map source and dest rects in pixel coords
-
         //Rectangle source_rect = new Rectangle(0, 32288, (m_size.X * m_tile_size.X), (m_size.Y * m_tile_size.Y));
         var source_rect: Rectangle = new Rectangle(0, 0, (this.m_size.X * this.m_tile_size.X), (this.m_size.Y * this.m_tile_size.Y));
 
-        //           source_rect.Bottom = 32768;
-
-        var dest_rect: Rectangle = source_rect;
+        var dest_rect: Rectangle = new Rectangle(0, 0, 640, 32768);
         //dest_rect..move(m_position);
 
-        dest_rect.Left += this.m_position.X;//.getX();
-        dest_rect.Top += this.m_position.Y;// offset.getY();
-        dest_rect.Right += this.m_position.X;// offset.getX();
-        dest_rect.Bottom += this.m_position.Y;// offset.getY();
-
+        dest_rect.Left += this.m_position.X;
+        dest_rect.Top += this.m_position.Y;
+        dest_rect.Right += this.m_position.X;
+        dest_rect.Bottom += this.m_position.Y;
 
         //screen_rect.clip(source_rect,dest_rect);
         if (dest_rect.Left < screen_rect.Left) {
@@ -269,23 +254,20 @@ class gsCMap {
             dest_rect.Bottom = screen_rect.Bottom;
         }
 
-
         this.srcRect.push(source_rect);
         this.destRect.push(dest_rect);
 
-        //List < int > drawcall = new List<int>();
         var drawcall: Array<number> = new Array<number>();
         this.points = [];
         this.collectedTiles = [];
-        //            testCounter++;
 
-        if (!dest_rect.IsEmpty) {
+        if (!dest_rect.IsEmpty()) {
 
             // convert back to tile coords
-            var left = source_rect.Left / this.m_tile_size.X;
-            var top = source_rect.Top / this.m_tile_size.Y;
-            var right = (source_rect.Right - 1) / this.m_tile_size.X;
-            var bottom = (source_rect.Bottom - 1) / this.m_tile_size.Y;
+            var left = Math.floor(source_rect.Left / this.m_tile_size.X);
+            var top = Math.floor(source_rect.Top / this.m_tile_size.Y);
+            var right = Math.floor((source_rect.Right - 1) / this.m_tile_size.X);
+            var bottom = Math.floor((source_rect.Bottom - 1) / this.m_tile_size.Y);
 
             var x, y;
             var map_tile: gsCMapTile;
@@ -295,102 +277,68 @@ class gsCMap {
             // top edge clipped
             map_tile = this.getMapTile(new Point(left, top));
             pos = new Vector2(this.m_position.X + new Vector2(left, top).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, top).y * this.m_tile_size.Y);
-            //points.Add(pos);//debugging!
-            //collectedTiles.Add(map_tile);//debugging!
 
-            //step = new Vector2(1, 0) * this.m_tile_size;
             step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
             for (x = left; x <= right; x++) {
                 if (map_tile.isDrawable()) {
-                    this.m_image.draw(map_tile.getTile(), pos, ctx);//, this.m_title);
-                    //drawcall.Add(1);//debugging!
+                    this.m_image.draw(map_tile.getTile(), pos, ctx);
                 }
                 this.testCounter++;
                 map_tile = this.m_map_tiles[this.testCounter];
                 pos.add(step);
-                //this.points.push(pos);//debugging!
-                //this.collectedTiles.push(map_tile);//debugging!
             }
 
             // bottom edge clipped
             map_tile = this.getMapTile(new Point(left, bottom));
             pos = new Vector2(this.m_position.X + new Vector2(left, bottom).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, bottom).y * this.m_tile_size.Y);
-            //points.Add(pos);//debugging!
-            //collectedTiles.Add(map_tile);//debugging!
-            //step = new Vector2(1, 0) * m_tile_size;
             step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
             for (x = left; x <= right; x++) {
                 if (map_tile.isDrawable()) {
-                    this.m_image.draw(map_tile.getTile(), pos, ctx);//, this.m_title);
-                    //drawcall.Add(2);//debugging!
+                    this.m_image.draw(map_tile.getTile(), pos, ctx);
                 }
                 this.testCounter++;
                 map_tile = this.m_map_tiles[this.testCounter - 1];
                 pos.add(step);
-                //points.Add(pos);//debugging!
-                //collectedTiles.Add(map_tile);//debugging!
             }
 
             // left edge clipped
             map_tile = this.getMapTile(new Point(left, top + 1));
-            //pos = m_position + new Vector2(left, top + 1) * m_tile_size;
             pos = new Vector2(this.m_position.X + new Vector2(left, top + 1).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, top + 1).y * this.m_tile_size.Y);
-            //points.Add(pos);//debugging!
-            //collectedTiles.Add(map_tile);//debugging!
-            //step = new Vector2(0, 1) * m_tile_size;
             step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
             for (y = top + 1; y < bottom; y++) {
                 if (map_tile.isDrawable()) {
-                    this.m_image.draw(map_tile.getTile(), pos, ctx);//, m_title);
-                    //drawcall.Add(3);//debugging!
+                    this.m_image.draw(map_tile.getTile(), pos, ctx);
                 }
                 this.testCounter++;
                 map_tile = this.m_map_tiles[this.testCounter + this.m_size.X];
                 pos.add(step);
-                //    points.Add(pos);//debugging!
-                //    collectedTiles.Add(map_tile);//debugging!
             }
 
             // right edge clipped
             map_tile = this.getMapTile(new Point(right, top + 1));
-            //pos = m_position + new Vector2(right, top + 1) * m_tile_size;
             pos = new Vector2(this.m_position.X + new Vector2(right, top + 1).x * this.m_tile_size.X, this.m_position.Y + new Vector2(right, top + 1).y * this.m_tile_size.Y);
-            //points.Add(pos);//debugging!
-            //collectedTiles.Add(map_tile);//debugging!
-            //step = new Vector2(0, 1) * this.m_tile_size;
             step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
             for (y = top + 1; y < bottom; y++) {
                 if (map_tile.isDrawable()) {
-                    this.m_image.draw(map_tile.getTile(), pos, ctx);//, m_title);
-                    //drawcall.Add(4);//debugging!
+                    this.m_image.draw(map_tile.getTile(), pos, ctx);
                 }
                 this.testCounter++;
                 map_tile = this.m_map_tiles[this.testCounter + this.m_size.X];
                 pos.add(step);
-                //points.Add(pos);//debugging!
-                //collectedTiles.Add(map_tile);//debugging!
             }
 
             // middle not clipped
             for (y = top + 1; y < bottom; y++) {
                 map_tile = this.getMapTile(new Point(left + 1, y));
-                //pos = m_position + new Vector2(left + 1, y) * m_tile_size;
                 pos = new Vector2(this.m_position.X + new Vector2(left + 1, y).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left + 1, y).y * this.m_tile_size.Y);
-                //    points.Add(pos);//debugging!
-                //    collectedTiles.Add(map_tile);//debugging!
-                //step = new Vector2(1, 0) * this.m_tile_size;
                 step = new Vector2(new Vector2(1, 0).x * this.m_tile_size.X, new Vector2(1, 0).y * this.m_tile_size.Y);
                 for (x = left + 1; x < right; x++) {
                     if (map_tile.isDrawable()) {
-                        this.m_image.drawFast(map_tile.getTile(), pos, ctx);// m_title);
-                        //    drawcall.Add(5);//debugging!
+                        this.m_image.drawFast(map_tile.getTile(), pos, ctx);
                     }
                     this.testCounter++;
                     map_tile = this.m_map_tiles[this.testCounter];
-                    //pos += step;
                     pos.add(step);
-                    //    points.Add(pos);//debugging!
-                    //    collectedTiles.Add(map_tile);//debugging!
                 }
             }
         }
@@ -401,12 +349,9 @@ class gsCMap {
     //bool load(const char *filename,const gsCPoint& size)
     //{
     //    setSize(size);
-
     //    gsCFile file;
-
     //    if (!file.open(filename))
     //        return false;
-
     //    for (int y = 0; y < m_size.getY(); y++) {
     //        for (int x = 0; x < m_size.getX(); x++) {
     //            gsUWORD tile;
@@ -418,23 +363,17 @@ class gsCMap {
     //                setMapTile(gsCPoint(x,y),gsCMapTile(tile / 32)); // - 1));
     //            }
     //        }
-
     //    file.close();
-
     //    return true;
     //}
 
-    ////-------------------------------------------------------------
-    //// Find tiles which overlap rect
-
-    //int hitBy(const gsCRect& rect,gsUBYTE collision_mask)
+    //-------------------------------------------------------------
+    // Find tiles which overlap rect
     public hitBy(rect: Rectangle, collision_mask: number): number {
-        //    gsCRect dest = rect;
         var dest: Rectangle = rect;
-        //    gsCRect source(gsCPoint(0,0),m_total_size);
         var source = new Rectangle(0, 0, this.m_total_size.X, this.m_total_size.Y);
-        //    source.clip(dest);
 
+        //    source.clip(dest);
         //    if (dest.isEmpty())
         //        return 0;
 

@@ -12,11 +12,14 @@ class gsCTiledImage extends gsCImage {
     private m_source_rects: Array<gsCRectangle>;
     private m_imageTiles: HTMLImageElement;
 
+    private m_screen: gsCScreen;
+
     constructor(imageTile: HTMLImageElement) {
         super();
         this.m_imageTiles = imageTile;
         var m_rect: gsCRectangle = new gsCRectangle(0, 0, imageTile.width, imageTile.height);
         this.setSize(m_rect);
+        this.m_screen = new gsCScreen;
     }
 
     public calculateSourceRects() {
@@ -79,9 +82,9 @@ class gsCTiledImage extends gsCImage {
     // Draw the tiles !! <gsCTiledImage>
     public draw(tile: number, position: gsCVector, ctx: CanvasRenderingContext2D) {
         var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
-        var screen: gsCScreen = new gsCScreen;
+        //var screen: gsCScreen = new gsCScreen;
 
-        if (screen.contains(dest)) {
+        if (this.m_screen.contains(dest)) {
             var source: gsCRectangle = this.m_source_rects[tile];
 
             //ctx.font = "12px Arial";
@@ -232,44 +235,31 @@ class gsCTiledImage extends gsCImage {
     //    bool gsCTiledImage::drawFast(int tile,const gsCPoint& position) {
     public drawFast(tile: number, position: gsCVector, ctx: CanvasRenderingContext2D): boolean {
 
+        ////gsCScreen * screen = gsCApplication::getScreen();
+        ////HRESULT hr;
+        ////gsCRect dest(position, position + m_tile_size);
+        //var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
 
-        //gsCScreen * screen = gsCApplication::getScreen();
+        ////hr = screen ->getBackSurface() ->Blt(LPRECT(dest),
+        ////							   m_surface,
+        ////							   m_source_rects[tile],
+        ////							   DDBLT_WAIT | m_colour_key,
+        ////							   NULL);
 
-        //HRESULT hr;
+        //ctx.drawImage(this.m_imageTiles, dest.Left, dest.Top, dest.Right, dest.Bottom, position.x, position.y, dest.Right, dest.Bottom);
 
-        //gsCRect dest(position, position + m_tile_size);
-        var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
+        ////if (hr != DD_OK) {
+        ////    gsREPORT("gsCTiledImage::drawFast blit failed");
+        ////    return false;
+        ////}
 
-        //hr = screen ->getBackSurface() ->Blt(LPRECT(dest),
-        //							   m_surface,
-        //							   m_source_rects[tile],
-        //							   DDBLT_WAIT | m_colour_key,
-        //							   NULL);
-
-
-        ctx.drawImage(this.m_imageTiles, dest.Left, dest.Top, dest.Right, dest.Bottom, position.x, position.y, dest.Right, dest.Bottom);
-
-        //if (hr != DD_OK) {
-        //    gsREPORT("gsCTiledImage::drawFast blit failed");
-        //    return false;
-        //}
+        var source: gsCRectangle = this.m_source_rects[tile];
+        ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.x, position.y, source.Right, source.Bottom);
 
         return true;
     }
 
     //-------------------------------------------------------------
-
-
-
-
-
-
-
-
-
-
-
-
 }
 
 export = gsCTiledImage;

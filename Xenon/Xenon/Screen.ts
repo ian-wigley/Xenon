@@ -61,10 +61,17 @@ class gsCScreen {
         //    rect.Top >= this.m_rect.Top &&
         //    rect.Bottom <= this.m_rect.Bottom);
 
-        if (actorRect.Left > this.m_rect.Left &&
-            actorRect.Right < this.m_rect.Right &&
-            actorRect.Top > this.m_rect.Top &&
-            actorRect.Bottom < this.m_rect.Bottom) {
+
+        //var one: boolean = actorRect.Left >= this.m_rect.Left;
+        //var two: boolean = actorRect.Right <= this.m_rect.Right;
+        //var thr: boolean = actorRect.Top >= this.m_rect.Top
+        //var fou: boolean = actorRect.Bottom <= this.m_rect.Bottom;
+
+
+        if (actorRect.Left >= this.m_rect.Left &&
+            actorRect.Right <= this.m_rect.Right &&
+            actorRect.Top >= this.m_rect.Top &&
+            actorRect.Bottom <= this.m_rect.Bottom) {
 
             return true;
         }

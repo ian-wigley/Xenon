@@ -16,7 +16,7 @@ class CPlayGameState extends CGameState {
     private m_level: CLevel;
 
     private PLAYER_START_OFFSET: number = 64;
-    private m_yscroll: number = 0;
+    private m_yscroll: number = 1;
     private m_even: number = 0;
 
     private m_fast_forward: boolean = false;
@@ -435,17 +435,17 @@ class CPlayGameState extends CGameState {
 
     setLayerPositions(ship_y: number) {
         ////int mh = m_back_layer.getSizeInPixels().Y;//.getY();
-        //var mh: number = this.m_level.getMapBackLayer().getSizeInPixels().Y;
+        var mh: number = this.m_level.getMapBackLayer().getSizeInPixels().Y;
 
-        //var by: number = -(mh - (mh - ship_y) / 2 + this.PLAYER_START_OFFSET / 2 - 480);//m_screen.getSize().getY());
+        var by: number = -(mh - (mh - ship_y) / 2 + this.PLAYER_START_OFFSET / 2 - 480);//m_screen.getSize().getY());
 
         ////m_back_layer.setPosition(new Point(0, by));
-        //this.m_level.getMapBackLayer().setPosition(new Point(0, by));
+        this.m_level.getMapBackLayer().setPosition(new gsCPoint(0, by));
 
-        //var fy: number = -(ship_y + this.PLAYER_START_OFFSET - 480);// m_screen.getSize().getY());
+        var fy: number = -(ship_y + this.PLAYER_START_OFFSET - 480);// m_screen.getSize().getY());
 
         ////m_front_layer.setPosition(new Point(0, fy));
-        //this.m_level.getMapFrontLayer().setPosition(new Point(0, fy));
+        this.m_level.getMapFrontLayer().setPosition(new gsCPoint(0, fy));
     }
 }
 

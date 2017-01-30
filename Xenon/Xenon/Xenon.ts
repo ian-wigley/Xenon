@@ -46,6 +46,9 @@ class Xenon {
 
     private m_gameOn: boolean = false; //TEMP!
 
+
+    private testInterval;
+
     constructor() {
         this.m_timer = new gsCTimer();
     }
@@ -69,9 +72,10 @@ class Xenon {
     private Initialize(): void {
         this.canvas = <HTMLCanvasElement>document.getElementById("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.LoadContent();
+
         this.AddHitListener(this.canvas);
-        setInterval(() => this.Update(), 10);
+        this.LoadContent();
+        //setInterval(() => this.Update(), 10);
     }
 
     private LoadContent(): void {
@@ -97,11 +101,31 @@ class Xenon {
         }
 
         var levelImage: HTMLImageElement = <HTMLImageElement>document.getElementById("blocks");
+
         this.m_scene = new CScene(levelImage, this.m_textures, this.m_listOfActors);
         this.starTexture = <HTMLImageElement>document.getElementById("star");
         this.m_stars = new CStarfield(this.starTexture);
-        this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
+
+
+        // Needs to wait until level is loaded before configuring the gamestate !!
+        //this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
+
+
+        //this.testIfLoaded();
+        this.testInterval = setInterval(() => this.testIfLoaded(), 10);
     }
+
+    private testIfLoaded() {
+        if (this.m_scene.LevelLoaded()) {
+            // Needs to wait until level is loaded before configuring the gamestate !!
+            this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
+            clearInterval(this.testInterval);
+
+            setInterval(() => this.Update(), 10);
+        }
+
+    }
+
 
     AddHitListener(element: HTMLElement) {
         window.addEventListener("keydown", (event) => {

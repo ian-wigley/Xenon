@@ -599,6 +599,11 @@ class CScene {
     public GetlistOfActors() {
         return this.m_listOfActors;
     }
+
+    public LevelLoaded() {
+        return this.lev.LoadingComplete;
+    }
+
 }
 
 export = CScene;
