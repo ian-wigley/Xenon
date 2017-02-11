@@ -7,7 +7,7 @@ import Point = require("Point");
 
 class gsCTiledImage extends gsCImage {
 
-    private m_tile_size: Point;//gsCVector;
+    private m_tile_size: Point;
     private m_num_tiles: number;
     private m_source_rects: Array<gsCRectangle>;
     private m_imageTiles: HTMLImageElement;
@@ -45,13 +45,10 @@ class gsCTiledImage extends gsCImage {
         var vert: number = this.getSize().y / this.m_tile_size.Y;
         this.m_num_tiles = horiz * vert;
         this.m_source_rects = [];
-        var i: number = 0;
 
         for (var y = 0; y + this.m_tile_size.Y <= this.getSize().y; y += this.m_tile_size.Y) {
             for (var x = 0; x + this.m_tile_size.X <= this.getSize().x; x += this.m_tile_size.X) {
                 this.m_source_rects.push(new gsCRectangle(x, y, this.m_tile_size.X, this.m_tile_size.Y));
-
-                i++;
             }
         }
 
@@ -60,7 +57,7 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    public setTileSize(tile_size: Point) { //gsCVector) {
+    public setTileSize(tile_size: Point) {
         this.m_tile_size = tile_size;
         return this.calculateSourceRects();
     }
@@ -79,183 +76,147 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    // Draw the tiles !! <gsCTiledImage>
-    public draw(tile: number, position: gsCVector, ctx: CanvasRenderingContext2D) {
-        var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
-        //var screen: gsCScreen = new gsCScreen;
+    // Main tile Drawing method !! <gsCTiledImage>
+    public draw(tile: number, position: Point, ctx: CanvasRenderingContext2D) {
+        var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
 
         if (this.m_screen.contains(dest)) {
-            var source: gsCRectangle = this.m_source_rects[tile];
-
-            //ctx.font = "12px Arial";
-            //ctx.fillStyle = "white";
-            //ctx.fillText("X position :" + position.x, 0, 40);
-            //ctx.fillText("Y position :" + position.y, 0, 60);
-
-            //ctx.fillText("Dest rect height:" + dest.Top, 0, 80);
-            //ctx.fillText("Dest rect width:" + dest.Right, 0, 100);
-
-            ////ctx.fillText("Number of Actors:" + this.getNumberOfActors(), 0, 120);
-            ////ctx.drawImage(this.m_imageTiles, position.x, position.y, source.Width(), source.Height(), 0, 0, this.m_tile_size.x, this.m_tile_size.y);
-            ////ctx.drawImage(this.m_imageTiles, 0, 0, 64, 64, position.x, position.y, 64, 64);
-            ////ctx.drawImage(this.m_imageTiles, source.Left(), source.Top(), 64, 64, position.x, position.y, 64, 64);
-
-            ////img 	Specifies the image, canvas, or video element to use 	 	
-            ////sx 	Optional. The x coordinate where to start clipping 	
-            ////sy 	Optional. The y coordinate where to start clipping 	
-            ////swidth 	Optional. The width of the clipped image 	
-            ////sheight 	Optional. The height of the clipped image 	
-            ////x 	The x coordinate where to place the image on the canvas 	
-            ////y 	The y coordinate where to place the image on the canvas 	
-            ////width 	Optional. The width of the image to use (stretch or reduce the image) 	
-            ////height 	Optional. The height of the image to use (stretch or reduce the image)
-            ////context.drawImage(img,sx,sy,swidth,sheight,x,y,width,height);
-            ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.x, position.y, source.Right, source.Bottom);
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
             return true;
         }
+        else {
+            var source: gsCRectangle = this.m_source_rects[tile];
+            ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.X, position.Y, source.Right, source.Bottom);
+            return true;
+        }
+    }
 
-        return false;
+    //-------------------------------------------------------------
+
+    //bool gsCTiledImage::drawSolid(int tile,const gsCPoint& position,const gsCColour& fill_colour) {
+    public drawSolid(tile: number, position: Point, ctx: CanvasRenderingContext2D, tfill_colour/*gsCColour&*/): boolean {
+        //    if (tile >= m_num_tiles)
+        //        return false;
+
+        //    if (!m_direct_draw) {
+        //        gsREPORT("gsCTiledImage::draw called with no direct draw device");
+        //        return false;
+        //    }
+
+        //    gsCScreen * screen = gsCApplication::getScreen();
+
+        //    if (!screen) {
+        //        gsREPORT("gsCTiledImage::draw called with no active screen");
+        //        return false;
+        //    }
+
+        //    gsCRect dest(position, position + m_tile_size);
+
+        //    if (screen ->getRect().contains(dest)) {
+
+        //        bool ok = false;
+
+        //        if (lock()) {
+        //            ok = screen ->bltSolid(dest, m_ddsd, m_source_rects[tile], fill_colour);
+        //            unlock();
+        //        }
+        //        if (!ok) {
+        //            gsREPORT("gsCTiledImage::drawSolid blit failed");
+        //            return false;
+        //        }
+        //    }
+        //    else {
+        //        if (!screen ->getRect().overlaps(dest))
+        //            return false;
+
+        //        gsCRect source = m_source_rects[tile];
+
+        //        screen ->getRect().clip(source, dest);
+
+        //        bool ok = false;
+
+        //        if (lock()) {
+        //            ok = screen ->bltSolid(dest, m_ddsd, source, fill_colour);
+        //            unlock();
+        //        }
+        //        if (!ok) {
+        //            gsREPORT("gsCTiledImage::drawSolid blit failed");
+        //            return false;
+        //        }
+        //    }
+
+        return true;
+    }
+
+    //-------------------------------------------------------------
+
+    public drawTinted(tile: number, position: Point, ctx: CanvasRenderingContext2D, tint_colour/*gsCColour&*/): boolean {
+        if (tile >= this.m_num_tiles) {
+            return false;
+        }
+
+        //if (!m_direct_draw) {
+        //    gsREPORT("gsCTiledImage::draw called with no direct draw device");
+        //    return false;
+        //}
+
+        //gsCScreen * screen = gsCApplication::getScreen();
+
+        //if (!screen) {
+        //    gsREPORT("gsCTiledImage::draw called with no active screen");
+        //    return false;
+        //}
+
+        //gsCRect dest(position, position + m_tile_size);
+        var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
+
+        if (this.m_screen.contains(dest)) {
+            //if (screen ->getRect().contains(dest)) {
+
+            var ok: boolean = false;
+
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
+
+            //if (lock()) {
+            //    ok = screen->bltTinted(dest, m_ddsd, m_source_rects[tile], tint_colour);
+            //    unlock();
+            //}
+            //if (!ok) {
+            //    gsREPORT("gsCTiledImage::drawTinted blit failed");
+            //    return false;
+            //}
+        }
+        else {
+            //if (!screen ->getRect().overlaps(dest))
+            //    return false;
+
+            //gsCRect source = m_source_rects[tile];
+
+            //screen ->getRect().clip(source, dest);
+
+            //bool ok = false;
+
+            //if (lock()) {
+            //    ok = screen ->bltTinted(dest, m_ddsd, source, tint_colour);
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
+            //    unlock();
+            //}
+            //if (!ok) {
+            //    gsREPORT("gsCTiledImage::drawTinted blit failed");
+            //    return false;
+            //}
+        }
+
+        return true;
     }
 
 
     //-------------------------------------------------------------
 
-    //bool gsCTiledImage::drawSolid(int tile,const gsCPoint& position,const gsCColour& fill_colour) {
-    //    if (tile >= m_num_tiles)
-    //        return false;
 
-    //    if (!m_direct_draw) {
-    //        gsREPORT("gsCTiledImage::draw called with no direct draw device");
-    //        return false;
-    //    }
-
-    //    gsCScreen * screen = gsCApplication::getScreen();
-
-    //    if (!screen) {
-    //        gsREPORT("gsCTiledImage::draw called with no active screen");
-    //        return false;
-    //    }
-
-    //    gsCRect dest(position, position + m_tile_size);
-
-    //    if (screen ->getRect().contains(dest)) {
-
-    //        bool ok = false;
-
-    //        if (lock()) {
-    //            ok = screen ->bltSolid(dest, m_ddsd, m_source_rects[tile], fill_colour);
-    //            unlock();
-    //        }
-    //        if (!ok) {
-    //            gsREPORT("gsCTiledImage::drawSolid blit failed");
-    //            return false;
-    //        }
-    //    }
-    //    else {
-    //        if (!screen ->getRect().overlaps(dest))
-    //            return false;
-
-    //        gsCRect source = m_source_rects[tile];
-
-    //        screen ->getRect().clip(source, dest);
-
-    //        bool ok = false;
-
-    //        if (lock()) {
-    //            ok = screen ->bltSolid(dest, m_ddsd, source, fill_colour);
-    //            unlock();
-    //        }
-    //        if (!ok) {
-    //            gsREPORT("gsCTiledImage::drawSolid blit failed");
-    //            return false;
-    //        }
-    //    }
-
-    //    return true;
-    //}
-
-    ////-------------------------------------------------------------
-
-    //bool gsCTiledImage::drawTinted(int tile,const gsCPoint& position,const gsCColour& tint_colour) {
-    //    if (tile >= m_num_tiles)
-    //        return false;
-
-    //    if (!m_direct_draw) {
-    //        gsREPORT("gsCTiledImage::draw called with no direct draw device");
-    //        return false;
-    //    }
-
-    //    gsCScreen * screen = gsCApplication::getScreen();
-
-    //    if (!screen) {
-    //        gsREPORT("gsCTiledImage::draw called with no active screen");
-    //        return false;
-    //    }
-
-    //    gsCRect dest(position, position + m_tile_size);
-
-    //    if (screen ->getRect().contains(dest)) {
-
-    //        bool ok = false;
-
-    //        if (lock()) {
-    //            ok = screen ->bltTinted(dest, m_ddsd, m_source_rects[tile], tint_colour);
-    //            unlock();
-    //        }
-    //        if (!ok) {
-    //            gsREPORT("gsCTiledImage::drawTinted blit failed");
-    //            return false;
-    //        }
-    //    }
-    //    else {
-    //        if (!screen ->getRect().overlaps(dest))
-    //            return false;
-
-    //        gsCRect source = m_source_rects[tile];
-
-    //        screen ->getRect().clip(source, dest);
-
-    //        bool ok = false;
-
-    //        if (lock()) {
-    //            ok = screen ->bltTinted(dest, m_ddsd, source, tint_colour);
-    //            unlock();
-    //        }
-    //        if (!ok) {
-    //            gsREPORT("gsCTiledImage::drawTinted blit failed");
-    //            return false;
-    //        }
-    //    }
-
-    //    return true;
-    //}
-
-
-    //-------------------------------------------------------------
-    //    bool gsCTiledImage::drawFast(int tile,const gsCPoint& position) {
-    public drawFast(tile: number, position: gsCVector, ctx: CanvasRenderingContext2D): boolean {
-
-        ////gsCScreen * screen = gsCApplication::getScreen();
-        ////HRESULT hr;
-        ////gsCRect dest(position, position + m_tile_size);
-        //var dest: gsCRectangle = new gsCRectangle(position.x, position.y, position.x + this.m_tile_size.X, position.y + this.m_tile_size.Y);
-
-        ////hr = screen ->getBackSurface() ->Blt(LPRECT(dest),
-        ////							   m_surface,
-        ////							   m_source_rects[tile],
-        ////							   DDBLT_WAIT | m_colour_key,
-        ////							   NULL);
-
-        //ctx.drawImage(this.m_imageTiles, dest.Left, dest.Top, dest.Right, dest.Bottom, position.x, position.y, dest.Right, dest.Bottom);
-
-        ////if (hr != DD_OK) {
-        ////    gsREPORT("gsCTiledImage::drawFast blit failed");
-        ////    return false;
-        ////}
-
+    public drawFast(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
         var source: gsCRectangle = this.m_source_rects[tile];
-        ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.x, position.y, source.Right, source.Bottom);
-
+        ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.X, position.Y, source.Right, source.Bottom);
         return true;
     }
 
