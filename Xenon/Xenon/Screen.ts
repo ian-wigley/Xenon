@@ -86,6 +86,10 @@ class gsCScreen {
             this.m_rect.Top < rect.Bottom &&
             this.m_rect.Bottom > rect.Top);
     }
+
+    public getRect() {
+        return this.m_rect;
+    }
 }
 
 export = gsCScreen;
