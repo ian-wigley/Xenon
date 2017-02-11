@@ -24,5 +24,29 @@
         this.m_y = value;
     }
 
+    public add(point: Point): Point {
+        this.m_x += point.X;
+        this.m_y += point.Y;
+        return this;
+    }
+
+    public subtract(point: Point): Point {
+        this.m_x -= point.X;
+        this.m_y -= point.Y;
+        return this;
+    }
+
+    public multiply(point: Point): Point {
+        this.m_x *= point.X;
+        this.m_y *= point.Y;
+        return this;
+    }
+
+    public divide(point: Point): Point {
+        this.m_x /= point.X;
+        this.m_y /= point.Y;
+        return this;
+    }
 }
+
 export = Point;
