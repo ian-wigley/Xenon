@@ -25,6 +25,30 @@ class gsCVector extends Point {
     public set y(value: number) {
         this.m_y = value;
     }
+
+    public plus(a: gsCVector, b: gsCVector): gsCVector {
+        return new gsCVector(a.m_x + b.m_x, a.m_y + b.m_y);
+    }
+
+    public plusEquals(a: gsCVector): gsCVector {
+        this.m_x += a.m_x;
+        this.m_y += a.m_y;
+        return this;
+    }
+
+    public times(a: gsCVector, b: number): gsCVector {
+        return new gsCVector(a.m_x * b, a.m_y * b);
+    }
+
+
+    public normalize(): void {
+        var len = this.length;
+
+        if (len > 0) {
+            this.m_x /= len;
+            this.m_y /= len;
+        }
+    }
 }
 
 export = gsCVector;

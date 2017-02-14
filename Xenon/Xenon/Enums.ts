@@ -230,5 +230,13 @@ module enu {
     export enum m_mode {
         CREATEPLAYER,
         PLAYERACTIVE,
-    } 
+    };
+
+
+    export enum WallHuggerGrade {
+        WALLHUGGER_STATIC,
+        WALLHUGGER_MOVING,
+    };
+
+
 } 

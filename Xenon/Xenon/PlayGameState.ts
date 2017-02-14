@@ -8,22 +8,37 @@ import gsCTimer = require("Timer");
 import gsCVector = require("Vector");
 import CLevel = require("Level");
 import enums = require("Enums");
+import CPlayer = require("Player");
 
-class CPlayGameState extends CGameState { 
+enum m_mode {
+    CREATEPLAYER,
+    PLAYERACTIVE,
+}
+
+class CPlayGameState extends CGameState {
     private m_ship: CShip;
-    private m_scene: CScene;
+
     private m_starfield: CStarfield;
     private m_level: CLevel;
 
     private PLAYER_START_OFFSET: number = 64;
-    private m_yscroll: number = 1;
-    private m_even: number = 0;
+    private ENERGYBAR_WIDTH: number = 100;		// energy bar dimensions
+    private ENERGYBAR_HEIGHT: number = 9;
+    private ENERGYBAR_STEP: number = 5;			// marker spacing
 
+    //gsCList<CPlayer *> CPlayGameState::m_player_list;
+    private m_player_list: Array<CPlayer> = new Array<CPlayer>();
+    private m_active_player:number = 0;
     private m_fast_forward: boolean = false;
     private m_reached_boss: boolean = false;
-    private m_paused:boolean = false;
+    private m_paused: boolean = false;
+    private m_yscroll: number = 1;
 
+
+    //private m_even: number = 0;
     private even: boolean = true;		//TEMP
+
+
 
     constructor(ship: CShip, scene: CScene, starfield: CStarfield) {
         super();
@@ -39,7 +54,68 @@ class CPlayGameState extends CGameState {
     }
 
 
-    createPlayer() {
+    //-------------------------------------------------------------
+
+    public create(): boolean {
+        //if (m_screen.getBytesPerPixel() == 1) {
+        //    if (!m_level.load(m_level_filename, DIRECTORY_GRAPHICS8)) {
+        //        gsREPORT("load level failed");
+        //        return false;
+        //    }
+        //}
+        //else {
+        //    if (!m_level.load(m_level_filename, DIRECTORY_GRAPHICS24)) {
+        //        gsREPORT("load level failed");
+        //        return false;
+        //    }
+        //}
+
+        //this.m_scene.setMap(this.m_level.m_front_layer);
+        //this.m_scene.setCollisionListSize(this.m_screen.getSize(), gsCPoint(8, 6));
+
+        //this.m_ship = null;
+
+        //this.m_game_end_timer.reset();
+
+        //gsCPoint map_size = m_level.m_front_layer.getSizeInPixels();
+        //gsCVector start_position = gsCVector((float) map_size.getX() / 2.f,
+        //    (float)(map_size.getY() - PLAYER_START_OFFSET));
+
+        for (var i = 0; i < this.m_number_of_players; i++) {
+            var player: CPlayer = new CPlayer();
+        //    player ->setCheckpoint(start_position);
+            //m_player_list.addItem(player);
+            this.m_player_list.push(player);
+        }
+
+        //m_active_player = null;
+
+        //m_mode = CREATEPLAYER;
+
+        //if (m_demo_mode == DEMO_RECORD)
+        //    m_demo_recorder.setLevel(m_level_filename);
+
+        //this.m_fast_forward = false;
+
+        return true;
+    }
+
+    //-------------------------------------------------------------
+
+    public setLayerPositions(ship_y: number) {
+        var mh: number = this.m_level.getMapBackLayer().getSizeInPixels().Y;
+        var by: number = -(mh - (mh - ship_y) / 2 + this.PLAYER_START_OFFSET / 2 - 480);//m_screen.getSize().getY());
+
+        ////this.m_back_layer.setPosition(new Point(0, by));
+        this.m_level.getMapBackLayer().setPosition(new gsCPoint(0, by));
+        var fy: number = -(ship_y + this.PLAYER_START_OFFSET - 480);// m_screen.getSize().getY());
+        //this.m_front_layer.setPosition(new Point(0, fy));
+        this.m_level.getMapFrontLayer().setPosition(new gsCPoint(0, fy));
+    }
+
+    //-------------------------------------------------------------
+
+    public createPlayer() {
 
         var temp = new gsCTimer();
         ////    m_scene.killAllActors();
@@ -73,7 +149,9 @@ class CPlayGameState extends CGameState {
         ////    m_reached_boss = false;        
     }
 
-    update(ctx: CanvasRenderingContext2D):boolean {
+    //-------------------------------------------------------------
+
+    public update(ctx: CanvasRenderingContext2D): boolean {
 
         /*
 	if (!CGameState::update())
@@ -144,8 +222,6 @@ class CPlayGameState extends CGameState {
         */
 
 
-
-
         var loop: number = 1;
 
         if (this.m_fast_forward) {
@@ -157,11 +233,11 @@ class CPlayGameState extends CGameState {
             //            m_starfield.move(4);
             //            m_starfield.draw();
 
-            //            if (m_mode == PLAYERACTIVE)
-            //                m_level.scanForNewActors(&m_scene);
+            if (m_mode.PLAYERACTIVE == 1) {
+                this.m_level.scanForNewActors(this.m_scene);
+            }
 
             //		static bool even = true;		//TEMP
-
             this.even = !this.even;
 
             if (this.even && !this.m_reached_boss) {
@@ -174,7 +250,7 @@ class CPlayGameState extends CGameState {
 
             if (!this.m_reached_boss) {
                 //if (CBossControl::isStarted()) {
-               // this.m_reached_boss = true;
+                // this.m_reached_boss = true;
                 //playMusic(MUSIC_BOSS);
                 //}
             }
@@ -204,249 +280,410 @@ class CPlayGameState extends CGameState {
             //this.m_scene.checkActorCollisions();
             //this.m_scene.checkMapCollisions(m_level.m_front_layer);
             //this.m_scene.removeDeadActors();
-          }
+        }
 
-            //testDebugKeys(key);
+        //testDebugKeys(key);
 
-            //if (key == gsKEY_ESCAPE || (key != gsKEY_NONE && m_demo_mode == DEMO_PLAYBACK)) {
-            //    setDemoMode(DEMO_OFF);
+        //if (key == gsKEY_ESCAPE || (key != gsKEY_NONE && m_demo_mode == DEMO_PLAYBACK)) {
+        //    setDemoMode(DEMO_OFF);
 
-            //    #ifdef _PROFILING
-            //    return false;
-            //    #else
-            //    return changeState(CMainMenuState::instance());
-            //    #endif
-            //}
+        //    #ifdef _PROFILING
+        //    return false;
+        //    #else
+        //    return changeState(CMainMenuState::instance());
+        //    #endif
+        //}
 
-            //displayScores();
-            //displayLives();
-            //displayEnergyBar();
+        //displayScores();
+        //displayLives();
+        //displayEnergyBar();
 
-            //if (m_reached_boss)
-            //    displayBossEnergyBar();
+        //if (m_reached_boss)
+        //    displayBossEnergyBar();
 
-            //printDebugInfo();
+        //printDebugInfo();
 
-            //if (m_demo_mode == DEMO_PLAYBACK) {
-            //    m_medium_font.setTextCursor(gsCPoint(0, 100));
-            //    m_medium_font.justifyString("DEMONSTRATION");
-            //}
+        //if (m_demo_mode == DEMO_PLAYBACK) {
+        //    m_medium_font.setTextCursor(gsCPoint(0, 100));
+        //    m_medium_font.justifyString("DEMONSTRATION");
+        //}
 
-            //switch (m_mode) {
-            //    case PLAYERACTIVE:
-            //        if (m_game_start_timer.getState() == gsTIMER_ACTIVE) {
-            //            if (m_game_start_timer.getTime() < 1.f) {
-            //                m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //                if (m_number_of_players == 1)
-            //                    m_medium_font.justifyString("Get Ready");
-            //                else {
-            //                    if (m_active_player == 0)
-            //                        m_medium_font.justifyString("Player One");
-            //                    else
-            //                        m_medium_font.justifyString("Player Two");
-            //                }
-            //            }
-            //				else
-            //            m_game_start_timer.reset();
-            //        }
+        //switch (m_mode) {
+        //    case PLAYERACTIVE:
+        //        if (m_game_start_timer.getState() == gsTIMER_ACTIVE) {
+        //            if (m_game_start_timer.getTime() < 1.f) {
+        //                m_medium_font.setTextCursor(gsCPoint(0, 232));
+        //                if (m_number_of_players == 1)
+        //                    m_medium_font.justifyString("Get Ready");
+        //                else {
+        //                    if (m_active_player == 0)
+        //                        m_medium_font.justifyString("Player One");
+        //                    else
+        //                        m_medium_font.justifyString("Player Two");
+        //                }
+        //            }
+        //				else
+        //            m_game_start_timer.reset();
+        //        }
 
-            //        if (m_ship ->getShield() == 0) {
-            //            m_game_end_timer.start();
-            //            playSample(SAMPLE_PLAYER_DESTROYED, m_ship ->getPosition().getX());
-            //            m_ship ->explode();
-            //            m_ship ->kill();
-            //            m_scene.removeDeadActors();
-            //            m_ship = 0;
-            //            m_mode = PLAYERDEAD;
-            //            break;
-            //        }
+        //        if (m_ship ->getShield() == 0) {
+        //            m_game_end_timer.start();
+        //            playSample(SAMPLE_PLAYER_DESTROYED, m_ship ->getPosition().getX());
+        //            m_ship ->explode();
+        //            m_ship ->kill();
+        //            m_scene.removeDeadActors();
+        //            m_ship = 0;
+        //            m_mode = PLAYERDEAD;
+        //            break;
+        //        }
 
-            //        if (m_reached_boss && CBoss::getShield() == 0) {
-            //            playMusic(MUSIC_OUTRO);
-            //            m_game_end_timer.start();
-            //            m_mode = GAMEWON;
-            //            break;
-            //        }
+        //        if (m_reached_boss && CBoss::getShield() == 0) {
+        //            playMusic(MUSIC_OUTRO);
+        //            m_game_end_timer.start();
+        //            m_mode = GAMEWON;
+        //            break;
+        //        }
 
-            //        if (m_scene.hasCheckpoint()) {
-            //            if (m_ship ->getPosition().getY() <= m_scene.getCheckpoint().getY()) {
-            //                if (getPlayer() ->getCheckpoint() != m_scene.getCheckpoint()) {
-            //                    getPlayer() ->setCheckpoint(m_scene.getCheckpoint());
-            //                    m_scene.createLabel(m_scene.getCheckpoint(), "CHECKPOINT REACHED");
-            //                    playSample(SAMPLE_CHECKPOINT);
-            //                }
-            //                m_scene.clearCheckpoint();
-            //            }
-            //        }
+        //        if (m_scene.hasCheckpoint()) {
+        //            if (m_ship ->getPosition().getY() <= m_scene.getCheckpoint().getY()) {
+        //                if (getPlayer() ->getCheckpoint() != m_scene.getCheckpoint()) {
+        //                    getPlayer() ->setCheckpoint(m_scene.getCheckpoint());
+        //                    m_scene.createLabel(m_scene.getCheckpoint(), "CHECKPOINT REACHED");
+        //                    playSample(SAMPLE_CHECKPOINT);
+        //                }
+        //                m_scene.clearCheckpoint();
+        //            }
+        //        }
 
-            //        break;
+        //        break;
 
-            //    case PLAYERDEAD:
+        //    case PLAYERDEAD:
 
-            //        stopMusic();
+        //        stopMusic();
 
-            //        m_fast_forward = false;
+        //        m_fast_forward = false;
 
-            //        if (m_game_end_timer.getTime() >= 1.f) {
-            //            if (m_demo_mode != DEMO_OFF) {
-            //                setDemoMode(DEMO_OFF);
-            //                return changeState(CMainMenuState::instance());
-            //            }
+        //        if (m_game_end_timer.getTime() >= 1.f) {
+        //            if (m_demo_mode != DEMO_OFF) {
+        //                setDemoMode(DEMO_OFF);
+        //                return changeState(CMainMenuState::instance());
+        //            }
 
-            //            swapPlayer();
-            //            if (getPlayer() ->getLives() > 0)
-            //                m_mode = CREATEPLAYER;
-            //            else
-            //                m_mode = GAMEOVER;
-            //        }
-            //        break;
+        //            swapPlayer();
+        //            if (getPlayer() ->getLives() > 0)
+        //                m_mode = CREATEPLAYER;
+        //            else
+        //                m_mode = GAMEOVER;
+        //        }
+        //        break;
 
-            //    case GAMEOVER:
-            //        m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //        m_medium_font.justifyString("Game Over");
-            //        if (m_game_end_timer.getTime() >= 3.f) {
-            //            stopSamples();
+        //    case GAMEOVER:
+        //        m_medium_font.setTextCursor(gsCPoint(0, 232));
+        //        m_medium_font.justifyString("Game Over");
+        //        if (m_game_end_timer.getTime() >= 3.f) {
+        //            stopSamples();
 
-            //            #ifdef _PROFILING
-            //            return false;
-            //            #endif
+        //            #ifdef _PROFILING
+        //            return false;
+        //            #endif
 
-            //            if (addNewScore(getPlayer() ->getScore()))
-            //                return changeState(CScoreEntryState::instance());
-            //            else
-            //                return changeState(CViewScoresState::instance());
-            //        }
-            //        break;
+        //            if (addNewScore(getPlayer() ->getScore()))
+        //                return changeState(CScoreEntryState::instance());
+        //            else
+        //                return changeState(CViewScoresState::instance());
+        //        }
+        //        break;
 
-            //    case GAMEWON:
+        //    case GAMEWON:
 
-            //        if (m_game_end_timer.getTime() >= 3.f) {
-            //            m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //            m_medium_font.justifyString("Congratulations");
-            //        }
+        //        if (m_game_end_timer.getTime() >= 3.f) {
+        //            m_medium_font.setTextCursor(gsCPoint(0, 232));
+        //            m_medium_font.justifyString("Congratulations");
+        //        }
 
-            //        if (m_game_end_timer.getTime() >= 6.f) {
-            //            stopSamples();
+        //        if (m_game_end_timer.getTime() >= 6.f) {
+        //            stopSamples();
 
-            //            if (addNewScore(getPlayer() ->getScore()))
-            //                return changeState(CScoreEntryState::instance());
-            //            else
-            //                return changeState(CViewScoresState::instance());
-            //        }
-            //        break;
-            //}
+        //            if (addNewScore(getPlayer() ->getScore()))
+        //                return changeState(CScoreEntryState::instance());
+        //            else
+        //                return changeState(CViewScoresState::instance());
+        //        }
+        //        break;
+        //}
 
-            //m_screen.flip();
+        //m_screen.flip();
 
-            //if (m_sound_system.isMusicFinished() && m_mode != GAMEWON) {
-            //    if (m_reached_boss)
-            //        playMusic(MUSIC_BOSS);
-            //    else
-            //        playMusic(MUSIC_GAME);
+        //if (m_sound_system.isMusicFinished() && m_mode != GAMEWON) {
+        //    if (m_reached_boss)
+        //        playMusic(MUSIC_BOSS);
+        //    else
+        //        playMusic(MUSIC_GAME);
         //}
 
         return true;
+    }
 
+    //-------------------------------------------------------------
 
+    public swapPlayer(): void {
+        //// skip if one player game
+        //if (this.m_number_of_players == 1)
+        //    return;
 
+        //// only swap to other player if it has lives left
 
+        //var other_player:number = 1 - this.m_active_player;
 
+        //if (this.m_player_list[other_player].getLives() > 0) {
+        //    this.m_active_player = other_player;
+        //}
+    }
 
+    //-------------------------------------------------------------
 
+    public destroy(): boolean {
+        this.m_scene.killAllActors();
+        this.m_ship = null;
 
+        //for (var i = 0; i < m_player_list.getSize(); i++)
+        //delete m_player_list[i];
 
+        //m_player_list.clear();
 
+        return true;
+    }
 
+    //-------------------------------------------------------------
 
+    public displayScores(): void {
+        //m_small_font.setTextCursor(gsCPoint(320, 10));
+        //m_small_font.justifyString("Hi Score");
 
+        //m_small_font.setTextCursor(gsCPoint(320, 20));
+        //m_small_font.justifyString("%010i", m_score_table.getScore(0));
 
-        //////if (!CGameState::update())
-        //////    return false;
+        //if (m_number_of_players == 1) {
+        //    m_small_font.setTextCursor(gsCPoint(10, 10));
+        //    m_small_font.printString("Player One");
 
-        //////gsKeyCode key = m_keyboard.getKey();
+        //    m_medium_font.setTextCursor(gsCPoint(10, 20));
+        //    m_medium_font.printString("%010i", m_player_list[0] ->getScore());
+        //}
+        //else {
+        //    m_small_font.setTextCursor(gsCPoint(10, 10));
+        //    m_small_font.printString("Player One");
 
-        //////if (key == gsKEY_ESCAPE)
-        //////    return false;
+        //    m_small_font.setTextCursor(gsCPoint(640 - 10 - 10 * 8, 10));
+        //    m_small_font.printString("Player Two");
 
-        ////if ((int)m_mode.CREATEPLAYER == 1)
-        ////{
-        ////    createPlayer();
-        ////    //(int)m_mode.PLAYERACTIVE = 1;
-        ////}
+        //    if (m_active_player == 0) {
+        //        m_medium_font.setTextCursor(gsCPoint(10, 20));
+        //        m_medium_font.printString("%010i", m_player_list[0] ->getScore());
+        //        m_small_font.setTextCursor(gsCPoint(640 - 10 - 10 * 8, 20));
+        //        m_small_font.printString("%010i", m_player_list[1] ->getScore());
+        //    }
+        //    else {
+        //        m_small_font.setTextCursor(gsCPoint(10, 20));
+        //        m_small_font.printString("%010i", m_player_list[0] ->getScore());
+        //        m_medium_font.setTextCursor(gsCPoint(640 - 10 - 10 * 16, 20));
+        //        m_medium_font.printString("%010i", m_player_list[1] ->getScore());
+        //    }
+        //}
+    }
 
-        //////Controls controls;
+    //-------------------------------------------------------------
 
-        //////getControl(controls,0);
+    public displayLives(): void {
+        //gsCImage * life_symbol = m_scene.getImage("PULife.bmp");
+        var life_symbol = this.m_scene.getImage("PULife.png");
 
-        //////m_screen.clear(gsCColour(gsBLACK));
+        for (var i = 0; i < this.getPlayer().getLives(); i++){
+        //life_symbol ->draw(gsCPoint(10 + i * 32, 480 - 64));
+    }
 
-        ////m_starfield.Update(4);
-        //////	m_starfield.draw();
+        //if (getPlayer() ->hasDive()) {
+        //    gsCTiledImage * dive_symbol = m_scene.getImage("PUDive.bmp");
 
-        ////if ((int)m_mode.CREATEPLAYER == 1)
-        //{
-        //    this.m_level.scanForNewActors(this.m_scene);
+        //    dive_symbol ->draw(0, gsCPoint(10, 480 - 104));
+        //}
+    }
+
+    //-------------------------------------------------------------
+
+    public displayEnergyBar(): void {
+        var x:number = 10;
+        var y:number = 480 - 20;
+
+        //m_screen.drawRect(gsCRect(x - 1, y - 1, x + ENERGYBAR_WIDTH, y + ENERGYBAR_HEIGHT), gsCColour(gsWHITE));
+
+        var shield:number = 0;
+
+        if (this.m_ship) {
+            shield = this.ENERGYBAR_WIDTH * this.m_ship.getShield() / this.m_ship.getActorInfo().m_initial_shield;
+        }
+
+        if (shield < 0) {
+            shield = 0;
+        }
+        if (shield > this.ENERGYBAR_WIDTH) {
+            shield = this.ENERGYBAR_WIDTH;
+        }
+
+        //gsCColour shield_colour;
+
+        //if (m_ship && m_ship ->isCloaked())
+        //    shield_colour = gsCColour(gsBLUE);
+        //else {
+        //    if (shield < ENERGYBAR_WIDTH / 3)
+        //        shield_colour = gsCColour(gsRED);
+        //    else if (shield < ENERGYBAR_WIDTH * 2 / 3)
+        //        shield_colour = gsCColour(gsYELLOW);
+        //    else
+        //        shield_colour = gsCColour(gsGREEN);
         //}
 
-        //////static bool even = true;		//TEMP
-        //////even = !even;
+        //m_screen.drawSolidRect(gsCRect(x, y, x + shield, y + 9), shield_colour);
 
-        ////if (m_even == 1)
-        ////{
-        ////    //		m_level.m_back_layer.move(new Point(0,1));
-        ////    m_level.getMapBackLayer().move(new Point(0, 1));
-        ////    m_even = -1;
-        ////}
-        ////m_even += 1;
-
-        //////	if (m_level.m_back_layer.getPosition().getY() > 0)
-        ////if (m_level.getMapBackLayer().getPosition().Y > 0)
-        ////{
-        ////    //		m_level.m_back_layer.setPosition(new Point(0,0));
-        ////    m_level.getMapBackLayer().setPosition(new Point(0, 0));
-        ////}
-
-        //////	m_level.m_front_layer.move(new Point(0,m_yscroll));
-        ////m_level.getMapFrontLayer().move(new Point(0, m_yscroll));
-
-        //////	if (m_level.m_front_layer.getPosition().getY() > 0)
-        ////if (m_level.getMapFrontLayer().getPosition().Y > 0)
-        ////{
-        ////    return false;
-        ////}
-
-        //////m_scene.updateAllActors(controls);
-        //////m_level.m_back_layer.draw();
-        //////m_scene.drawAllActors(m_level.m_front_layer);
-        //this.m_scene.checkActorCollisions();
-        //////m_scene.checkMapCollisions(m_level.m_front_layer);
-        //////m_scene.removeDeadActors();
-
-        //////m_small_font.setTextCursor(gsCPoint(2,2));
-        //////m_small_font.printString("Cursor Keys  - move");
-        //////m_small_font.setTextCursor(gsCPoint(2,12));
-        //////m_small_font.printString("Left Control - fire");
-        //////m_small_font.setTextCursor(gsCPoint(2,24));
-        //////m_small_font.printString("Escape       - exit");
-
-        //////m_screen.flip();
-        //return true;
+        //for (var i = ENERGYBAR_STEP; i < ENERGYBAR_WIDTH; i += ENERGYBAR_STEP) {
+        //    if (i <= shield) {
+        //        m_screen.drawLine(gsCPoint(x + i, y),
+        //            gsCPoint(x + i, y + ENERGYBAR_HEIGHT - 1),
+        //            gsCColour(gsBLACK));
+        //    }
+        //}
     }
 
-    setLayerPositions(ship_y: number) {
-        ////int mh = m_back_layer.getSizeInPixels().Y;//.getY();
-        var mh: number = this.m_level.getMapBackLayer().getSizeInPixels().Y;
+    //-------------------------------------------------------------
 
-        var by: number = -(mh - (mh - ship_y) / 2 + this.PLAYER_START_OFFSET / 2 - 480);//m_screen.getSize().getY());
+    public displayBossEnergyBar(): void {
+        //const int x = 320 - 50;
+        //const int y = 50;
 
-        ////m_back_layer.setPosition(new Point(0, by));
-        this.m_level.getMapBackLayer().setPosition(new gsCPoint(0, by));
+        //m_small_font.setTextCursor(gsCPoint(x + 6, y - 10));
+        //m_small_font.printString("BOSS SHIELD");
 
-        var fy: number = -(ship_y + this.PLAYER_START_OFFSET - 480);// m_screen.getSize().getY());
+        //m_screen.drawRect(gsCRect(x - 1, y - 1, x + 100, y + 9), gsCColour(gsWHITE));
 
-        ////m_front_layer.setPosition(new Point(0, fy));
-        this.m_level.getMapFrontLayer().setPosition(new gsCPoint(0, fy));
+        //int shield = CBoss::getShield();
+
+        //if (shield < 0)
+        //    shield = 0;
+        //if (shield > 100)
+        //    shield = 100;
+
+        //m_screen.drawSolidRect(gsCRect(x, y, x + shield, y + 9), gsCColour(gsRED));
     }
+
+    //-------------------------------------------------------------
+
+    public testDebugKeys(key /*:gsKeyCode*/): void {
+        //if (!Options.getOption(OPTION_CHEATS) ||
+        //    !m_ship)
+        //    return;
+
+        //switch (key) {
+
+        //    case gsKEY_1: m_ship ->upgradeWeapon(); break;
+        //    case gsKEY_2: m_ship ->addWeapon(MISSILE_WEAPON, WEAPON_MEDIUM); break;
+        //    case gsKEY_3: m_ship ->addWeapon(MISSILE_WEAPON, WEAPON_BEST); break;
+        //    case gsKEY_4: m_ship ->addWeapon(LASER_WEAPON, WEAPON_STANDARD); break;
+        //    case gsKEY_5: m_ship ->addWeapon(LASER_WEAPON, WEAPON_MEDIUM); break;
+        //    case gsKEY_6: m_ship ->addWeapon(LASER_WEAPON, WEAPON_BEST); break;
+        //    case gsKEY_7: m_ship ->addWeapon(HOMING_MISSILE_WEAPON, WEAPON_STANDARD); break;
+
+        //    case gsKEY_8: m_ship ->attachClone(0); break;
+        //    case gsKEY_9: m_ship ->attachWingtip(0); break;
+        //    case gsKEY_0: m_ship ->removeUpgrades(); break;
+
+        //    case gsKEY_NUMPAD1: m_ship ->setHandling(HANDLING_BAD); break;
+        //    case gsKEY_NUMPAD2: m_ship ->setHandling(HANDLING_NORMAL); break;
+        //    case gsKEY_NUMPAD3: m_ship ->setHandling(HANDLING_GOOD); break;
+
+        //    case gsKEY_ADD: getPlayer() ->scoreBonus(50); break;
+        //    case gsKEY_MULTIPLY: getPlayer() ->extraLife(); break;
+
+        //    case gsKEY_C: m_ship ->setCloak(5.f); break;
+
+        //    case gsKEY_B: Options.toggleOption(OPTION_BACKDROP); break;
+        //    case gsKEY_I: Options.toggleOption(OPTION_DEBUGINFO); break;
+
+        //    case gsKEY_X:
+        //        {
+        //            m_fast_forward = !m_fast_forward;
+        //            if (m_fast_forward)
+        //                m_ship ->setCloak(999.f);
+        //            else
+        //                m_ship ->setCloak(1.f);
+        //            break;
+        //        }
+
+        //}
+    }
+
+    //-------------------------------------------------------------
+
+        public printDebugInfo(): void {
+        //if (!Options.getOption(OPTION_DEBUGINFO))
+        //    return;
+
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 60));
+        //m_small_font.printString("actors %i", m_scene.getNumberOfActors());
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 70));
+        //m_small_font.printString("images %i", m_scene.getNumberOfImages());
+
+        //int totals[ACTOR_TYPE_TOTAL] = { 0 };
+
+        //for (int i = 0; i < m_scene.getNumberOfActors(); i++) {
+        //    ActorType t = m_scene.getActor(i) ->getActorInfo().m_type;
+        //    totals[(int) t]++;
+        //}
+
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 90));
+        //m_small_font.printString("ship  %i", totals[0]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 100));
+        //m_small_font.printString("bullet  %i", totals[1]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 110));
+        //m_small_font.printString("upgrade %i", totals[2]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 120));
+        //m_small_font.printString("engine  %i", totals[3]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 130));
+        //m_small_font.printString("weapon  %i", totals[4]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 140));
+        //m_small_font.printString("pickup  %i", totals[5]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 150));
+        //m_small_font.printString("alien   %i", totals[6]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 160));
+        //m_small_font.printString("abullet %i", totals[7]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 170));
+        //m_small_font.printString("label   %i", totals[8]);
+        //m_small_font.setTextCursor(gsCPoint(640 - 128, 180));
+        //m_small_font.printString("effect  %i", totals[9]);
+
+        //m_small_font.setTextCursor(gsCPoint(640 - 24, 470));
+        //m_small_font.printString("%i", (int)(getApplication() ->getFrameRate() + 0.5f));
+    }
+
+    //-------------------------------------------------------------
+
+    public getPlayer(): CPlayer { // * CPlayGameState::*/ {
+        return this.m_player_list[this.m_active_player];
+    }
+
+    //-------------------------------------------------------------
+
+    public reachedBoss(): boolean {
+        return this.m_reached_boss;
+    }
+
+    //-------------------------------------------------------------
+
+    public getYScroll(): number {
+        return this.m_yscroll;
+    }
+
+    //-------------------------------------------------------------
+
 }
 
 export = CPlayGameState;

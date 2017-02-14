@@ -17,7 +17,7 @@ class CWeapon extends CActor {
     m_direction: enums.WeaponDirection;
     WEAPON_ONSCREEN_RADIUS: number;
 
-    constructor(scene: CScene) {
+    constructor(scene?: CScene) {
         super(scene);
         this.m_grade = enums.WeaponGrade.WEAPON_STANDARD;
         this.m_offset = new gsCVector(0, 0);

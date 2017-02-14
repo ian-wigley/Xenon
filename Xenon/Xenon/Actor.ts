@@ -61,7 +61,7 @@ class CActor {
     gameTime: gsCTimer;
     timerTest: number = 0.0;
 
-    constructor(theScene: CScene) {
+    constructor(theScene?: CScene) {
         this.m_scene = theScene;
         if (this.m_scene != null) {
             this.m_actorInfo = this.m_scene.GetlistOfActors();

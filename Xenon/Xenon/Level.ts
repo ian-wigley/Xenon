@@ -15,7 +15,6 @@
     public numblockgfx; //ushort 	/* Number of 'blocks' in graphics (BGFX) */
 };
 
-
 class BLKSTR {						/* Structure for data blocks */
     public bgoff;
     public fgoff;			        /* offsets from start of graphic blocks */
@@ -42,6 +41,65 @@ import gsCMap = require("Map");
 import Point = require("Point");
 import gsCMapTile = require("MapTile");
 import gsCTiledImage = require("TiledImage");
+import CScene = require("Scene");
+import gsCRectangle = require("Rectangle");
+import gsCVector = require("Vector");
+import CBigExplosion = require("BigExplosion");
+import Pickup = require("Pickup");
+import Asteroid = require("Asteroid");
+import Loner = require("Loner");
+import CHomer = require("Homer");
+import CPod = require("Pod");
+import CRusher = require("Rusher");
+import CWallHugger = require("WallHugger");
+import CDroneGenerator = require("DroneGenerator");
+import CRusherGenerator = require("RusherGenerator");
+import COrganicGun = require("OrganicGun");
+import CBossMouth = require("BossMouth");
+import CBossEye = require("BossEye");
+import CBossControl = require("BossControl");
+import enums = require("Enums");
+
+
+ enum AlienType {
+    WALLHUGGER,				// 0
+    ASTEROID,				// 1
+    RUSHER,					// 2
+    POD,					// 3
+    HOMER,					// 4
+    DRONE_GENERATOR,		// 5
+    LONER,					// 6
+    REVERSE_RUSHER,			// 7
+    RUSHER_GENERATOR_RIGHT,	// 8
+    RUSHER_GENERATOR_LEFT,	// 9
+    ORGANIC_GUN,			// 10
+};
+
+ enum PickupType {
+    PICKUP_SHIELD,			// 0
+    PICKUP_SPEEDUP,			// 1
+    PICKUP_WEAPONUP,		// 2
+    PICKUP_CLOAK,			// 3
+    PICKUP_DIVE,			// 4
+    PICKUP_SCOREBONUS,		// 5
+    PICKUP_CLONE,			// 6
+    PICKUP_WINGTIP,			// 7
+    PICKUP_HOMINGMISSILE,	// 8
+    PICKUP_LASER,			// 9
+}
+
+enum TileId {
+    ID_NORMAL_TILE,			// 0
+    ID_PICKUP,				// 1
+    ID_ALIEN,				// 2
+    ID_DESTROYABLE_TILE,	// 3
+    ID_CHECKPOINT,			// 4
+    ID_WARP_START,			// 5
+    ID_WARP_END,			// 6
+    ID_BOSS_MOUTH,			// 7
+    ID_BOSS_EYE,			// 8
+    ID_BOSS_CONTROL = 9		// 9
+}
 
 class CLevel {
 
@@ -524,11 +582,404 @@ class CLevel {
         //        }
     }
 
-    public get LoadingComplete(): boolean {
-        return this.loaded;
 
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+    public scanForNewActors(scene: CScene): void {
+        //gsCScreen *screen = gsCApplication::getScreen();
+
+        //if (!screen)
+        //    return;
+
+        //Rectangle screen_rect = screen->getRect();
+        var screen_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
+        var source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
+        var dest_rect = source_rect;
+        //dest_rect.move(m_front_layer.getPosition());
+
+
+        dest_rect.Left += this.m_front_layer.getPosition().X;//.getX();
+        dest_rect.Top += this.m_front_layer.getPosition().Y;// offset.getY();
+        dest_rect.Right += this.m_front_layer.getPosition().X;// offset.getX();
+        dest_rect.Bottom += this.m_front_layer.getPosition().Y;// offset.getY();
+
+
+
+        //screen_rect.clip(source_rect,dest_rect);
+        //screen_rect.clip(source_rect,dest_rect);
+        if (dest_rect.Left < screen_rect.Left) {
+            source_rect.Left += (screen_rect.Left - dest_rect.Left);
+            dest_rect.Left = screen_rect.Left;
+        }
+        if (dest_rect.Right > screen_rect.Right) {
+            source_rect.Right -= (dest_rect.Right - screen_rect.Right);
+            dest_rect.Right = screen_rect.Right;
+        }
+        if (dest_rect.Top < screen_rect.Top) {
+            source_rect.Top += (screen_rect.Top - dest_rect.Top);
+            dest_rect.Top = screen_rect.Top;
+        }
+        if (dest_rect.Bottom > screen_rect.Bottom) {
+            source_rect.Bottom -= (dest_rect.Bottom - screen_rect.Bottom);
+            dest_rect.Bottom = screen_rect.Bottom;
+        }
+
+
+        //if (dest_rect.isEmpty())
+        //    return;
+
+        // convert back to tile coords
+        //int top = source_rect.Top / m_image.getTileSize().Y;
+        var top = source_rect.Top / this.m_image.getTileSize().Y;
+
+        // get row above screen
+        top--;
+
+        if (top < 0)
+            return;
+
+        while (this.m_scan_y >= top) {
+
+            for (var x = 0; x < this.m_front_layer.getSize().X; x++)
+            {
+
+                var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, this.m_scan_y));
+
+                if (!mt.isEmpty()) {
+                    var id = mt.getUserData(0);
+                    var type = mt.getUserData(1);
+                    var grade = mt.getUserData(2);
+                    var size = mt.getUserData(3);
+
+                    var pos:gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
+
+                    //pos += new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0);
+                    pos.add(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
+
+                    switch (id) {
+                        case TileId.ID_PICKUP:
+                            // pickups
+                            {
+                                var p: Pickup.CPickup = null;
+
+                                switch (type) {
+                                    case PickupType.PICKUP_SHIELD:
+                                        p = new Pickup.CShieldPickup();
+                                        break;
+                                    case PickupType.PICKUP_SPEEDUP:
+                                        p = new Pickup.CSpeedPickup();
+                                        break;
+                                    case PickupType.PICKUP_WEAPONUP:
+                                        p = new Pickup.CWeaponPickup();
+                                        break;
+                                    case PickupType.PICKUP_CLOAK:
+                                        p = new Pickup.CCloakPickup();
+                                        break;
+                                    case PickupType.PICKUP_DIVE:
+                                        p = new Pickup.CDivePickup();
+                                        break;
+                                    case PickupType.PICKUP_SCOREBONUS:
+                                        p = new Pickup.CScorePickup();
+                                        break;
+                                    case PickupType.PICKUP_CLONE:
+                                        p = new Pickup.CClonePickup();
+                                        break;
+                                    case PickupType.PICKUP_WINGTIP:
+                                        p = new Pickup.CWingtipPickup();
+                                        break;
+                                    case PickupType.PICKUP_HOMINGMISSILE:
+                                        p = new Pickup.CHomingMissilePickup();
+                                        break;
+                                    case PickupType.PICKUP_LASER:
+                                        p = new Pickup.CLaserPickup();
+                                        break;
+                                }
+
+                                if (p != null) {
+                                    scene.addActor(p);
+                                    p.setPosition(pos);
+                                    p.activate();
+                                }
+                            }
+
+                            break;
+                        case TileId.ID_ALIEN:
+                            // aliens
+
+                            switch (type) {
+                                case AlienType.ASTEROID:
+                                    {
+                                        var a: Asteroid.CAsteroid = null;
+
+                                        switch (size) {
+                                            case 0:
+                                                switch (grade) {
+                                                    case 0:
+                                                        a = new Asteroid.CSmallStandardAsteroid();
+                                                        break;
+                                                    case 1:
+                                                        a = new Asteroid.CSmallHighDensityAsteroid();
+                                                        break;
+                                                    case 2:
+                                                        a = new Asteroid.CSmallIndestructibleAsteroid();
+                                                        break;
+                                                }
+                                                break;
+                                            case 1:
+                                                switch (grade) {
+                                                    case 0:
+                                                        a = new Asteroid.CMediumStandardAsteroid();
+                                                        break;
+                                                    case 1:
+                                                        a = new Asteroid.CMediumHighDensityAsteroid();
+                                                        break;
+                                                    case 2:
+                                                        a = new Asteroid.CMediumIndestructibleAsteroid();
+                                                        break;
+                                                }
+                                                break;
+                                            case 2:
+                                                switch (grade) {
+                                                    case 0:
+                                                        a = new Asteroid.CBigStandardAsteroid();
+                                                        break;
+                                                    case 1:
+                                                        a = new Asteroid.CBigHighDensityAsteroid();
+                                                        break;
+                                                    case 2:
+                                                        a = new Asteroid.CBigIndestructibleAsteroid();
+                                                        break;
+                                                }
+                                                break;
+                                        }
+
+                                        if (a != null) {
+                                            scene.addActor(a);
+                                            a.setPosition(pos);
+                                            a.setVelocity(new gsCVector(0.0, 0.5));
+                                            a.activate();
+                                        }
+                                    }
+                                    break;
+
+                                case AlienType.LONER:
+                                    {
+                                        var l: Loner.CLoner = null;
+
+                                        switch (grade) {
+                                            case 0:
+                                                l = new Loner.CStandardLoner();
+                                                break;
+                                            case 1:
+                                                l = new Loner.CMediumLoner();
+                                                break;
+                                            case 2:
+                                                l = new Loner.CArmouredLoner();
+                                                break;
+                                        }
+
+                                        if (l != null) {
+                                            scene.addActor(l);
+                                            l.setPosition(pos);
+                                            l.setVelocity(new gsCVector(0.0, 0.5));
+                                            l.activate();
+                                        }
+                                    }
+                                    break;
+
+                                case AlienType.HOMER:
+                                    {
+                                        var h: CHomer  = new CHomer();
+                                        scene.addActor(h);
+                                        h.setPosition(pos);
+                                        h.setVelocity(new gsCVector(0.0, 0.5));
+                                        h.activate();
+                                    }
+                                    break;
+
+                                case AlienType.POD:
+                                    {
+                                        var pO: CPod = new CPod();
+                                        scene.addActor(pO);
+                                        pO.setPosition(pos);
+                                        pO.setVelocity(new gsCVector(0.0, 0.0));
+                                        pO.activate();
+                                    }
+                                    break;
+
+                                case AlienType.RUSHER:
+                                    {
+                                        var r: CRusher  = new CRusher();
+                                        scene.addActor(r);
+                                        r.setPosition(pos);
+                                        r.setVelocity(new gsCVector(0.0, 2.0));
+                                        r.activate();
+                                    }
+                                    break;
+
+                                case AlienType.WALLHUGGER:
+                                    {
+                                        var w: CWallHugger = new CWallHugger();
+                                        scene.addActor(w);
+                                        w.setPosition(pos);
+                                        w.setVelocity(new gsCVector(0.0, 0.0));
+                                        w.activate();
+
+                                        switch (grade) {
+                                            case 0:
+                                                w.setGrade(enums.WallHuggerGrade.WALLHUGGER_STATIC);
+                                                break;
+                                            case 1:
+                                                w.setGrade(enums.WallHuggerGrade.WALLHUGGER_MOVING);
+                                                break;
+                                        }
+                                    }
+                                    break;
+
+                                case AlienType.DRONE_GENERATOR:
+                                    {
+                                        var d: CDroneGenerator = new CDroneGenerator();
+                                        scene.addActor(d);
+                                        d.setPosition(pos);
+                                        d.activate();
+                                    }
+                                    break;
+
+                                case AlienType.REVERSE_RUSHER:
+                                    {
+                                        var r: CRusher = new CRusher();
+                                        scene.addActor(r);
+                                        //									r.setPosition(pos + new Vector2(0.0f,(float) screen.getSize().getY() +
+                                        //																	   m_image.getTileSize().Y));
+                                        r.setVelocity(new gsCVector(0.0, -4.0));
+                                        r.activate();
+                                    }
+                                    break;
+
+                                case AlienType.RUSHER_GENERATOR_LEFT:
+                                    {
+                                        var rG: CRusherGenerator = new CRusherGenerator();
+                                        scene.addActor(rG);
+                                        rG.setPosition(pos);
+                                        rG.setVelocity(new gsCVector(-2.0, 0.0));
+                                        rG.activate();
+                                    }
+                                    break;
+
+                                case AlienType.RUSHER_GENERATOR_RIGHT:
+                                    {
+                                        rG = new CRusherGenerator();
+                                        scene.addActor(rG);
+                                        rG.setPosition(pos);
+                                        rG.setVelocity(new gsCVector(2.0, 0.0));
+                                        rG.activate();
+                                    }
+                                    break;
+
+                                case AlienType.ORGANIC_GUN:
+                                    {
+                                        var oG: COrganicGun = new COrganicGun();
+                                        scene.addActor(oG);
+                                        oG.setPosition(pos);
+                                        oG.setVelocity(new gsCVector(0.0, 0.0));
+                                        oG.activate();
+                                        if (grade == 0)
+                                            oG.setDirection(1);
+                                        else
+                                            oG.setDirection(-1);
+                                    }
+                                    break;
+
+                                default:
+
+                                    var xp: CBigExplosion = new CBigExplosion();
+                                    scene.addActor(xp);
+                                    xp.setPosition(pos);
+                                    xp.activate();
+                                    break;
+                            }
+                            break;
+
+                        case TileId.ID_CHECKPOINT:
+                            scene.setNextCheckpoint(pos);
+                            break;
+
+                        case TileId.ID_WARP_START:
+                            scene.setWarp(true);
+                            break;
+
+                        case TileId.ID_WARP_END:
+                            scene.setWarp(false);
+                            break;
+
+                        case TileId.ID_BOSS_MOUTH:
+                            {
+                                var m: CBossMouth = new CBossMouth();
+                                scene.addActor(m);
+                                m.setPosition(pos);
+                                m.setVelocity(new gsCVector(0.0, 0.0));
+                                m.activate();
+                            }
+                            break;
+                        case TileId.ID_BOSS_EYE:
+                            {
+                                var e: CBossEye = new CBossEye();
+                                e.setEyeNumber(type);
+                                scene.addActor(e);
+                                switch (type) {
+                                    case 0:
+                                    case 1:
+                                    case 4:
+                                    case 5:
+                                        e.setPosition(pos);
+                                        break;
+                                    case 2:
+                                        //e.setPosition(pos + new gsCVector(15.0, 20.0));
+                                        e.setPosition(new gsCVector(0, 0).plus(pos,new gsCVector(15.0, 20.0)));
+                                        break;
+                                    case 3:
+                                        //e.setPosition(pos + new gsCVector(15.0, 20.0));
+                                        e.setPosition(new gsCVector(0, 0).plus(pos,new gsCVector(15.0, 20.0)));
+                                        break;
+                                }
+                                e.setVelocity(new gsCVector(0.0, 0.0));
+                                e.activate();
+                            }
+                            break;
+                        case TileId.ID_BOSS_CONTROL:
+                            {
+                                var bC: CBossControl = new CBossControl();
+                                scene.addActor(bC);
+                                bC.setPosition(pos);
+                                bC.setVelocity(new gsCVector(0.0, 0.0));
+                                bC.activate();
+
+                                this.m_boss_active = true;
+                            }
+                            break;
+                    }
+                }
+            }
+
+            this.m_scan_y--;
+        }
     }
 
+    public get LoadingComplete(): boolean {
+        return this.loaded;
+   }
 }
 
 export = CLevel;
