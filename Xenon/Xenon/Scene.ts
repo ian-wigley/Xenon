@@ -217,6 +217,7 @@ class CScene {
             //        this.drawActorsOfType(ActorType.ACTOR_TYPE_LABEL, total, ctx);
         }
     }
+
     // Main draw method for all Actors
     drawActorsOfType(type: enums.ActorType, total: number, ctx: CanvasRenderingContext2D) {
         for (var j = 0; j < this.m_actor_list.length; j++) {

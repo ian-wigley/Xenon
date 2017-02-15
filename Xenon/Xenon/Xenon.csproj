@@ -48,6 +48,7 @@
     <TypeScriptCompile Include="Homer.ts" />
     <TypeScriptCompile Include="HomerProjectileWeapon.ts" />
     <TypeScriptCompile Include="Loner.ts" />
+    <TypeScriptCompile Include="MainMenuState.ts" />
     <TypeScriptCompile Include="MapTile.ts" />
     <TypeScriptCompile Include="Image.ts" />
     <TypeScriptCompile Include="Level.ts" />
