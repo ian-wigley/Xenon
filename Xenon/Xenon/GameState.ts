@@ -1,4 +1,6 @@
 ﻿import CScene = require("Scene");
+import gsCFont = require("Font");
+import gsCPoint = require("Point");
 
 //-------------------------------------------------------------
 
@@ -69,8 +71,8 @@ class CGameState {
     //gsCJoystick		m_joystick;
     //gsCSoundSystem	m_sound_system;
 
-    //gsCFont			m_small_font;
-    //gsCFont			m_medium_font;
+    m_small_font: gsCFont;
+    m_medium_font: gsCFont;
     //gsCStarfield	m_starfield;
     //gsCScoreTable	m_score_table;
     //gsCImage		m_backdrop;
@@ -241,11 +243,11 @@ class CGameState {
         //if (!m_scene.loadImages())
         //    return false;
 
-        //if (!m_small_font.load("font8x8.bmp"))
-        //    return false;
+        if (!this.m_small_font.load("font8x8.bmp"))
+            return false;
 
-        //m_small_font.setTileSize(gsCPoint(8, 8));
-        //m_small_font.enableColourKey(gsCColour(gsMAGENTA));
+        this.m_small_font.setTileSize(new gsCPoint(8, 8));
+        //this.m_small_font.enableColourKey(gsCColour(gsMAGENTA));
 
         //if (!m_medium_font.load("font16x16.bmp"))
         //    return false;

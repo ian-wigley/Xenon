@@ -54,9 +54,9 @@ class CActor {
     m_is_hit: boolean;
     m_score_multiplier: number;
     m_actorInfo: CActorInfoList;
-    m_arial16Font: HTMLImageElement;    //SpriteFont;
-    m_shipTexture: HTMLImageElement;    //Texture2D;
-    m_engineTexture: HTMLImageElement;  //Texture2D;
+    //m_arial16Font: HTMLImageElement;
+    //m_shipTexture: HTMLImageElement;    //Texture2D;
+    //m_engineTexture: HTMLImageElement;  //Texture2D;
     //protected int m_sprite = 0;
     gameTime: gsCTimer;
     timerTest: number = 0.0;
@@ -70,7 +70,6 @@ class CActor {
         this.m_velocity = new gsCVector(0, 0);
     }
 
-
     //constructor(listOfActors: CActorInfoList) {
     //    if (this.m_scene != null) {
     //        this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -81,77 +80,8 @@ class CActor {
     //    this.m_is_on_screen = true;
     //    this.m_is_hit = false;
     //    this.m_score_multiplier = 1.0;
-
     //    this.m_actorInfo = listOfActors;
     //}
-
-    //class CActor
-    //{
-    //	private:
-    //
-    //		CActor *m_owner;			// owner
-    //		bool m_is_active;
-    //		gsCTimer m_hit_timer;		// for animation of hit
-    //
-    //	protected:
-    //
-    //		CScene *m_scene;			// scene containing this actor
-    //
-    //		Vector2 m_position;		// relative to map
-    //		Vector2 m_velocity;
-    //		int m_shield;				// shield strength
-    //		gsCSprite m_sprite;
-    //		gsCTiledImage *m_image;
-    //		gsCTimer m_timer;			// for animation
-    //
-    //		bool m_is_on_screen;
-    //
-    //		bool m_is_hit;
-    //
-    //		float m_score_multiplier;
-    //
-    //	public:
-    //
-    //		CActor();
-    //		virtual ~CActor();
-    //
-    //		virtual  ActorInfo& getActorInfo() = 0;
-    //
-    //		virtual bool activate();
-    //		virtual void kill();
-    //		virtual void explode();
-    //		virtual bool update(Controls *controls = 0) = 0;
-    //		virtual bool draw();
-    //		virtual void registerHit(int energy,CActor *hitter);
-    //
-    //		virtual void onKilled();
-    //		virtual void onLeavingScreen();
-    //		virtual void onCollisionWithActor(CActor *actor);
-    //		virtual void onCollisionWithMap(gsCMap *map,int hits);
-    //		virtual void postProcessCollision();
-    //
-    //		bool isActive();
-    //		bool isOnScreen();
-    //		bool isHit();
-    //
-    //		Vector2 getPosition();
-    //		Vector2 getVelocity();
-    //		CActor *getOwner();
-    //		int getShield();
-    //		int getDirection(int num_dir);
-    //		virtual gsCRect getCollisionRect();
-    //
-    //		void setPosition( Vector2& position);
-    //		void setVelocity( Vector2& velocity);
-    //		void setOwner(CActor *owner);
-    //		void setScene(CScene *scene);
-    //		void setShield(int shield);
-    //
-    //		bool animate(AnimationMode mode);
-    //		bool animate(AnimationMode mode,int first_frame,int num_frames);
-    //
-    //		void increaseScoreMultiplier(float amount);
-    //};
 
     //-------------------------------------------------------------
 

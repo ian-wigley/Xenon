@@ -219,7 +219,7 @@ class Xenon {
             //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);
         }
         else {
-            this.ctx.font = "20px Arial";
+            this.ctx.font = "2px Arial";//20
             this.ctx.fillStyle = "yellow";
             this.ctx.fillText("Press X to Start the game", 400, 240);
         }

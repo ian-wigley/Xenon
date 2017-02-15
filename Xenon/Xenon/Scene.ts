@@ -59,7 +59,7 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    getImage(filename: string) {
+    public getImage(filename: string) {
         if (filename == "") {
             return null;
         }

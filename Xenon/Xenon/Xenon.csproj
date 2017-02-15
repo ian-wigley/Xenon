@@ -43,6 +43,7 @@
     <TypeScriptCompile Include="Engine.ts" />
     <TypeScriptCompile Include="Enums.ts" />
     <TypeScriptCompile Include="Explosion.ts" />
+    <TypeScriptCompile Include="Font.ts" />
     <TypeScriptCompile Include="GameState.ts" />
     <TypeScriptCompile Include="Homer.ts" />
     <TypeScriptCompile Include="HomerProjectileWeapon.ts" />

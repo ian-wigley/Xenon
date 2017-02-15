@@ -10,7 +10,7 @@ class gsCTiledImage extends gsCImage {
     private m_tile_size: Point;
     private m_num_tiles: number;
     private m_source_rects: Array<gsCRectangle>;
-    private m_imageTiles: HTMLImageElement;
+    //private m_imageTiles: HTMLImageElement;
 
     private m_screen: gsCScreen;
 
@@ -210,9 +210,7 @@ class gsCTiledImage extends gsCImage {
         return true;
     }
 
-
     //-------------------------------------------------------------
-
 
     public drawFast(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
         var source: gsCRectangle = this.m_source_rects[tile];
@@ -221,6 +219,7 @@ class gsCTiledImage extends gsCImage {
     }
 
     //-------------------------------------------------------------
+
 }
 
 export = gsCTiledImage;
