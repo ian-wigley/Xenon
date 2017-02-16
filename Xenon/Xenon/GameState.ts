@@ -1,6 +1,8 @@
 ﻿import CScene = require("Scene");
 import gsCFont = require("Font");
 import gsCPoint = require("Point");
+import gsCScoreTable = require("ScoreTable");
+
 
 //-------------------------------------------------------------
 
@@ -73,8 +75,13 @@ class CGameState {
 
     m_small_font: gsCFont;
     m_medium_font: gsCFont;
+
+    m_font8x8: HTMLImageElement;
+    m_font16x16: HTMLImageElement
+    m_ctx: CanvasRenderingContext2D;
+
     //gsCStarfield	m_starfield;
-    //gsCScoreTable	m_score_table;
+    m_score_table: gsCScoreTable;
     //gsCImage		m_backdrop;
 
     //char			m_level_filename[MAX_FILENAME_SIZE];
@@ -96,7 +103,11 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    constructor() {
+    constructor(font8x8: HTMLImageElement, font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+        this.m_font8x8 = font8x8;
+        this.m_font16x16 = font16x16;
+        this.m_ctx = ctx;
+        this.initialize(null);
     }
 
     //-------------------------------------------------------------
@@ -168,12 +179,12 @@ class CGameState {
         //    else
         //        gsCFile::setDirectory(DIRECTORY_GRAPHICS24);
 
-        //    if (!loadGraphics())
-        //        return false;
+        if (!this.loadGraphics())
+            return false;
 
         //    m_starfield.initialize(8);
-
-        //    loadScoreTable();
+        this.m_score_table = new gsCScoreTable();
+        this.loadScoreTable();
 
         //    #ifdef _PROFILING
         //    strcpy(m_level_filename, "test.fmp");
@@ -243,17 +254,20 @@ class CGameState {
         //if (!m_scene.loadImages())
         //    return false;
 
-        if (!this.m_small_font.load("font8x8.bmp"))
-            return false;
+        this.m_small_font = new gsCFont(this.m_font8x8, this.m_ctx);
+
+        //if (!this.m_small_font.load("font8x8.bmp"))
+        //    return false;
 
         this.m_small_font.setTileSize(new gsCPoint(8, 8));
         //this.m_small_font.enableColourKey(gsCColour(gsMAGENTA));
 
+        this.m_medium_font = new gsCFont(this.m_font16x16, this.m_ctx);
         //if (!m_medium_font.load("font16x16.bmp"))
         //    return false;
 
-        //m_medium_font.setTileSize(gsCPoint(16, 16));
-        //m_medium_font.enableColourKey(gsCColour(gsMAGENTA));
+        this.m_medium_font.setTileSize(new gsCPoint(16, 16));
+        //this.m_medium_font.enableColourKey(gsCColour(gsMAGENTA));
 
         //CLabel::setFont(&m_small_font);
 
@@ -481,24 +495,24 @@ class CGameState {
     //-------------------------------------------------------------
 
     public loadScoreTable(): void {
-        //   m_score_table.setSize(NUMBER_OF_SCORE_ENTRIES);
-        //   m_score_table.setPosition(gsCPoint(0, 150));
-        //   m_score_table.setSpacing(gsCPoint(0, 20));
-        //   m_score_table.setFont(&m_medium_font);
+        this.m_score_table.setSize(this.NUMBER_OF_SCORE_ENTRIES);
+        this.m_score_table.setPosition(new gsCPoint(0, 150));
+        this.m_score_table.setSpacing(new gsCPoint(0, 20));
+        this.m_score_table.setFont(this.m_medium_font);
 
         //   gsCFile::setDirectory(DIRECTORY_ROOT);
 
         //   if (!gsCFile::exists(HISCORE_FILENAME)) {
-        //       m_score_table.insertScore(5000000, "JMP");
-        //       m_score_table.insertScore(4500000, "EJB");
-        //       m_score_table.insertScore(4000000, "MJM");
-        //       m_score_table.insertScore(3500000, "CM");
-        //       m_score_table.insertScore(3000000, "MC");
-        //       m_score_table.insertScore(2500000, "AH");
-        //       m_score_table.insertScore(2000000, "JB");
-        //       m_score_table.insertScore(1500000, "DC");
-        //       m_score_table.insertScore(1000000, "JK");
-        //       m_score_table.insertScore(500000, "SW");
+        this.m_score_table.insertScore(5000000, "JMP");
+        this.m_score_table.insertScore(4500000, "EJB");
+        this.m_score_table.insertScore(4000000, "MJM");
+        this.m_score_table.insertScore(3500000, "CM");
+        this.m_score_table.insertScore(3000000, "MC");
+        this.m_score_table.insertScore(2500000, "AH");
+        this.m_score_table.insertScore(2000000, "JB");
+        this.m_score_table.insertScore(1500000, "DC");
+        this.m_score_table.insertScore(1000000, "JK");
+        this.m_score_table.insertScore(500000, "SW");
         //   }
         //else {
         //       gsCIniFile file;

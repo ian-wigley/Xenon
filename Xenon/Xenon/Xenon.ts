@@ -24,6 +24,8 @@ class Xenon {
     starTexture: HTMLImageElement;
     backgroundTexture: HTMLImageElement;
     m_textures: Array<HTMLImageElement>;
+    m_font8x8: HTMLImageElement;
+    m_font16x16: HTMLImageElement;
 
     m_gameState: CPlayGameState;
     m_ship: CShip;
@@ -106,19 +108,19 @@ class Xenon {
         this.starTexture = <HTMLImageElement>document.getElementById("star");
         this.m_stars = new CStarfield(this.starTexture);
 
+        this.m_font8x8 = <HTMLImageElement>document.getElementById("Font8x8");
+        this.m_font16x16 = <HTMLImageElement>document.getElementById("font16x16");
 
         // Needs to wait until level is loaded before configuring the gamestate !!
         //this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
 
-
-        //this.testIfLoaded();
         this.testInterval = setInterval(() => this.testIfLoaded(), 10);
     }
 
     private testIfLoaded() {
         if (this.m_scene.LevelLoaded()) {
             // Needs to wait until level is loaded before configuring the gamestate !!
-            this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
+            this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars, this.m_font8x8, this.m_font16x16, this.ctx);
             clearInterval(this.testInterval);
 
             setInterval(() => this.Update(), 10);

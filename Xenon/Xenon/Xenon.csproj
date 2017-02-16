@@ -68,6 +68,7 @@
     <TypeScriptCompile Include="Rusher.ts" />
     <TypeScriptCompile Include="RusherGenerator.ts" />
     <TypeScriptCompile Include="Scene.ts" />
+    <TypeScriptCompile Include="ScoreTable.ts" />
     <TypeScriptCompile Include="Screen.ts" />
     <TypeScriptCompile Include="Ship.ts" />
     <TypeScriptCompile Include="ShipEngine.ts" />

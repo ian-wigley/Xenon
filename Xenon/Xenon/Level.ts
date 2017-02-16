@@ -503,7 +503,7 @@ class CLevel {
 
         //m_blocks.unused1 = (char)LevelBytes[LevelCounter][0];
         //m_blocks.unused2 = (char)LevelBytes[LevelCounter][1];
-        //m_blocks.unusewigleyd3 = (char)LevelBytes[LevelCounter][2];
+        //m_blocks.unused3 = (char)LevelBytes[LevelCounter][2];
         //LevelCounter += 1;
         return m_blocks;
     }
@@ -583,20 +583,6 @@ class CLevel {
     }
 
 
-
-
-
-
-
-
-
-
-
-
-
-
-
-
     public scanForNewActors(scene: CScene): void {
         //gsCScreen *screen = gsCApplication::getScreen();
 
@@ -614,8 +600,6 @@ class CLevel {
         dest_rect.Top += this.m_front_layer.getPosition().Y;// offset.getY();
         dest_rect.Right += this.m_front_layer.getPosition().X;// offset.getX();
         dest_rect.Bottom += this.m_front_layer.getPosition().Y;// offset.getY();
-
-
 
         //screen_rect.clip(source_rect,dest_rect);
         //screen_rect.clip(source_rect,dest_rect);

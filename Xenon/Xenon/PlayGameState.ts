@@ -12,6 +12,7 @@ import CPlayer = require("Player");
 import gsCImage = require("Image");
 import gsCRectangle = require("Rectangle");
 import gsCScreen = require("Screen");
+import gsCScoreTable = require("ScoreTable");
 
 enum m_mode {
     CREATEPLAYER,
@@ -46,9 +47,8 @@ class CPlayGameState extends CGameState {
     private even: boolean = true;		//TEMP
 
 
-
-    constructor(ship: CShip, scene: CScene, starfield: CStarfield) {
-        super();
+    constructor(ship: CShip, scene: CScene, starfield: CStarfield, m_font8x8: HTMLImageElement, m_font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+        super(m_font8x8, m_font16x16, ctx);
 
         //this.m_level = new CLevel();
 
@@ -57,9 +57,8 @@ class CPlayGameState extends CGameState {
         this.m_level = this.m_scene.GetLevel();
 
         // temp!
-
         this.m_screen = new gsCScreen();
-
+        //this.m_score_table = new gsCScoreTable();
         this.create();
         this.createPlayer();
     }
@@ -309,8 +308,9 @@ class CPlayGameState extends CGameState {
         this.displayLives(ctx);
         this.displayEnergyBar(ctx);
 
-        //if (m_reached_boss)
-        //    displayBossEnergyBar();
+        if (this.m_reached_boss) {
+            this.displayBossEnergyBar(ctx);
+        }
 
         //printDebugInfo();
 
@@ -474,50 +474,48 @@ class CPlayGameState extends CGameState {
     //-------------------------------------------------------------
 
     public displayScores(ctx: CanvasRenderingContext2D): void {
-        //m_small_font.setTextCursor(gsCPoint(320, 10));
-        //m_small_font.justifyString("Hi Score");
+        this.m_small_font.setTextCursor(new gsCPoint(320, 10));
+        this.m_small_font.justifyString("Hi Score");
 
-        //m_small_font.setTextCursor(gsCPoint(320, 20));
-        //m_small_font.justifyString("%010i", m_score_table.getScore(0));
+        this.m_small_font.setTextCursor(new gsCPoint(320, 20));
+        this.m_small_font.justifyString(String("00000" + this.m_score_table.getScore(0)).slice(-10));
 
-        //if (m_number_of_players == 1) {
-        //    m_small_font.setTextCursor(gsCPoint(10, 10));
-        //    m_small_font.printString("Player One");
+        if (this.m_number_of_players == 1) {
+            this.m_small_font.setTextCursor(new gsCPoint(10, 10));
+            this.m_small_font.printString("Player One");
 
-        //    m_medium_font.setTextCursor(gsCPoint(10, 20));
-        //    m_medium_font.printString("%010i", m_player_list[0] ->getScore());
-        //}
-        //else {
-        //    m_small_font.setTextCursor(gsCPoint(10, 10));
-        //    m_small_font.printString("Player One");
+            this.m_medium_font.setTextCursor(new gsCPoint(10, 20));
+            this.m_medium_font.printString(String("00000" + + this.m_player_list[0].getScore()).slice(-10));
+        }
+        else {
+            this.m_small_font.setTextCursor(new gsCPoint(10, 10));
+            this.m_small_font.printString("Player One");
 
-        //    m_small_font.setTextCursor(gsCPoint(640 - 10 - 10 * 8, 10));
-        //    m_small_font.printString("Player Two");
+            this.m_small_font.setTextCursor(new gsCPoint(640 - 10 - 10 * 8, 10));
+            this.m_small_font.printString("Player Two");
 
-        //    if (m_active_player == 0) {
-        //        m_medium_font.setTextCursor(gsCPoint(10, 20));
-        //        m_medium_font.printString("%010i", m_player_list[0] ->getScore());
-        //        m_small_font.setTextCursor(gsCPoint(640 - 10 - 10 * 8, 20));
-        //        m_small_font.printString("%010i", m_player_list[1] ->getScore());
-        //    }
-        //    else {
-        //        m_small_font.setTextCursor(gsCPoint(10, 20));
-        //        m_small_font.printString("%010i", m_player_list[0] ->getScore());
-        //        m_medium_font.setTextCursor(gsCPoint(640 - 10 - 10 * 16, 20));
-        //        m_medium_font.printString("%010i", m_player_list[1] ->getScore());
-        //    }
-        //}
+            if (this.m_active_player == 0) {
+                this.m_medium_font.setTextCursor(new gsCPoint(10, 20));
+                this.m_medium_font.printString("%010i" + this.m_player_list[0].getScore());
+                this.m_small_font.setTextCursor(new gsCPoint(640 - 10 - 10 * 8, 20));
+                this.m_small_font.printString("%010i" + this.m_player_list[1].getScore());
+            }
+            else {
+                this.m_small_font.setTextCursor(new gsCPoint(10, 20));
+                this.m_small_font.printString("%010i" + this.m_player_list[0].getScore());
+                this.m_medium_font.setTextCursor(new gsCPoint(640 - 10 - 10 * 16, 20));
+                this.m_medium_font.printString("%010i" + this.m_player_list[1].getScore());
+            }
+        }
     }
 
     //-------------------------------------------------------------
 
     public displayLives(ctx: CanvasRenderingContext2D): void {
 
-        //var test: gsCImage = new gsCImage();
         var life_symbol: gsCImage = this.m_scene.getImage("PULife");
         for (var i = 0; i < this.getPlayer().getLives(); i++) {
             life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
-            //test.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
         }
 
         //if (this.getPlayer().hasDive()) {
@@ -579,8 +577,8 @@ class CPlayGameState extends CGameState {
         var x: number = 320 - 50;
         var y: number = 50;
 
-        //this.m_small_font.setTextCursor(new gsCPoint(x + 6, y - 10));
-        //this.m_small_font.printString("BOSS SHIELD");
+        this.m_small_font.setTextCursor(new gsCPoint(x + 6, y - 10));
+        this.m_small_font.printString("BOSS SHIELD");
 
         this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + 100, y + 9), "white", ctx);
 

@@ -1,155 +1,137 @@
 ﻿import gsCTiledImage = require("TiledImage");
-
+import gsCPoint = require("Point");
 
 class gsCFont extends gsCTiledImage {
 
+    m_text_cursor: gsCPoint;
+    m_tint: string;//gsCColour
+    m_use_tint: boolean;
+    m_ctx: CanvasRenderingContext2D;
 
-    /*
-    
-    #include "gamesystem.h"
-    
     //-------------------------------------------------------------
-    
-    gsCFont::gsCFont()
-    {
-        m_text_cursor = gsCPoint(0,0);
-        m_use_tint = false;
+
+    constructor(font: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+        super(font);
+        this.m_ctx = ctx;
+        this.m_text_cursor = new gsCPoint(0, 0);
+        this.m_use_tint = false;
     }
-    
+
     //-------------------------------------------------------------
-    
-    gsCFont::~gsCFont()
-    {
+
+    public setTextCursor(position: gsCPoint): void {
+        this.m_text_cursor = position;
     }
-    
+
     //-------------------------------------------------------------
-    
-    void gsCFont::setTextCursor(const gsCPoint& position)
-    {
-        m_text_cursor = position;
+
+    public enableTint(colour: string): void {
+        this.m_tint = colour;
+        this.m_use_tint = true;
     }
-    
+
     //-------------------------------------------------------------
-    
-    void gsCFont::enableTint(const gsCColour& colour)
-    {
-        m_tint = colour;
-        m_use_tint = true;
+
+    public disableTint(): void {
+        this.m_use_tint = false;
     }
-    
+
     //-------------------------------------------------------------
-    
-    void gsCFont::disableTint()
-    {
-        m_use_tint = false;
+
+    getTextCursor(): gsCPoint {
+        return this.m_text_cursor;
     }
-    
+
     //-------------------------------------------------------------
-    
-    gsCPoint gsCFont::getTextCursor()
-    {
-        return m_text_cursor;
+
+    private getStringSize(text: string): gsCPoint {
+        return new gsCPoint((text.length) * this.m_tile_size.X, this.m_tile_size.Y);
     }
-    
+
     //-------------------------------------------------------------
-    
-    gsCPoint gsCFont::getStringSize(const char *string)
-    {
-        return gsCPoint(strlen(string) * m_tile_size.getX(),m_tile_size.getY());
-    }
-    
-    //-------------------------------------------------------------
-    
-    bool _cdecl gsCFont::printString(const char *format,...)
-    {
-        va_list arglist;
-        static char message[1000];
-    
-        va_start(arglist,format);
-        vsprintf(message,format,arglist);
-        va_end(arglist);
-    
-        int length = strlen(message);
-    
-        if (length == 0)
-            return false;
-    
-        gsCScreen *screen = gsCApplication::getScreen();
-    
-        if (!screen)
-            return false;
-    
-        gsCRect extents(m_text_cursor,m_text_cursor + m_tile_size * gsCPoint(length,1));
-    
-        gsCRect screen_rect = screen->getRect();
-    
-        if (screen_rect.contains(extents)) {
-            char *str = message;
-            while (length-- > 0) {
-                gsUBYTE c = *str++;
-                if (c >= 0x20 && c <= 0x7F) {
-                    c -= 0x20;
-                    if (c < m_num_tiles) {
-                        if (m_use_tint)
-                            drawTinted(c,m_text_cursor,m_tint);
-                        else
-                            drawFast(c,m_text_cursor);
-                        m_text_cursor += gsCPoint(m_tile_size.getX(),0);
-                        }
+
+    public printString(message: string): boolean {
+        //    va_list arglist;
+        //    static char message[1000];
+        //    va_start(arglist,format);
+        //    vsprintf(message,format,arglist);
+        //    va_end(arglist);
+
+        var length: number = message.length; //strlen(message);
+
+        //    if (length == 0)
+        //        return false;
+        //    gsCScreen *screen = gsCApplication::getScreen();
+        //    if (!screen)
+        //        return false;
+        //    gsCRect extents(m_text_cursor,m_text_cursor + m_tile_size * gsCPoint(length,1));
+        //    gsCRect screen_rect = screen->getRect();
+        //    if (screen_rect.contains(extents)) {
+        //        char *str = message;
+
+        var count: number = 0;
+        while (length-- > 0) {
+            //            gsUBYTE c = *str++;
+            var c = message.charCodeAt(count++);//("M".charCodeAt(0));
+            if (c >= 0x20 && c <= 0x7F) {
+                c -= 0x20;
+                if (c < this.m_num_tiles) {
+                    if (this.m_use_tint) {
+                        this.drawTinted(c, this.m_text_cursor, this.m_tint, this.m_ctx);
+                    }
+                    else {
+                        this.drawFast(c, this.m_text_cursor, this.m_ctx);
+                        this.m_text_cursor.add(new gsCPoint(this.m_tile_size.X, 0));// += new gsCPoint(m_tile_size.X, 0);
                     }
                 }
             }
-        else {
-            char *str = message;
-            while (length-- > 0) {
-                gsUBYTE c = *str++;
-                if (c >= 0x20 && c <= 0x7F) {
-                    c -= 0x20;
-                    if (c < m_num_tiles) {
-                        if (m_use_tint)
-                            drawTinted(c,m_text_cursor,m_tint);
-                        else
-                            draw(c,m_text_cursor);
-                        m_text_cursor += gsCPoint(m_tile_size.getX(),0);
-                        }
-                    }
-                }
-            }
-    
-        return true;
-    }
-    
-    //-------------------------------------------------------------
-    
-    bool _cdecl gsCFont::justifyString(const char *format,...)
-    {
-        va_list arglist;
-        static char message[1000];
-    
-        va_start(arglist,format);
-        vsprintf(message,format,arglist);
-        va_end(arglist);
-    
-        gsCScreen *screen = gsCApplication::getScreen();
-    
-        if (!screen)
-            return false;
-    
-        gsCPoint size = getStringSize(message);
-    
-        int old_x = m_text_cursor.getX();
-    
-        m_text_cursor.setX((screen->getSize().getX() - size.getX()) / 2);
-    
-        printString(message);
-    
-        m_text_cursor.setX(old_x);
-    
-        return true;
-    }
-    
-    //-------------------------------------------------------------
-    */
+        }
+        //        }
+        //    else {
+        //        char *str = message;
+        //        while (length-- > 0) {
+        //            gsUBYTE c = *str++;
+        //            if (c >= 0x20 && c <= 0x7F) {
+        //                c -= 0x20;
+        //                if (c < m_num_tiles) {
+        //                    if (m_use_tint)
+        //                        drawTinted(c,m_text_cursor,m_tint);
+        //                    else
+        //                        draw(c,m_text_cursor);
+        //                    m_text_cursor += gsCPoint(m_tile_size.getX(),0);
+        //                    }
+        //                }
+        //            }
+        //        }
 
+        return true;
+    }
+
+    //-------------------------------------------------------------
+
+    public justifyString(message: string): boolean {
+        //    va_list arglist;
+        //    static char message[1000];
+
+        //    va_start(arglist,format);
+        //    vsprintf(message,format,arglist);
+        //    va_end(arglist);
+
+        //    gsCScreen *screen = gsCApplication::getScreen();
+
+        //    if (!screen)
+        //        return false;
+
+        var size: gsCPoint = this.getStringSize(message);
+        var old_x: number = this.m_text_cursor.X;
+
+        //m_text_cursor.setX((screen->getSize().getX() - size.getX()) / 2);
+        this.m_text_cursor.X = ((640 - size.X) / 2);
+        this.printString(message);
+        this.m_text_cursor.X = old_x;
+        return true;
+    }
+
+    //-------------------------------------------------------------
 }
 export = gsCFont;

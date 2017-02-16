@@ -7,11 +7,10 @@ import Point = require("Point");
 
 class gsCTiledImage extends gsCImage {
 
-    private m_tile_size: Point;
-    private m_num_tiles: number;
+    protected m_tile_size: Point;
+    protected m_num_tiles: number;
     private m_source_rects: Array<gsCRectangle>;
     //private m_imageTiles: HTMLImageElement;
-
     private m_screen: gsCScreen;
 
     constructor(imageTile: HTMLImageElement) {
@@ -150,7 +149,7 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    public drawTinted(tile: number, position: Point, ctx: CanvasRenderingContext2D, tint_colour/*gsCColour&*/): boolean {
+    public drawTinted(tile: number, position: Point, tint_colour: string/*gsCColour&*/, ctx: CanvasRenderingContext2D): boolean {
         if (tile >= this.m_num_tiles) {
             return false;
         }
@@ -219,7 +218,6 @@ class gsCTiledImage extends gsCImage {
     }
 
     //-------------------------------------------------------------
-
 }
 
 export = gsCTiledImage;
