@@ -2,6 +2,7 @@
 import enums = require("Enums");
 
 class CBigExplosion extends CExplosion {
+
     getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_EXPLOSION);

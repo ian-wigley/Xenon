@@ -55,8 +55,11 @@
     <TypeScriptCompile Include="main.ts" />
     <TypeScriptCompile Include="Map.ts" />
     <TypeScriptCompile Include="MediumExplosion.ts" />
+    <TypeScriptCompile Include="Menu.ts" />
+    <TypeScriptCompile Include="MenuItem.ts" />
     <TypeScriptCompile Include="Missile.ts" />
     <TypeScriptCompile Include="MissileWeapon.ts" />
+    <TypeScriptCompile Include="Options.ts" />
     <TypeScriptCompile Include="OrganicGun.ts" />
     <TypeScriptCompile Include="Pickup.ts" />
     <TypeScriptCompile Include="PlayGameState.ts" />

@@ -18,11 +18,6 @@ class CHomer extends CAlien {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_HOMER);
     }
-    //public ActorInfo getActorInfo() 
-    //{
-
-    //    return null;// ActorInfoList[INFO_HOMER]; 
-    //}
 
     public activate(): boolean {
         return super.activate();

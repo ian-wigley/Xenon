@@ -38,13 +38,13 @@ class gsCFont extends gsCTiledImage {
 
     //-------------------------------------------------------------
 
-    getTextCursor(): gsCPoint {
+    public getTextCursor(): gsCPoint {
         return this.m_text_cursor;
     }
 
     //-------------------------------------------------------------
 
-    private getStringSize(text: string): gsCPoint {
+    public getStringSize(text: string): gsCPoint {
         return new gsCPoint((text.length) * this.m_tile_size.X, this.m_tile_size.Y);
     }
 

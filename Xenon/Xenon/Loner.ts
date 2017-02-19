@@ -1,6 +1,8 @@
 ﻿import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CAlien = require("Alien");
+import enums = require("Enums");
+import ActorInfo = require("ActorInfo")
 
 export = Loner;
 module Loner {
@@ -26,7 +28,6 @@ module Loner {
             //    //m_timer.start();
             //}
             return super.activate();
-            ////return CActor::activate();
         }
 
         //-------------------------------------------------------------
@@ -51,16 +52,16 @@ module Loner {
         //        return true;
         //    }
 
-            //CShip ship = m_scene->findShip();
+        //CShip ship = m_scene->findShip();
 
-            // fire weapon towards ship
+        // fire weapon towards ship
 
-            //if (ship != null)
-            //{
-            //    gsCVector dir = ship->getPosition() - getPosition();
-            //    dir.normalize();
-            //    m_weapon->setDirection(dir);
-            //}
+        //if (ship != null)
+        //{
+        //    gsCVector dir = ship->getPosition() - getPosition();
+        //    dir.normalize();
+        //    m_weapon->setDirection(dir);
+        //}
 
         //    m_position += m_velocity;
 
@@ -73,46 +74,32 @@ module Loner {
 
     //-------------------------------------------------------------
 
-    export class CStandardLoner extends CLoner
-    {
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_STANDARD_LONER);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_STANDARD_LONER];
-        ////}
+    export class CStandardLoner extends CLoner {
+
+        public getActorInfo(): ActorInfo {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_STANDARD_LONER);
+        }
     }
 
     //-------------------------------------------------------------
 
-    export class CMediumLoner extends CLoner{
+    export class CMediumLoner extends CLoner {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_MEDIUM_LONER);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_MEDIUM_LONER];
-        ////}
+        public getActorInfo(): ActorInfo {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_LONER);
+        }
     }
 
     //-------------------------------------------------------------
 
     export class CArmouredLoner extends CLoner {
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_ARMOURED_LONER);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_ARMOURED_LONER];
-        ////}
+
+        public getActorInfo(): ActorInfo {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_ARMOURED_LONER);
+        }
     }
 
     //-------------------------------------------------------------

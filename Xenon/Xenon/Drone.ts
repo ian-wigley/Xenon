@@ -5,48 +5,41 @@ import Pickup = require("Pickup");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 
-class CDrone extends CAlien
-{
-    private m_generator: CDroneGenerator ;
-        private m_phase:number;
-        //private m_timer:number = 0.0;
+class CDrone extends CAlien {
 
-    //    constructor() {
-    //        super();
-    //}
+    private m_generator: CDroneGenerator;
+    private m_phase: number;
+    //private m_timer:number = 0.0;
 
-
-        constructor(generator?: CDroneGenerator )
-        {
-            super();
+    constructor(generator?: CDroneGenerator) {
+        super();
         this.m_generator = generator;
         this.m_phase = 0.0;
     }
 
-        public getActorInfo()//override ActorInfo 
+    public getActorInfo() 
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DRONE);
     }
 
-        //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-        public activate(): boolean
-    {
+    public activate(): boolean {
         //if (!isActive())
         //    m_timer.start();
 
-        return super.activate();//CActor::activate();
+        return super.activate();
     }
 
-        //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-        //public override bool update(Controls controls, GameTime gametime)
-        public update(controls: gsCControls, gameTime: gsCTimer) {
-    
+    //public override bool update(Controls controls, GameTime gametime)
+    public update(controls: gsCControls, gameTime: gsCTimer) {
+
         this.gameTime = this.gameTime = gameTime;;
         if (this.m_shield == 0) {
-            var score:number = this.m_generator.droneKilled(true);
+            var score: number = this.m_generator.droneKilled(true);
 
             if (score == 0) {
                 var s: Pickup.CScorePickup = new Pickup.CScorePickup();
@@ -74,20 +67,16 @@ class CDrone extends CAlien
         return true;
     }
 
-        //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-        public setPhase(p:number):void 
-    {
+    public setPhase(p: number): void {
         this.m_phase = p;
     }
 
-        //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-        public onLeavingScreen():void
-    {
+    public onLeavingScreen(): void {
         this.m_generator.droneKilled(false);
-
-        //CAlien::onLeavingScreen();
         super.onLeavingScreen();
     }
 

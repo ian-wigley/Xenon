@@ -1,8 +1,8 @@
 ﻿import CActor = require("Actor");
+import enums = require("Enums");
 
 export = Pickups;
 module Pickups {
-
 
     export class CPickup extends CActor {
 
@@ -12,17 +12,11 @@ module Pickups {
             super();
         }
 
-
         //public update(controls: Controls, gametime: GameTime) {
         //    this.gameTime = gametime;
         //    animate(AnimationMode.ANIMATE_LOOP);
         //    return true;
         //}
-
-        ////getActorInfo() {
-        ////    this.m_actorInfo = this.m_scene.GetlistOfActors();
-        ////    return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_EXPLOSION);
-        ////}
 
         ////activate() {
         ////    //CGameState::playSample(SAMPLE_BIG_EXPLOSION,getPosition().getX());
@@ -36,6 +30,13 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CClonePickup extends CPickup {
+
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLONE_PICKUP);
+        }
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -58,6 +59,14 @@ module Pickups {
 
     export class CDivePickup extends CPickup {
 
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DIVE_PICKUP);
+        }
+
+
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -73,6 +82,13 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CHomingMissilePickup extends CPickup {
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_HOMING_MISSILE_PICKUP);
+        }
+
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -89,6 +105,12 @@ module Pickups {
 
     export class CCloakPickup extends CPickup {
 
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLOAK_PICKUP);
+        }
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -104,6 +126,14 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CLaserPickup extends CPickup {
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_LASER_PICKUP);
+        }
+
+
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -119,6 +149,16 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CScorePickup extends CPickup {
+
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SCORE_PICKUP);
+        }
+
+
+
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -134,6 +174,13 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CShieldPickup extends CPickup {
+
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SHIELD_PICKUP);
+        }
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -149,6 +196,14 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CSpeedPickup extends CPickup {
+
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPEED_PICKUP);
+        }
+
+
         //    public override ActorInfo getActorInfo()
         //{
         //    m_actorInfo = m_scene.GetlistOfActors();
@@ -165,11 +220,17 @@ module Pickups {
 
     export class CWeaponPickup extends CPickup {
 
-        //    public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_WEAPON_PICKUP);
-        //}
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WEAPON_PICKUP);
+        }
+
+
+        //    public getActorInfo(): ActorInfo {
+        ////    m_actorInfo = m_scene.GetlistOfActors();
+        ////    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_WEAPON_PICKUP);
+        ////}
 
         //void collect()
         //{
@@ -181,6 +242,12 @@ module Pickups {
 
     export class CWingtipPickup extends CPickup {
         WINGTIP_FRAMES: number = 8;
+
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WINGTIP_PICKUP);
+        }
 
         //    public override ActorInfo getActorInfo()
         //{

@@ -1,6 +1,7 @@
 ﻿import CBoss = require("Boss")
 import ActorInfo = require("ActorInfo")
 import gsCControls = require("Controls");
+import enums = require("Enums");
 
 class CBossMouth extends CBoss {
     public CBossMouth() {
@@ -8,7 +9,8 @@ class CBossMouth extends CBoss {
     }
 
     public getActorInfo(): ActorInfo {
-        return null;// ActorInfoList[INFO_BOSSMOUTH]; 
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSMOUTH);
     }
 
     public activate(): boolean {

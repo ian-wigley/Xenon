@@ -1,6 +1,7 @@
 ﻿import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CAlien = require("Alien");
+import enums = require("Enums");
 
 export = Asteroid;
 module Asteroid {
@@ -20,7 +21,7 @@ module Asteroid {
         }
 
         public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-      
+
             //this.gameTime = gametime;
             //if (m_shield == 0) {
             //    fragment();
@@ -40,13 +41,12 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-        export class CSmallStandardAsteroid extends CAsteroid {
+    export class CSmallStandardAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_SMALL_STANDARD_ASTEROID);
-        //}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SMALL_STANDARD_ASTEROID);
+        }
 
         public fragment(): void {
             super.explode();
@@ -57,13 +57,12 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CSmallHighDensityAsteroid extends CAsteroid
-    {
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_SMALL_HIGHDENSITY_ASTEROID);
-        //}
+    export class CSmallHighDensityAsteroid extends CAsteroid {
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SMALL_HIGHDENSITY_ASTEROID);
+        }
 
         public fragment(): void {
         }
@@ -71,14 +70,12 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CSmallIndestructibleAsteroid extends CAsteroid
-    {
+    export class CSmallIndestructibleAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_SMALL_INDESTRUCTIBLE_ASTEROID);
-        //}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SMALL_INDESTRUCTIBLE_ASTEROID);
+        }
 
         public fragment(): void {
         }
@@ -86,17 +83,16 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CMediumStandardAsteroid extends CAsteroid
-    {
+    export class CMediumStandardAsteroid extends CAsteroid {
 
-        //    public getActorInfo():ActorInfo 
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_MEDIUM_STANDARD_ASTEROID);
-        //}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_STANDARD_ASTEROID);
+        }
 
-        public fragment(): void 
-        {
+
+
+        public fragment(): void {
             //var child1: CAsteroid  = new CSmallStandardAsteroid();
             //m_scene.addActor(child1);
             //child1.activate();
@@ -128,14 +124,13 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CMediumHighDensityAsteroid extends CAsteroid
-    {
+    export class CMediumHighDensityAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_MEDIUM_HIGHDENSITY_ASTEROID);
-        //}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_HIGHDENSITY_ASTEROID);
+        }
+
 
         //void fragment()
         //{
@@ -145,18 +140,13 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CMediumIndestructibleAsteroid extends CAsteroid
-    {
+    export class CMediumIndestructibleAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_MEDIUM_INDESTRUCTIBLE_ASTEROID);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_MEDIUM_INDESTRUCTIBLE_ASTEROID]; 
-        ////}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_INDESTRUCTIBLE_ASTEROID);
+        }
+
         //void fragment()
         //{
 
@@ -165,18 +155,14 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CBigStandardAsteroid extends CAsteroid
-    {
+    export class CBigStandardAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_BIG_STANDARD_ASTEROID);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_BIG_STANDARD_ASTEROID]; 
-        ////}
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_STANDARD_ASTEROID);
+        }
+
         //void fragment()
         //{
 
@@ -185,17 +171,13 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CBigHighDensityAsteroid extends CAsteroid
-    {
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_BIG_HIGHDENSITY_ASTEROID);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_BIG_HIGHDENSITY_ASTEROID]; 
-        ////}
+    export class CBigHighDensityAsteroid extends CAsteroid {
+
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_HIGHDENSITY_ASTEROID);
+        }
+
         //void fragment()
         //{
 
@@ -204,18 +186,13 @@ module Asteroid {
 
     //-------------------------------------------------------------
 
-    export class CBigIndestructibleAsteroid extends CAsteroid
-    {
+    export class CBigIndestructibleAsteroid extends CAsteroid {
 
-        //public override ActorInfo getActorInfo()
-        //{
-        //    m_actorInfo = m_scene.GetlistOfActors();
-        //    return m_actorInfo.GetActorInfoListItem((int)ActorInfoType.INFO_BIG_INDESTRUCTIBLE_ASTEROID);
-        //}
-        ////public ActorInfo getActorInfo()
-        ////{
-        ////    return null;//ActorInfoList[INFO_BIG_INDESTRUCTIBLE_ASTEROID]; 
-        ////}
+        public getActorInfo() {
+            this.m_actorInfo = this.m_scene.GetlistOfActors();
+            return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_INDESTRUCTIBLE_ASTEROID);
+        }
+
         //void fragment()
         //{
 
@@ -223,5 +200,4 @@ module Asteroid {
     }
 
     //-------------------------------------------------------------
-
 }

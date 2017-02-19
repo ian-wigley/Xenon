@@ -140,7 +140,7 @@ class CPlayGameState extends CGameState {
         this.m_ship.setPosition(start_position);
         ////    m_scene.clearCheckpoint();
         this.setLayerPositions(32704);//start_position.getY());
-        //        this.m_level.reset();
+        this.m_level.reset();
         this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
 
         ////#ifdef _PROFILING

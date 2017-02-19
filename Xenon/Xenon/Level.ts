@@ -61,7 +61,7 @@ import CBossControl = require("BossControl");
 import enums = require("Enums");
 
 
- enum AlienType {
+enum AlienType {
     WALLHUGGER,				// 0
     ASTEROID,				// 1
     RUSHER,					// 2
@@ -75,7 +75,7 @@ import enums = require("Enums");
     ORGANIC_GUN,			// 10
 };
 
- enum PickupType {
+enum PickupType {
     PICKUP_SHIELD,			// 0
     PICKUP_SPEEDUP,			// 1
     PICKUP_WEAPONUP,		// 2
@@ -116,7 +116,7 @@ class CLevel {
     public m_back_layer: gsCMap;
     public m_front_layer: gsCMap;
 
-    private m_scan_y: number;
+    private m_scan_y: number = 0;
     private m_boss_active: boolean;
 
     //    private LevelBytes: Array<number[]>;
@@ -548,38 +548,34 @@ class CLevel {
     }
 
     public reset(): void {
-        //m_boss_active = false;
-
-        //m_scan_y = (int)(-m_front_layer.getPosition().Y - 1 + 480) / m_image.getTileSize().Y;	//TEMP
+        this.m_boss_active = false;
+        this.m_scan_y = Math.floor((-this.m_front_layer.getPosition().Y - 1 + 480) / this.m_image.getTileSize().Y);	//TEMP
 
         // hide special tiles
         // unhide everything else
 
-        //        for (int x = 0; x < m_front_layer.getSize().X; x++)
-        //        {
-        //            for (int y = 0; y < m_front_layer.getSize().Y; y++)
-        //            {
-        //                gsCMapTile mt = m_front_layer.getMapTile(new Point(x, y));
-        //                switch (mt.getUserData(0))
-        //                {
-        //                    case (byte)TileId.ID_PICKUP:
-        //                    case (byte)TileId.ID_ALIEN:
-        //                    case (byte)TileId.ID_CHECKPOINT:
-        //                    case (byte)TileId.ID_WARP_START:
-        //                    case (byte)TileId.ID_WARP_END:
-        //                    case (byte)TileId.ID_BOSS_CONTROL:
-        //                        mt.setHidden(true);
-        //                        break;
-        //                    case (byte)TileId.ID_DESTROYABLE_TILE:
-        //                        mt.setHidden(false);
-        //        mt.setUserData(3, 0);	// reset hit count
-        //                        break;
-        //                    default:
-        //        mt.setHidden(false);
-        //        break;
-        //    }
-        //}
-        //        }
+        for (var x = 0; x < this.m_front_layer.getSize().X; x++) {
+            for (var y = 0; y < this.m_front_layer.getSize().Y; y++) {
+                var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, y));
+                switch (mt.getUserData(0)) {
+                    case TileId.ID_PICKUP:
+                    case TileId.ID_ALIEN:
+                    case TileId.ID_CHECKPOINT:
+                    case TileId.ID_WARP_START:
+                    case TileId.ID_WARP_END:
+                    case TileId.ID_BOSS_CONTROL:
+                        mt.setHidden(true);
+                        break;
+                    case TileId.ID_DESTROYABLE_TILE:
+                        mt.setHidden(false);
+                        mt.setUserData(3, 0);	// reset hit count
+                        break;
+                    default:
+                        mt.setHidden(false);
+                        break;
+                }
+            }
+        }
     }
 
 
@@ -592,7 +588,7 @@ class CLevel {
         //Rectangle screen_rect = screen->getRect();
         var screen_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
         var source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
-        var dest_rect = source_rect;
+        var dest_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);//source_rect;
         //dest_rect.move(m_front_layer.getPosition());
 
 
@@ -636,8 +632,7 @@ class CLevel {
 
         while (this.m_scan_y >= top) {
 
-            for (var x = 0; x < this.m_front_layer.getSize().X; x++)
-            {
+            for (var x = 0; x < this.m_front_layer.getSize().X; x++) {
 
                 var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, this.m_scan_y));
 
@@ -647,7 +642,7 @@ class CLevel {
                     var grade = mt.getUserData(2);
                     var size = mt.getUserData(3);
 
-                    var pos:gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
+                    var pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
 
                     //pos += new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0);
                     pos.add(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
@@ -785,7 +780,7 @@ class CLevel {
 
                                 case AlienType.HOMER:
                                     {
-                                        var h: CHomer  = new CHomer();
+                                        var h: CHomer = new CHomer();
                                         scene.addActor(h);
                                         h.setPosition(pos);
                                         h.setVelocity(new gsCVector(0.0, 0.5));
@@ -805,7 +800,7 @@ class CLevel {
 
                                 case AlienType.RUSHER:
                                     {
-                                        var r: CRusher  = new CRusher();
+                                        var r: CRusher = new CRusher();
                                         scene.addActor(r);
                                         r.setPosition(pos);
                                         r.setVelocity(new gsCVector(0.0, 2.0));
@@ -931,11 +926,11 @@ class CLevel {
                                         break;
                                     case 2:
                                         //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        e.setPosition(new gsCVector(0, 0).plus(pos,new gsCVector(15.0, 20.0)));
+                                        e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
                                         break;
                                     case 3:
                                         //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        e.setPosition(new gsCVector(0, 0).plus(pos,new gsCVector(15.0, 20.0)));
+                                        e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
                                         break;
                                 }
                                 e.setVelocity(new gsCVector(0.0, 0.0));
@@ -963,7 +958,7 @@ class CLevel {
 
     public get LoadingComplete(): boolean {
         return this.loaded;
-   }
+    }
 }
 
 export = CLevel;

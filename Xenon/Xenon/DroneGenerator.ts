@@ -5,8 +5,7 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import gsCVector = require("Vector");
 
-class CDroneGenerator extends CActor
-{
+class CDroneGenerator extends CActor {
     //-------------------------------------------------------------
 
     DRONE_TOTAL: number = 8;		// total segments in chain
@@ -27,18 +26,13 @@ class CDroneGenerator extends CActor
         this.m_drones_killed = 0;
     }
 
-        public getActorInfo() {
+    public getActorInfo() {
 
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DRONE_GENERATOR);
     }
-        //public ActorInfo getActorInfo() 
-        //{
-        //    return null;// ActorInfoList[INFO_DRONE_GENERATOR]; 
-        //}
 
-		public activate(): boolean
-    {
+    public activate(): boolean {
         return super.activate();
     }
 
@@ -48,7 +42,7 @@ class CDroneGenerator extends CActor
             var d: CDrone = new CDrone(this);
             this.m_scene.addActor(d);
             ////d.setPosition(this.getPosition() + new gsCVector(0.0, this.m_drones_created * this.DRONE_SPACING));
-//            d.setPosition(this.getPosition().add(new gsCVector(0.0, this.m_drones_created * this.DRONE_SPACING)));
+            //            d.setPosition(this.getPosition().add(new gsCVector(0.0, this.m_drones_created * this.DRONE_SPACING)));
             d.setVelocity(new gsCVector(0.0, this.DRONE_SPEED));
             d.setPhase(this.m_drones_created * this.DRONE_DELAY);
             d.activate();
@@ -58,8 +52,7 @@ class CDroneGenerator extends CActor
         return true;
     }
 
-    public droneKilled(by_player: boolean):number
-    {
+    public droneKilled(by_player: boolean): number {
         //return 0;
         this.m_drones_active--;
 

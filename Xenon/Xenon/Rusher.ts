@@ -24,13 +24,13 @@ class CRusher extends CAlien {
         if (!this.isActive()) {
 
             //if (m_random.getInt(100) < 25) 
-            {
-                this.m_weapon = new CSpinnerWeapon();
-                this.m_scene.addActor(this.m_weapon);
-                this.m_weapon.activate();
-                this.m_weapon.setOwner(this);
-                this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
-            }
+            //{
+            //    this.m_weapon = new CSpinnerWeapon();
+            //    this.m_scene.addActor(this.m_weapon);
+            //    this.m_weapon.activate();
+            //    this.m_weapon.setOwner(this);
+            //    this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
+            //}
 
             //m_timer.start();
         }
@@ -39,7 +39,6 @@ class CRusher extends CAlien {
     }
 
     //-------------------------------------------------------------
-    //override public bool update(Controls controls, GameTime gametime)
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         {
             this.gameTime = gameTime;
