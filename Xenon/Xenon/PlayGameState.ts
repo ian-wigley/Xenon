@@ -117,10 +117,10 @@ class CPlayGameState extends CGameState {
         var by: number = -(mh - (mh - ship_y) / 2 + this.PLAYER_START_OFFSET / 2 - 480);//m_screen.getSize().getY());
 
         ////this.m_back_layer.setPosition(new Point(0, by));
-        this.m_level.getMapBackLayer().setPosition(new gsCPoint(0, by));
+        this.m_level.getMapBackLayer().setPosition(new gsCVector(0, by));
         var fy: number = -(ship_y + this.PLAYER_START_OFFSET - 480);// m_screen.getSize().getY());
         //this.m_front_layer.setPosition(new Point(0, fy));
-        this.m_level.getMapFrontLayer().setPosition(new gsCPoint(0, fy));
+        this.m_level.getMapFrontLayer().setPosition(new gsCVector(0, fy));
     }
 
     //-------------------------------------------------------------
@@ -255,7 +255,7 @@ class CPlayGameState extends CGameState {
             }
 
             if (this.m_level.m_back_layer.getPosition().Y > 0) {
-                this.m_level.m_back_layer.setPosition(new gsCPoint(0, 0));
+                this.m_level.m_back_layer.setPosition(new gsCVector(0, 0));
             }
 
             if (!this.m_reached_boss) {
@@ -274,7 +274,7 @@ class CPlayGameState extends CGameState {
             this.m_level.m_front_layer.move(new gsCPoint(0, this.m_yscroll));
 
             if (this.m_level.m_front_layer.getPosition().Y > 0) {
-                this.m_level.m_front_layer.setPosition(new gsCPoint(0, 0));
+                this.m_level.m_front_layer.setPosition(new gsCVector(0, 0));
             }
 
             var sprite_hits: number = 0;

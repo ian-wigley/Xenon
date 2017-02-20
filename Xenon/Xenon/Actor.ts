@@ -61,6 +61,10 @@ class CActor {
     gameTime: gsCTimer;
     timerTest: number = 0.0;
 
+    frame = 0;
+
+
+
     constructor(theScene?: CScene) {
         this.m_scene = theScene;
         if (this.m_scene != null) {
@@ -301,8 +305,8 @@ class CActor {
             ////m_sprite.setPosition(new Point((int)m_position.X + m_scene.getMapFrontLayer().getPosition().X,
             ////(int)m_position.Y + m_scene.getMapFrontLayer().getPosition().Y));
 
-            //this.m_sprite.setPosition(this.m_position + this.m_scene.getMapFrontLayer().getPosition());
-            this.m_sprite.setPosition(this.m_position);
+            this.m_sprite.setPosition(new gsCVector(0,0).plus(this.m_position,this.m_scene.getMapFrontLayer().getPosition()));
+            //this.m_sprite.setPosition(this.m_position);
 
             if (this.m_is_hit) {
                 //if (m_hit_timer.getTime() > ACTOR_HIT_TIME)
@@ -343,27 +347,30 @@ class CActor {
     animations(mode: enums.AnimationMode, first_frame: number, num_frames: number) {
         var finished = false;
 
-        var frame = 0;
+        //var frame = 0;
 
         if (num_frames <= 1) {
-            frame = 0;
+            this.frame = 0;
         }
         else {
-            frame = this.timerTest * this.getActorInfo().m_anim_rate;
+            //frame = 0; ///*this.timerTest*/ 0.5 * this.getActorInfo().m_anim_rate;
             switch (mode) {
                 case enums.AnimationMode.ANIMATE_LOOP:
-                    frame = frame % (num_frames - 1);	// cycle repeatedly
+                    //frame = frame % (num_frames - 1);	// cycle repeatedly
+
+                    this.frame = (this.frame + 1) % num_frames;// - 1);	// cycle repeatedly
+                    //screenCounter = (screenCounter + 1) % 15;
                     break;
                 case enums.AnimationMode.ANIMATE_ONESHOT:
-                    if (frame >= num_frames) {
-                        frame = num_frames - 1;			// stay on last frame
+                    if (this.frame >= num_frames) {
+                        this.frame = num_frames - 1;			// stay on last frame
                         finished = true;				// flag that we've finished
                     }
                     break;
             }
         }
 
-        this.m_sprite.setFrame(first_frame + frame);
+        this.m_sprite.setFrame(first_frame + this.frame);
         return finished;
     }
 

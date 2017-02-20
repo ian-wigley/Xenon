@@ -25,11 +25,11 @@ class CRusher extends CAlien {
 
             //if (m_random.getInt(100) < 25) 
             //{
-            //    this.m_weapon = new CSpinnerWeapon();
-            //    this.m_scene.addActor(this.m_weapon);
-            //    this.m_weapon.activate();
-            //    this.m_weapon.setOwner(this);
-            //    this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
+                this.m_weapon = new CSpinnerWeapon();
+                this.m_scene.addActor(this.m_weapon);
+                this.m_weapon.activate();
+                this.m_weapon.setOwner(this);
+                this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             //}
 
             //m_timer.start();
@@ -54,14 +54,14 @@ class CRusher extends CAlien {
 
             //    //// fire weapon towards ship
 
-            //    if (ship != null && getPosition().Y < ship.getPosition().Y) {
-            //        Vector2 dir = ship.getPosition() - getPosition();
+            //    if (ship != null && this.getPosition().Y < ship.getPosition().Y) {
+            //        var dir:gsCVector = ship.getPosition() - this.getPosition();
             //        dir.Normalize();
-            //        m_weapon.setDirection(dir);
+            //        this.m_weapon.setDirection(dir);
             //    }
             //}
 
-            //this.m_position += this.m_velocity;
+            this.m_position.plusEquals(this.m_velocity);
 
             super.animate(enums.AnimationMode.ANIMATE_LOOP);
 

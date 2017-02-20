@@ -14,6 +14,7 @@ import CPlayGameState = require("PlayGameState");
 import CLevel = require("Level");
 import enums = require("Enums");
 import Point = require("Point");
+import CSmallExplosion = require("SmallExplosion");
 
 class CScene {
 
@@ -205,16 +206,16 @@ class CScene {
         }
         else {
             this.m_map.drawMap(ctx);
-            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_EFFECT, total, ctx);
-            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_PICKUP, total, ctx);
-            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIEN, total, ctx);//
-            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIEN, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BULLET, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ENGINE, total, ctx);
-            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);//
-            //this.drawActorsOfType(ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
-            // this.drawActorsOfType(ActorType.ACTOR_TYPE_WEAPON, total, ctx);
-            //        this.drawActorsOfType(ActorType.ACTOR_TYPE_LABEL, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_WEAPON, total, ctx);
+            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, total, ctx);
         }
     }
 
@@ -364,7 +365,7 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    //public void removeDeadActors()
+    //public removeDeadActors() : void
     //{
     //    for (int i = m_actor_list.getSize() - 1; i >= 0; i--) {
     //        if (!m_actor_list[i]->isActive()) {
@@ -376,7 +377,7 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    public killAllActors() {
+    public killAllActors(): void {
         var i;
 
         //for (i = 0; i < m_actor_list.getSize(); i++)
@@ -420,8 +421,7 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    //public void createLabel(Vector2 position, char text)
-    //{
+    //public void createLabel(Vector2 position: gsCVector, text:string):void{
     //    //CLabel label = new CLabel;
     //    //addActor(label);
 
@@ -434,34 +434,31 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    //void createLabel(const gsCVector& position,int number)
-    //{
-    //    CLabel *label = new CLabel;
-    //    addActor(label);
-
-    //    label->activate();
-    //    label->setText("%i",number);
-    //    label->setPosition(position);
-    //    label->setVelocity(gsCVector(0.f,-1.25f));
-    //    label->setTime(0.5);
-    //}
+    public createLabel(position: gsCVector, num: number): void {
+        //    CLabel *label = new CLabel;
+        //    addActor(label);
+        //    label->activate();
+        //    label->setText("%i",num);
+        //    label->setPosition(position);
+        //    label->setVelocity(gsCVector(0.f,-1.25f));
+        //    label->setTime(0.5);
+    }
 
     //-------------------------------------------------------------
 
-    //    public createMapExplosion(gsCMap map, Point position)
-    //    {
-    //        CSmallExplosion exp = new CSmallExplosion();
-    //addActor(exp);
+    public createMapExplosion(map: gsCMap, position: Point) {
+        var exp: CSmallExplosion = new CSmallExplosion();
+        this.addActor(exp);
 
-    //        Point tile_size = map.getImage().getTileSize();
-    //        //Point tile_centre = tile_size / new Point(2,2);
-    //        Point tile_centre = new Point(tile_size.X / 2, tile_size.Y / 2);
+        var tile_size: Point = map.getImage().getTileSize();
+        //Point tile_centre = tile_size / new Point(2,2);
+        var tile_centre: Point = new Point(tile_size.X / 2, tile_size.Y / 2);
 
-    //        //Point pos = position * tile_size + tile_centre;
-    //        Point pos = new Point(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
-    //exp.setPosition(new Vector2((float) pos.X, (float) pos.Y));
-    //exp.activate();
-    //    }
+        //Point pos = position * tile_size + tile_centre;
+        var pos: Point = new Point(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
+        exp.setPosition(new gsCVector(pos.X, pos.Y));
+        exp.activate();
+    }
 
     //-------------------------------------------------------------
 

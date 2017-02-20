@@ -59,7 +59,7 @@ class CDrone extends CAlien {
 
         //m_timer += this.gameTime.ElapsedGameTime.Milliseconds / 1000;// 0.01f;
         ////m_position.X = (m_generator.getPosition().X + 32.0f * Math.Sin((m_timer.getTime() + m_phase) * 180.0f));
-        //this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin((this.m_timer + this.m_phase) * 180.0);
+        this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin((/*this.m_timer*/ 0 + this.m_phase) * 180.0);
         this.m_position.Y = (this.m_position.Y + this.m_velocity.Y);
 
         super.animate(enums.AnimationMode.ANIMATE_LOOP);

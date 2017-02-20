@@ -1,7 +1,7 @@
 ﻿import gsCMapTile = require("MapTile");
 import gsCTiledImage = require("TiledImage");
 import Point = require("Point");
-import Vector2 = require("Vector");
+import gsCVector = require("Vector");
 import Rectangle = require("Rectangle");
 
 class gsCMap {
@@ -12,7 +12,7 @@ class gsCMap {
     m_hit_list: Array<Point> = new Array<Point>();
 
     private tileCounter: number = 0;
-    private m_position: Point;
+    private m_position: gsCVector;//Point;
     private m_tile_size: Point;
     private m_total_size: Point;
     private m_imageTiles: HTMLImageElement;
@@ -25,7 +25,7 @@ class gsCMap {
         //m_image = 0;
         this.m_size = new Point(0, 0);
         //m_map_tiles = 0;
-        this.m_position = new Point(0, 0);
+        this.m_position = new gsCVector(0, 0); //Point(0, 0);
         this.m_tile_size = new Point(0, 0);
         this.m_total_size = new Point(0, 0);
     }
@@ -117,7 +117,7 @@ class gsCMap {
 
     //-------------------------------------------------------------
 
-    public setPosition(position: Point): void {
+    public setPosition(position: gsCVector /*Point*/): void {
         this.m_position = position;
     }
 
@@ -176,7 +176,7 @@ class gsCMap {
 
     //-------------------------------------------------------------
 
-    public getPosition(): Point {
+    public getPosition(): gsCVector { //: Point {
         return this.m_position;
     }
 
@@ -220,7 +220,7 @@ class gsCMap {
 
             // top edge clipped
             map_tile = this.getMapTile(new Point(left, top));
-            pos = new Vector2(this.m_position.X + new Vector2(left, top).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, top).y * this.m_tile_size.Y);
+            pos = new gsCVector(this.m_position.X + new gsCVector(left, top).x * this.m_tile_size.X, this.m_position.Y + new gsCVector(left, top).y * this.m_tile_size.Y);
             step = new Point(1 * this.m_tile_size.X, 0);
             for (x = left; x <= right; x++) {
                 if (map_tile.isDrawable()) {
@@ -232,7 +232,7 @@ class gsCMap {
 
             // bottom edge clipped
             map_tile = this.getMapTile(new Point(left, bottom));
-            pos = new Vector2(this.m_position.X + new Vector2(left, bottom).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, bottom).y * this.m_tile_size.Y);
+            pos = new gsCVector(this.m_position.X + new gsCVector(left, bottom).x * this.m_tile_size.X, this.m_position.Y + new gsCVector(left, bottom).y * this.m_tile_size.Y);
             step = new Point(1 * this.m_tile_size.X, 0);
             for (x = left; x <= right; x++) {
                 if (map_tile.isDrawable()) {
@@ -244,7 +244,7 @@ class gsCMap {
 
             // left edge clipped
             map_tile = this.getMapTile(new Point(left, top + 1));
-            pos = new Vector2(this.m_position.X + new Vector2(left, top + 1).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left, top + 1).y * this.m_tile_size.Y);
+            pos = new gsCVector(this.m_position.X + new gsCVector(left, top + 1).x * this.m_tile_size.X, this.m_position.Y + new gsCVector(left, top + 1).y * this.m_tile_size.Y);
             step = new Point(0, 1 * this.m_tile_size.X);
             for (y = top + 1; y < bottom; y++) {
                 if (map_tile.isDrawable()) {
@@ -256,7 +256,7 @@ class gsCMap {
 
             // right edge clipped
             map_tile = this.getMapTile(new Point(right, top + 1));
-            pos = new Vector2(this.m_position.X + new Vector2(right, top + 1).x * this.m_tile_size.X, this.m_position.Y + new Vector2(right, top + 1).y * this.m_tile_size.Y);
+            pos = new gsCVector(this.m_position.X + new gsCVector(right, top + 1).x * this.m_tile_size.X, this.m_position.Y + new gsCVector(right, top + 1).y * this.m_tile_size.Y);
             step = new Point(0, 1 * this.m_tile_size.X);
             for (y = top + 1; y < bottom; y++) {
                 if (map_tile.isDrawable()) {
@@ -269,7 +269,7 @@ class gsCMap {
             // middle not clipped
             for (y = top + 1; y < bottom; y++) {
                 map_tile = this.getMapTile(new Point(left + 1, y));
-                pos = new Point(this.m_position.X + new Vector2(left + 1, y).x * this.m_tile_size.X, this.m_position.Y + new Vector2(left + 1, y).y * this.m_tile_size.Y);
+                pos = new Point(this.m_position.X + new gsCVector(left + 1, y).x * this.m_tile_size.X, this.m_position.Y + new gsCVector(left + 1, y).y * this.m_tile_size.Y);
                 step = new Point(1 * this.m_tile_size.X, 0);
                 for (x = left + 1; x < right; x++) {
                     if (map_tile.isDrawable()) {
