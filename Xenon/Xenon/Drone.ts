@@ -34,7 +34,6 @@ class CDrone extends CAlien {
 
     //-------------------------------------------------------------
 
-    //public override bool update(Controls controls, GameTime gametime)
     public update(controls: gsCControls, gameTime: gsCTimer) {
 
         this.gameTime = this.gameTime = gameTime;;
@@ -59,8 +58,14 @@ class CDrone extends CAlien {
 
         //m_timer += this.gameTime.ElapsedGameTime.Milliseconds / 1000;// 0.01f;
         ////m_position.X = (m_generator.getPosition().X + 32.0f * Math.Sin((m_timer.getTime() + m_phase) * 180.0f));
+
+        var hmm = this.m_generator.getPosition().X;
+
         this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin((/*this.m_timer*/ 0 + this.m_phase) * 180.0);
         this.m_position.Y = (this.m_position.Y + this.m_velocity.Y);
+        //console.log("Drone gen pos.x : " + this.m_generator.getPosition().X);
+        //console.log("Drone pos.x : " + this.m_position.X);
+        //console.log("Drone pos.y : " + this.m_position.Y);
 
         super.animate(enums.AnimationMode.ANIMATE_LOOP);
 

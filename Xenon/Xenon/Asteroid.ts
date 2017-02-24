@@ -35,7 +35,6 @@ module Asteroid {
 
         public fragment(): void {
         }
-
     }
 
     //-------------------------------------------------------------
@@ -88,8 +87,6 @@ module Asteroid {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_STANDARD_ASTEROID);
         }
-
-
 
         public fragment(): void {
             var child1: CAsteroid = new CSmallStandardAsteroid();

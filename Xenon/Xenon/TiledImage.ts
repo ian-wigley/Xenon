@@ -10,7 +10,6 @@ class gsCTiledImage extends gsCImage {
     protected m_tile_size: Point;
     protected m_num_tiles: number;
     private m_source_rects: Array<gsCRectangle>;
-    //private m_imageTiles: HTMLImageElement;
     private m_screen: gsCScreen;
 
     constructor(imageTile: HTMLImageElement) {
@@ -22,12 +21,6 @@ class gsCTiledImage extends gsCImage {
     }
 
     public calculateSourceRects() {
-        //if (m_source_rects.e)
-        //{
-        //    delete[] m_source_rects;
-        //    m_source_rects = 0;
-        //}
-
         this.m_num_tiles = 0;
 
         if (this.m_tile_size.X == 0 ||
@@ -47,7 +40,7 @@ class gsCTiledImage extends gsCImage {
 
         for (var y = 0; y + this.m_tile_size.Y <= this.getSize().y; y += this.m_tile_size.Y) {
             for (var x = 0; x + this.m_tile_size.X <= this.getSize().x; x += this.m_tile_size.X) {
-                this.m_source_rects.push(new gsCRectangle(x, y, this.m_tile_size.X, this.m_tile_size.Y));
+                this.m_source_rects.push(new gsCRectangle(x, y, x + this.m_tile_size.X, y + this.m_tile_size.Y));
             }
         }
 
@@ -63,7 +56,7 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    getTileSize() {
+    public getTileSize() {
         return this.m_tile_size;
     }
 
@@ -76,23 +69,21 @@ class gsCTiledImage extends gsCImage {
     //-------------------------------------------------------------
 
     // Main tile Drawing method !! <gsCTiledImage>
-    public draw(tile: number, position: Point, ctx: CanvasRenderingContext2D) {
+    public draw(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
         var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
-
         if (this.m_screen.contains(dest)) {
-            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             return true;
         }
         else {
-            var source: gsCRectangle = this.m_source_rects[tile];
-            ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.X, position.Y, source.Right, source.Bottom);
+            //var source: gsCRectangle = this.m_source_rects[tile];
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             return true;
         }
     }
 
     //-------------------------------------------------------------
 
-    //bool gsCTiledImage::drawSolid(int tile,const gsCPoint& position,const gsCColour& fill_colour) {
     public drawSolid(tile: number, position: Point, ctx: CanvasRenderingContext2D, tfill_colour/*gsCColour&*/): boolean {
         //    if (tile >= m_num_tiles)
         //        return false;
@@ -174,8 +165,7 @@ class gsCTiledImage extends gsCImage {
 
             var ok: boolean = false;
 
-            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
-
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             //if (lock()) {
             //    ok = screen->bltTinted(dest, m_ddsd, m_source_rects[tile], tint_colour);
             //    unlock();
@@ -197,7 +187,7 @@ class gsCTiledImage extends gsCImage {
 
             //if (lock()) {
             //    ok = screen ->bltTinted(dest, m_ddsd, source, tint_colour);
-            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom, position.X, position.Y, this.m_source_rects[tile].Right, this.m_source_rects[tile].Bottom);
+            ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             //    unlock();
             //}
             //if (!ok) {
@@ -213,7 +203,7 @@ class gsCTiledImage extends gsCImage {
 
     public drawFast(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
         var source: gsCRectangle = this.m_source_rects[tile];
-        ctx.drawImage(this.m_imageTiles, source.Left, source.Top, source.Right, source.Bottom, position.X, position.Y, source.Right, source.Bottom);
+        ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
         return true;
     }
 

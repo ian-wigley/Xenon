@@ -19,45 +19,40 @@ import gsCTimer = require("Timer");
 import CSpinnerWeapon = require("SpinnerWeapon");
 
 class CWallHugger extends CAlien {
-    //-------------------------------------------------------------
 
-    WALLHUGGER_WALK_START: number = 0;
-    WALLHUGGER_WALK_FRAMES: number = 6;
-    WALLHUGGER_SHOT_START: number = 6;
-    WALLHUGGER_SHOT_FRAMES: number = 8;
-    WALLHUGGER_LAUNCH_FRAME: number = 6;
+    private WALLHUGGER_WALK_START: number = 0;
+    private WALLHUGGER_WALK_FRAMES: number = 6;
+    private WALLHUGGER_SHOT_START: number = 6;
+    private WALLHUGGER_SHOT_FRAMES: number = 8;
+    private WALLHUGGER_LAUNCH_FRAME: number = 6;
+    private WALLHUGGER_LEFT: number = 14;
+    private WALLHUGGER_RIGHT: number = 0;
+    private WALLHUGGER_STILL_TIME: number = 1.0;
+    private WALLHUGGER_WALK_TIME: number = 1.0;
+    private WALLHUGGER_WALK_SPEED: number = 1.0;
 
-    WALLHUGGER_LEFT: number = 14;
-    WALLHUGGER_RIGHT: number = 0;
-
-    WALLHUGGER_STILL_TIME: number = 1.0;
-    WALLHUGGER_WALK_TIME: number = 1.0;
-    WALLHUGGER_WALK_SPEED: number = 1.0;
-
-
-    //CSpinnerWeapon m_weapon;
-
-    m_grade: WallHuggerGrade;
-    m_side: number;
-    m_direction: number;
-    m_fired: boolean;
-
-    m_state: WallHuggerState;
-
-    //static gsCRandom m_random;
-    m_weapon: CSpinnerWeapon;
+    //private m_weapon: CSpinnerWeapon;
+    private m_grade: WallHuggerGrade;
+    private m_side: number;
+    private m_direction: number;
+    private m_fired: boolean;
+    private m_state: WallHuggerState;
+    //private m_random: gsCRandom;
+    private m_weapon: CSpinnerWeapon;
 
     //-------------------------------------------------------------
 
-    public CWallHugger() {
+    constructor() {
+        super();
         this.m_grade = WallHuggerGrade.WALLHUGGER_STATIC;
         this.m_weapon = null;
         this.m_fired = false;
     }
 
+    //-------------------------------------------------------------
+
     public findWall(): void {
         //TEMP
-
         if (this.m_position.X < 320.0) {
             this.m_side = this.WALLHUGGER_LEFT;
             this.m_weapon.setDirectionS(new gsCVector(1.0, 0.0));
@@ -68,20 +63,20 @@ class CWallHugger extends CAlien {
         }
     }
 
-    validWalkPosition(): boolean {
+    //-------------------------------------------------------------
+
+    public validWalkPosition(): boolean {
         return false;
     }
 
-    public getActorInfo()//:override ActorInfo 
-    {
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE);
     }
 
-    //public ActorInfo getActorInfo()
-    //{
-    //    return null;//ActorInfoList[INFO_WALL_HUGGER]; 
-    //}
+    //-------------------------------------------------------------
 
     public activate(): boolean {
         if (!this.isActive()) {
@@ -91,13 +86,13 @@ class CWallHugger extends CAlien {
             this.m_weapon.setOwner(this);
             this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             this.m_weapon.setFiringMode(enums.WeaponFiringMode.WEAPON_MANUAL);
-
             this.m_state = WallHuggerState.WALLHUGGER_STILL;
-            //m_timer.start();
+           // this.m_timer.start();
         }
-
         return super.activate();
     }
+
+    //-------------------------------------------------------------
 
     public kill(): void {
         if (this.m_weapon != null) {
@@ -108,7 +103,8 @@ class CWallHugger extends CAlien {
         super.kill();
     }
 
-    //public override bool update(Controls controls, GameTime gametime)
+    //-------------------------------------------------------------
+
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
         this.gameTime = gameTime;
@@ -123,78 +119,71 @@ class CWallHugger extends CAlien {
         switch (this.m_state) {
             case WallHuggerState.WALLHUGGER_STILL:
                 {
-                    //            m_sprite.setFrame(m_side + WALLHUGGER_WALK_START);
+                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
 
-                    //            if (m_timer.getTime() >= WALLHUGGER_STILL_TIME)
-                    //            {
+                   /* if (this.m_timer.getTime() >= this.WALLHUGGER_STILL_TIME)*/ {
 
-                    //                if (m_grade == WALLHUGGER_STATIC ||
-                    //                    m_random.getInt(100) < 50)
-                    //                {
-                    //                    m_state = WALLHUGGER_SHOOTING;
-                    //                    m_fired = false;
-                    //                }
-                    //                else
-                    //                {
-                    //                    m_state = WALLHUGGER_WALKING;
-                    //                    if (m_random.getInt(100) < 50)
-                    //                        setVelocity(gsCVector(0.f, -WALLHUGGER_WALK_SPEED));
-                    //                    else
-                    //                        setVelocity(gsCVector(0.f, WALLHUGGER_WALK_SPEED));
-                    //                }
+                        if (this.m_grade == WallHuggerGrade.WALLHUGGER_STATIC /*|| m_random.getInt(100) < 50*/) {
+                            this.m_state = WallHuggerState.WALLHUGGER_SHOOTING;
+                            this.m_fired = false;
+                        }
+                        else {
+                            this.m_state = WallHuggerState.WALLHUGGER_WALKING;
+                            //if (m_random.getInt(100) < 50) {
+                            this.setVelocity(new gsCVector(0.0, -this.WALLHUGGER_WALK_SPEED));
+                            //} else {
+                            this.setVelocity(new gsCVector(0.0, this.WALLHUGGER_WALK_SPEED));
+                            //}
+                        }
 
-                    //                //m_timer.start();
-                    //            }
+                        //this.m_timer.start();
+                    }
                 }
                 break;
             case WallHuggerState.WALLHUGGER_WALKING:
                 {
-                    //            int frame = (int)(m_timer.getTime() * getActorInfo().m_anim_rate);
-                    //            m_sprite.setFrame(m_side + WALLHUGGER_WALK_START + frame % WALLHUGGER_WALK_FRAMES);
+                    var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
+                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START + frame % this.WALLHUGGER_WALK_FRAMES);
 
-                    //            m_position += m_velocity;
+                    this.m_position.plusEquals(this.m_velocity);
 
-                    //            // cancel movement if off edge of wall
+                    // cancel movement if off edge of wall
+                    if (!this.validWalkPosition()) {
+                        this.m_position.minusEquals(this.m_velocity);
 
-                    //            if (!validWalkPosition())
-                    //            {
-                    //                m_position -= m_velocity;
+                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                        this.m_timer.start();
+                    }
 
-                    //                m_state = WALLHUGGER_STILL;
-                    //                //m_timer.start();
-                    //            }
-
-                    //            //if (m_timer.getTime() >= WALLHUGGER_WALK_TIME)
-                    //            //{
-                    //            //    m_state = WALLHUGGER_STILL;
-                    //            //    m_timer.start();
-                    //            //}
+                    if (this.m_timer.getTime() >= this.WALLHUGGER_WALK_TIME)
+                    {
+                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                       // this.m_timer.start();
+                    }
                 }
                 break;
             case WallHuggerState.WALLHUGGER_SHOOTING:
                 {
-                    //            int frame = (int)(m_timer.getTime() * getActorInfo().m_anim_rate);
-                    //            if (frame >= WALLHUGGER_SHOT_FRAMES)
-                    //            {
-                    //                m_sprite.setFrame(m_side + WALLHUGGER_WALK_START);
-                    //                m_state = WALLHUGGER_STILL;
-                    //                //m_timer.start();
-                    //            }
-                    //            else
-                    //            {
-                    //                m_sprite.setFrame(m_side + WALLHUGGER_SHOT_START + frame);
-                    //                if (!m_fired && frame >= WALLHUGGER_LAUNCH_FRAME)
-                    //                {
-                    //                    m_weapon.fire();
-                    //                    m_fired = true;
-                    //                }
-                    //            }
+                    var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
+                    if (frame >= this.WALLHUGGER_SHOT_FRAMES) {
+                        this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
+                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                        //this.m_timer.start();
+                    }
+                    else {
+                        this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_SHOT_START + frame);
+                        if (!this.m_fired && frame >= this.WALLHUGGER_LAUNCH_FRAME) {
+                            this.m_weapon.fire();
+                            this.m_fired = true;
+                        }
+                    }
                 }
                 break;
         }
-
         return true;
     }
+
+    //-------------------------------------------------------------
 
     public setGrade(grade: WallHuggerGrade): void {
         this.m_grade = grade;
@@ -208,6 +197,8 @@ class CWallHugger extends CAlien {
                 break;
         }
     }
+
+    //-------------------------------------------------------------
 
 }
 

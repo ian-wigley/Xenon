@@ -4,7 +4,7 @@ import enums = require("Enums");
 class ActorInfo {
 
     public m_name: string;					// name (used for load/save to config file)
-    public m_type: enums.ActorType;				// type of actor
+    public m_type: enums.ActorType;			// type of actor
     public m_filename: string;				// file containing sprite frames
     public m_tile_width: number;			// width of 1 frame
     public m_tile_height: number;			// height of 1 frame

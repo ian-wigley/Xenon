@@ -17,41 +17,6 @@ enum GameMusicType {
 
 //-------------------------------------------------------------
 
-enum GameSampleType {
-    SAMPLE_MENU_SELECTION,
-    SAMPLE_MENU_OPTION,
-    SAMPLE_MENU_CLICK,
-    SAMPLE_MENU_BACK,
-
-    SAMPLE_PLAYER_CREATED,
-    SAMPLE_PLAYER_DESTROYED,
-
-    SAMPLE_FIRE_MISSILE,
-    SAMPLE_FIRE_HOMING_MISSILE,
-    SAMPLE_FIRE_LASER,
-
-    SAMPLE_SMALL_EXPLOSION,
-    SAMPLE_MEDIUM_EXPLOSION,
-    SAMPLE_BIG_EXPLOSION,
-
-    SAMPLE_ASTEROID_BREAKUP,
-
-    SAMPLE_PICKUP,
-    SAMPLE_BONUS,
-
-    SAMPLE_DIVE_DOWN,
-    SAMPLE_DIVE_UP,
-
-    SAMPLE_HIT_BACKGROUND,
-
-    SAMPLE_ROAR,
-    SAMPLE_SNORT,
-
-    SAMPLE_CHECKPOINT,
-}
-
-//-------------------------------------------------------------
-
 enum DemoMode {
     DEMO_OFF,
     DEMO_RECORD,
@@ -83,7 +48,6 @@ class CGameState {
     //gsCStarfield	m_starfield;
     m_score_table: gsCScoreTable;
     //gsCImage		m_backdrop;
-
     //char			m_level_filename[MAX_FILENAME_SIZE];
 
     //CLevel			m_level;
@@ -350,21 +314,20 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    public playSample(sample/*GameSampleType */): void {
-        //if (Options.getOption(OPTION_SOUNDFX))
-        //    m_sound_system.playSample((int) sample);
-    }
+    //public playSample(sample/*GameSampleType */): void {
+    //    //if (Options.getOption(OPTION_SOUNDFX))
+    //    //    m_sound_system.playSample((int) sample);
+    //}
 
     //-------------------------------------------------------------
     // play sample with stereo position based on screen x coordinate
 
-    //    public playSample(sample /*GameSampleType*/, x:number): void
-    //{
+    public playSample(sample /*GameSampleType*/, x:number): void{
     //    //if (Options.getOption(OPTION_SOUNDFX)) {
     //    //    int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
     //    //    m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
     //    //}
-    //}
+    }
 
     //-------------------------------------------------------------
 

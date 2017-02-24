@@ -9,7 +9,7 @@ class CMissile extends CBullet {
     MISSILE_FRAMES: number = 2;
 
     constructor(theScene: CScene) {
-        super(theScene);
+        super();//theScene);
     }
 
     public getActorInfo() {

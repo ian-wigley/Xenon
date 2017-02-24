@@ -23,7 +23,6 @@ class CHomer extends CAlien {
         return super.activate();
     }
 
-    //public override bool update(Controls controls, GameTime gametime) {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         this.gameTime = gameTime;
 

@@ -119,13 +119,10 @@ class CLevel {
     private m_scan_y: number = 0;
     private m_boss_active: boolean;
 
-    //    private LevelBytes: Array<number[]>;
     private LevelCounter: number = 0;
     private m_header: MPHD;
     private m_blocks: BLKSTR[];
-
     private m_imageTiles: HTMLImageElement;
-    //private m_font: SpriteFont;
     private m_image: gsCTiledImage;
 
     loaded: boolean = false;
@@ -138,14 +135,6 @@ class CLevel {
     CHUNK_BGFX: number = ("B".charCodeAt(0) << 24) + ("G".charCodeAt(0) << 16) + ("F".charCodeAt(0) << 8) + ("X".charCodeAt(0));
     CHUNK_BODY: number = ("B".charCodeAt(0) << 24) + ("O".charCodeAt(0) << 16) + ("D".charCodeAt(0) << 8) + ("Y".charCodeAt(0));
     CHUNK_LYR1: number = ("L".charCodeAt(0) << 24) + ("Y".charCodeAt(0) << 16) + ("R".charCodeAt(0) << 8) + ("1".charCodeAt(0));
-
-    //CHUNK_FORM: number = 1179603533;
-    //CHUNK_FMAP: number = 1179468112;
-    //CHUNK_MPHD: number = 1297107012;
-    //CHUNK_BKDT: number = 1112228948;
-    //CHUNK_BGFX: number = 1111967320;
-    //CHUNK_BODY: number = 1112491097;
-    //CHUNK_LYR1: number = 1280922161;
 
     constructor(imageTiles: HTMLImageElement) {
         this.m_imageTiles = imageTiles;
@@ -238,6 +227,7 @@ class CLevel {
                         ////gsCFile::setDirectory(graphics_directory);
                         ////    return error();
                         this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
+                        console.log("Creating tile for : " + this.m_image.Image.id);
                         this.m_image.setTileSize(new Point(32, 32));
                         this.m_image.enableColourKey();//gsCColour(gsMAGENTA));
 
@@ -250,50 +240,42 @@ class CLevel {
                 case this.CHUNK_BODY:
                 case this.CHUNK_LYR1:
                     {
-                        //gsUWORD tile;
                         var tile = 0;
 
                         // Create a new tile
                         //var mt: gsCMapTile = new gsCMapTile();
                         //gsCMapTile[] mt = m_back_layer.getListOfMapTiles();
 
-                        var fudge = 0;
+                        var count = 0;
 
                         for (var y = 0; y < this.m_header.mapheight; y++) {
                             for (var x = 0; x < this.m_header.mapwidth; x++) {
 
                                 // Create a new tile
                                 var mt: gsCMapTile = new gsCMapTile();
-                                //        if (m_file.read(&tile,2) != 2)
-                                //            return error();
+                                //if (m_file.read(&tile,2) != 2)
+                                //return error();
                                 var bytes = new Array<string>(2);
 
-                                if (fudge == 0) {
+                                if (count == 0) {
                                     bytes[0] = this.LevelBytes[this.LevelCounter++];
                                     bytes[1] = this.LevelBytes[this.LevelCounter++];
                                     tile = this.ByteConverterToUInt16(bytes);
                                 }
 
-                                if (fudge == 1) {
+                                if (count == 1) {
                                     bytes[0] = this.LevelBytes[this.LevelCounter++];
                                     bytes[1] = this.LevelBytes[this.LevelCounter++];
                                     tile = this.ByteConverterToUInt16(bytes);
-                                    fudge = -1;
+                                    count = -1;
                                 }
 
-                                fudge += 1;
+                                count += 1;
 
-                                //if (tile > 0) {
-                                //    var ii = 0;
-                                //}
-
-                                var sizeBLKSTR = 32;
-                                //sizeBLKSTR /= 2;
+                                var sizeBLKSTR = 32;  //sizeBLKSTR /= 2;
                                 var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
                                 var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
-                                ////        tile = (gsUWORD) (block->bgoff / tilesize);
                                 tile = block.bgoff / tilesize;
-                                //tileList.Add(tile);
                                 mt.setTile(tile);
 
                                 if (tile == 0) {
@@ -306,7 +288,7 @@ class CLevel {
                                     mt.setUserData(1, (block.user2 & 0xFF));
                                     mt.setUserData(2, (block.user3 & 0xFF));
                                     mt.setUserData(3, (block.user4 & 0xFF));
-                                    var cflags = 0;    //gsUBYTE cflags = 0;
+                                    var cflags: number = 0;
                                     if (block.tl != 0) {
                                         cflags |= this.COLLIDE_WITH_SHIP;
                                     }
@@ -350,15 +332,6 @@ class CLevel {
             //if (!m_file.setPosition(chunk_end))
             //    return error();
         }
-
-        //if (m_blocks) 
-        //{
-        //    delete [] m_blocks;
-        //    m_blocks = 0;
-        //    }
-
-        //m_file.close();
-        //return true;
     }
 
 
@@ -367,16 +340,6 @@ class CLevel {
         var d = (parseInt(bytes[0]) << 24) + (parseInt(bytes[1]) << 16) + (parseInt(bytes[2]) << 8) + (parseInt(bytes[3]));
         return d;
     }
-
-    //private readUWORD() {
-    //    var bytes = this.GetTwoBytes();
-    //    //w =	(((gsUWORD) b[0]) << 8) + ((gsUWORD) b[1]);
-    //    var temp = 0;
-    //    // temp = ((bytes[0]) << 8) + (bytes[1]);
-    //    var w = temp;
-    //    return w;
-    //    //return true;
-    //}
 
     private GetTwoBytes() {
         var bytes = new Array<string>(2);
@@ -524,10 +487,10 @@ class CLevel {
 
     private ByteConverterToUInt32(bytes) {
 
-        var t1 = parseInt(bytes[0]);//bytes[0].charCodeAt(0);
-        var t2 = parseInt(bytes[1]);//bytes[1].charCodeAt(0);
-        var t3 = parseInt(bytes[2]);//bytes[2].charCodeAt(0);
-        var t4 = parseInt(bytes[3]);//bytes[3].charCodeAt(0);
+        var t1 = parseInt(bytes[0]);
+        var t2 = parseInt(bytes[1]);
+        var t3 = parseInt(bytes[2]);
+        var t4 = parseInt(bytes[3]);
 
         //http://stackoverflow.com/questions/7993840/how-does-bitconverter-toint32-work
 
@@ -585,19 +548,17 @@ class CLevel {
         //if (!screen)
         //    return;
 
-        //Rectangle screen_rect = screen->getRect();
         var screen_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
         var source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
         var dest_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);//source_rect;
         //dest_rect.move(m_front_layer.getPosition());
 
 
-        dest_rect.Left += this.m_front_layer.getPosition().X;//.getX();
-        dest_rect.Top += this.m_front_layer.getPosition().Y;// offset.getY();
-        dest_rect.Right += this.m_front_layer.getPosition().X;// offset.getX();
-        dest_rect.Bottom += this.m_front_layer.getPosition().Y;// offset.getY();
+        dest_rect.Left += this.m_front_layer.getPosition().X;
+        dest_rect.Top += this.m_front_layer.getPosition().Y;
+        dest_rect.Right += this.m_front_layer.getPosition().X;
+        dest_rect.Bottom += this.m_front_layer.getPosition().Y;
 
-        //screen_rect.clip(source_rect,dest_rect);
         //screen_rect.clip(source_rect,dest_rect);
         if (dest_rect.Left < screen_rect.Left) {
             source_rect.Left += (screen_rect.Left - dest_rect.Left);
@@ -616,12 +577,10 @@ class CLevel {
             dest_rect.Bottom = screen_rect.Bottom;
         }
 
-
         //if (dest_rect.isEmpty())
         //    return;
 
         // convert back to tile coords
-        //int top = source_rect.Top / m_image.getTileSize().Y;
         var top = source_rect.Top / this.m_image.getTileSize().Y;
 
         // get row above screen
@@ -656,36 +615,45 @@ class CLevel {
                                 switch (type) {
                                     case PickupType.PICKUP_SHIELD:
                                         p = new Pickup.CShieldPickup();
+                                        //console.log("PICKUP_SHIELD");
                                         break;
                                     case PickupType.PICKUP_SPEEDUP:
                                         p = new Pickup.CSpeedPickup();
+                                        //console.log("PICKUP_SPEEDUP");
                                         break;
                                     case PickupType.PICKUP_WEAPONUP:
                                         p = new Pickup.CWeaponPickup();
+                                        //console.log("PICKUP_WEAPONUP");
                                         break;
                                     case PickupType.PICKUP_CLOAK:
                                         p = new Pickup.CCloakPickup();
+                                        //console.log("PICKUP_CLOAK");
                                         break;
                                     case PickupType.PICKUP_DIVE:
                                         p = new Pickup.CDivePickup();
+                                        //console.log("PICKUP_DIVE");
                                         break;
                                     case PickupType.PICKUP_SCOREBONUS:
                                         p = new Pickup.CScorePickup();
+                                        //console.log("PICKUP_SCOREBONUS");
                                         break;
                                     case PickupType.PICKUP_CLONE:
                                         p = new Pickup.CClonePickup();
+                                        //console.log("PICKUP_CLONE");
                                         break;
                                     case PickupType.PICKUP_WINGTIP:
                                         p = new Pickup.CWingtipPickup();
+                                        //console.log("PICKUP_WINGTIP");
                                         break;
                                     case PickupType.PICKUP_HOMINGMISSILE:
                                         p = new Pickup.CHomingMissilePickup();
+                                        //console.log("PICKUP_HOMINGMISSILE");
                                         break;
                                     case PickupType.PICKUP_LASER:
                                         p = new Pickup.CLaserPickup();
+                                        //console.log("PICKUP_LASER");
                                         break;
                                 }
-
                                 if (p != null) {
                                     scene.addActor(p);
                                     p.setPosition(pos);
@@ -707,12 +675,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CSmallStandardAsteroid();
+                                                        //console.log("CSmallStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CSmallHighDensityAsteroid();
+                                                        //console.log("CSmallHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CSmallIndestructibleAsteroid();
+                                                        //console.log("CSmallIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -720,12 +691,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CMediumStandardAsteroid();
+                                                        //console.log("CMediumStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CMediumHighDensityAsteroid();
+                                                        //console.log("CMediumHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CMediumIndestructibleAsteroid();
+                                                        //console.log("CMediumIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -733,12 +707,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CBigStandardAsteroid();
+                                                        //console.log("CBigStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CBigHighDensityAsteroid();
+                                                        //console.log("CBigHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CBigIndestructibleAsteroid();
+                                                        //console.log("CBigIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -760,12 +737,15 @@ class CLevel {
                                         switch (grade) {
                                             case 0:
                                                 l = new Loner.CStandardLoner();
+                                                //console.log("CStandardLoner");
                                                 break;
                                             case 1:
                                                 l = new Loner.CMediumLoner();
+                                                //console.log("CMediumLoner");
                                                 break;
                                             case 2:
                                                 l = new Loner.CArmouredLoner();
+                                                //console.log("CArmouredLoner");
                                                 break;
                                         }
 
@@ -781,6 +761,7 @@ class CLevel {
                                 case AlienType.HOMER:
                                     {
                                         var h: CHomer = new CHomer();
+                                        //console.log("HOMER");
                                         scene.addActor(h);
                                         h.setPosition(pos);
                                         h.setVelocity(new gsCVector(0.0, 0.5));
@@ -791,6 +772,7 @@ class CLevel {
                                 case AlienType.POD:
                                     {
                                         var pO: CPod = new CPod();
+                                        //console.log("POD");
                                         scene.addActor(pO);
                                         pO.setPosition(pos);
                                         pO.setVelocity(new gsCVector(0.0, 0.0));
@@ -801,6 +783,7 @@ class CLevel {
                                 case AlienType.RUSHER:
                                     {
                                         var r: CRusher = new CRusher();
+                                        //console.log("RUSHER");
                                         scene.addActor(r);
                                         r.setPosition(pos);
                                         r.setVelocity(new gsCVector(0.0, 2.0));
@@ -811,6 +794,7 @@ class CLevel {
                                 case AlienType.WALLHUGGER:
                                     {
                                         var w: CWallHugger = new CWallHugger();
+                                        //console.log("WallHugger");
                                         scene.addActor(w);
                                         w.setPosition(pos);
                                         w.setVelocity(new gsCVector(0.0, 0.0));
@@ -830,6 +814,7 @@ class CLevel {
                                 case AlienType.DRONE_GENERATOR:
                                     {
                                         var d: CDroneGenerator = new CDroneGenerator();
+                                        //console.log("DroneGenerator");
                                         scene.addActor(d);
                                         d.setPosition(pos);
                                         d.activate();
@@ -839,9 +824,9 @@ class CLevel {
                                 case AlienType.REVERSE_RUSHER:
                                     {
                                         var r: CRusher = new CRusher();
+                                        //console.log("REVERSE_RUSHER");
                                         scene.addActor(r);
-                                        //									r.setPosition(pos + new Vector2(0.0f,(float) screen.getSize().getY() +
-                                        //																	   m_image.getTileSize().Y));
+                                        //r.setPosition(pos + new Vector2(0.0f,(float) screen.getSize().getY() + m_image.getTileSize().Y));
                                         r.setVelocity(new gsCVector(0.0, -4.0));
                                         r.activate();
                                     }
@@ -850,6 +835,7 @@ class CLevel {
                                 case AlienType.RUSHER_GENERATOR_LEFT:
                                     {
                                         var rG: CRusherGenerator = new CRusherGenerator();
+                                        //console.log("RusherGenerator");
                                         scene.addActor(rG);
                                         rG.setPosition(pos);
                                         rG.setVelocity(new gsCVector(-2.0, 0.0));
@@ -860,6 +846,7 @@ class CLevel {
                                 case AlienType.RUSHER_GENERATOR_RIGHT:
                                     {
                                         rG = new CRusherGenerator();
+                                        //console.log("RusherGenerator");
                                         scene.addActor(rG);
                                         rG.setPosition(pos);
                                         rG.setVelocity(new gsCVector(2.0, 0.0));
@@ -870,6 +857,7 @@ class CLevel {
                                 case AlienType.ORGANIC_GUN:
                                     {
                                         var oG: COrganicGun = new COrganicGun();
+                                        //console.log("OrganicGun");
                                         scene.addActor(oG);
                                         oG.setPosition(pos);
                                         oG.setVelocity(new gsCVector(0.0, 0.0));
@@ -882,8 +870,8 @@ class CLevel {
                                     break;
 
                                 default:
-
                                     var xp: CBigExplosion = new CBigExplosion();
+                                    //console.log("BigExplosion");
                                     scene.addActor(xp);
                                     xp.setPosition(pos);
                                     xp.activate();
@@ -906,6 +894,7 @@ class CLevel {
                         case TileId.ID_BOSS_MOUTH:
                             {
                                 var m: CBossMouth = new CBossMouth();
+                                //console.log("BossMouth");
                                 scene.addActor(m);
                                 m.setPosition(pos);
                                 m.setVelocity(new gsCVector(0.0, 0.0));
@@ -915,6 +904,7 @@ class CLevel {
                         case TileId.ID_BOSS_EYE:
                             {
                                 var e: CBossEye = new CBossEye();
+                                //console.log("BossEye");
                                 e.setEyeNumber(type);
                                 scene.addActor(e);
                                 switch (type) {
@@ -940,6 +930,7 @@ class CLevel {
                         case TileId.ID_BOSS_CONTROL:
                             {
                                 var bC: CBossControl = new CBossControl();
+                                //console.log("BossControl");
                                 scene.addActor(bC);
                                 bC.setPosition(pos);
                                 bC.setVelocity(new gsCVector(0.0, 0.0));

@@ -4,6 +4,8 @@ import gsCVector = require("Vector");
 import CCloneEngine = require("CloneEngine");
 import CScene = require("Scene");
 import gsCTimer = require("Timer");
+import CShip = require("Ship");
+import enums = require("Enums");
 
 class CClone extends CUpgrade {
 
@@ -49,7 +51,7 @@ class CClone extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    kill() {
+    public kill() {
         if (this.m_engine) {
             this.m_engine.kill();
             this.m_engine = null;
@@ -60,86 +62,86 @@ class CClone extends CUpgrade {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gametime: gsCTimer) {
-        //this.gameTime = gametime;
-        //    CShip ship = (CShip) getOwner();
 
-        //if (ship != null) {
-        //    explode();
-        //    kill();
-        //    return true;
-        //}
+        var ship: CShip = <CShip>this.getOwner();
 
-        //if (getShield() == 0) {
-        //    ship.detachClone(this);
-        //    setOwner(null);
-        //    explode();
-        //    kill();
-        //    return true;
-        //}
+        if (ship != null) {
+            this.explode();
+            this.kill();
+            return true;
+        }
 
-        //if (controls.up) {
-        //    m_required_angle = m_max_angle;
-        //}
-        //if (controls.down) {
-        //    m_required_angle = m_min_angle;
-        //}
-        //    int thrust = 0;
+        if (this.getShield() == 0) {
+            ship.detachClone(this);
+            this.setOwner(null);
+            this.explode();
+            this.kill();
+            return true;
+        }
 
-        //if (m_current_angle != m_required_angle) {
+        if (controls.up) {
+            this.m_required_angle = this.m_max_angle;
+        }
+        if (controls.down) {
+            this.m_required_angle = this.m_min_angle;
+        }
+        var thrust: number = 0;
 
-        //        float delta = m_required_angle - m_current_angle;
+        if (this.m_current_angle != this.m_required_angle) {
 
-        //    if (Math.Abs(delta) < CLONE_ANGLE_STEP) {
-        //        m_current_angle = m_required_angle;
-        //    }
-        //    else {
-        //        if (delta > 0) {
-        //            m_current_angle += CLONE_ANGLE_STEP;
-        //            if (m_min_angle > m_max_angle)
-        //                thrust = 1;
-        //        }
-        //        else {
-        //            m_current_angle -= CLONE_ANGLE_STEP;
-        //            if (m_min_angle < m_max_angle)
-        //                thrust = 1;
-        //        }
-        //    }
-        //}
+            var delta = this.m_required_angle - this.m_current_angle;
 
-        //if (m_engine != null) {
-        //    m_engine.applyThrust(thrust);
-        //}
+            if (Math.abs(delta) < this.CLONE_ANGLE_STEP) {
+                this.m_current_angle = this.m_required_angle;
+            }
+            else {
+                if(delta > 0) {
+                    this.m_current_angle += this.CLONE_ANGLE_STEP;
+                    if (this.m_min_angle > this.m_max_angle)
+                        thrust = 1;
+                }
+                else {
+                    this.m_current_angle -= this.CLONE_ANGLE_STEP;
+                    if (this.m_min_angle < this. m_max_angle)
+                        thrust = 1;
+                }
+            }
+        }
 
-        ////m_offset = new Vector2::polar(CLONE_RADIUS, m_current_angle);
-        //m_offset = new Vector2(CLONE_RADIUS, m_current_angle);
+        if (this.m_engine != null) {
+            this.m_engine.applyThrust(thrust);
+        }
 
-        //    int d = ship.getDiveLevel();
+        //m_offset = new Vector2::polar(CLONE_RADIUS, m_current_angle);
+        this.m_offset = new gsCVector(this.CLONE_RADIUS, this.m_current_angle);
 
-        //if (d == 0) {
-        //    m_position = ship.getPosition() + m_offset;
-        //    if (ship.isCloaked()) {
-        //        if (!ship.isCloakFlashing()) {
-        //            m_sprite.setFrame(CLONE_CLOAK_FRAME);
-        //        }
-        //        else {
-        //            m_sprite.setFrame(0);
-        //        }
-        //    }
-        //    else {
-        //        animate(AnimationMode.ANIMATE_LOOP, 0, CLONE_FRAMES);
-        //    }
-        //}
-        //else {
-        //    m_position = ship.getPosition() + m_offset * ship.getDiveScale();
-        //    m_sprite.setFrame(CLONE_DIVE_OFFSET + CLONE_DIVE_FRAMES * d / SHIP_DIVE_FRAMES);
-        //}
+        var d:number = ship.getDiveLevel();
+
+        if (d == 0) {
+            this.m_position = ship.getPosition().plus1(this.m_offset);
+            if (ship.isCloaked()) {
+                if (!ship.isCloakFlashing()) {
+                    this.m_sprite.setFrame(this.CLONE_CLOAK_FRAME);
+                }
+                else {
+                    this.m_sprite.setFrame(0);
+                }
+            }
+            else {
+                //this.animate(enums.AnimationMode.ANIMATE_LOOP, 0, this.CLONE_FRAMES);
+            }
+        }
+        else {
+            //this.m_position = ship.getPosition() + m_offset * ship.getDiveScale();
+            this.m_sprite.setFrame(this.CLONE_DIVE_OFFSET + this.CLONE_DIVE_FRAMES * d / this.SHIP_DIVE_FRAMES);
+        }
 
         return true;
     }
 
     //-------------------------------------------------------------
 
-    public setAngleRange(min: number, max: number) {
+    public setAngleRange(min: number, max: number):void {
         this.m_min_angle = min;
         this.m_max_angle = max;
 
@@ -148,11 +150,10 @@ class CClone extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    public setAngle(angle: number, set: boolean) {
+    public setAngle(angle: number, set: boolean):void {
         if (set) {
             this.m_current_angle = angle;
         }
-
         this.m_required_angle = angle;
     }
 

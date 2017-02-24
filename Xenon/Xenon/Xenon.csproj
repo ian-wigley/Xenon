@@ -16,6 +16,7 @@
     <IISExpressAnonymousAuthentication />
     <IISExpressWindowsAuthentication />
     <IISExpressUseClassicPipelineMode />
+    <UseGlobalApplicationHostFile />
   </PropertyGroup>
   <ItemGroup>
     <Content Include="app.css" />
@@ -62,6 +63,7 @@
     <TypeScriptCompile Include="Options.ts" />
     <TypeScriptCompile Include="OrganicGun.ts" />
     <TypeScriptCompile Include="Pickup.ts" />
+    <TypeScriptCompile Include="Player.ts" />
     <TypeScriptCompile Include="PlayGameState.ts" />
     <TypeScriptCompile Include="Pod.ts" />
     <TypeScriptCompile Include="Point.ts" />

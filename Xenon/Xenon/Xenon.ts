@@ -82,9 +82,6 @@ class Xenon {
 
     private LoadContent(): void {
 
-        //this.m_level = new CLevel();
-
-        //this.shipTexture = <HTMLImageElement>document.getElementById("Ship1");
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
         this.engineTexture = <HTMLImageElement>document.getElementById("Burner1");
         this.m_listOfActors = new CActorInfoList();
@@ -117,7 +114,7 @@ class Xenon {
         this.testInterval = setInterval(() => this.testIfLoaded(), 10);
     }
 
-    private testIfLoaded() {
+    private testIfLoaded(): void {
         if (this.m_scene.LevelLoaded()) {
             // Needs to wait until level is loaded before configuring the gamestate !!
             this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars, this.m_font8x8, this.m_font16x16, this.ctx);
@@ -125,9 +122,7 @@ class Xenon {
 
             setInterval(() => this.Update(), 10);
         }
-
     }
-
 
     AddHitListener(element: HTMLElement) {
         window.addEventListener("keydown", (event) => {

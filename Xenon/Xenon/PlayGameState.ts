@@ -25,6 +25,9 @@ enum m_mode {
 class CPlayGameState extends CGameState {
     private m_ship: CShip;
 
+    private m_game_start_timer: gsCTimer;
+    private m_game_end_timer: gsCTimer;
+
     private m_starfield: CStarfield;
     private m_level: CLevel;
     private m_screen: gsCScreen;
@@ -93,7 +96,7 @@ class CPlayGameState extends CGameState {
 
         for (var i = 0; i < this.m_number_of_players; i++) {
             var player: CPlayer = new CPlayer();
-            //    player ->setCheckpoint(start_position);
+            //player.setCheckpoint(start_position);
             //m_player_list.addItem(player);
             this.m_player_list.push(player);
         }
@@ -287,9 +290,9 @@ class CPlayGameState extends CGameState {
             //this.m_scene.updateAllActors(controls);
             this.m_level.m_back_layer.drawMap(ctx);
             this.m_scene.drawAllActors(ctx, this.m_level.m_front_layer);
-            //this.m_scene.checkActorCollisions();
-            //this.m_scene.checkMapCollisions(m_level.m_front_layer);
-            //this.m_scene.removeDeadActors();
+            this.m_scene.checkActorCollisions();
+            this.m_scene.checkMapCollisions(this.m_level.m_front_layer);
+            this.m_scene.removeDeadActors();
         }
 
         //testDebugKeys(key);
@@ -338,16 +341,17 @@ class CPlayGameState extends CGameState {
             //        m_game_start_timer.reset();
             //    }
 
-            //    if (m_ship ->getShield() == 0) {
-            //        m_game_end_timer.start();
-            //        playSample(SAMPLE_PLAYER_DESTROYED, m_ship ->getPosition().getX());
-            //        m_ship ->explode();
-            //        m_ship ->kill();
-            //        m_scene.removeDeadActors();
-            //        m_ship = 0;
-            //        m_mode = PLAYERDEAD;
-            //        break;
-            //    }
+            if (this.m_ship.getShield() == 0) {
+                this.m_game_end_timer.start();
+                this.playSample(enums.GameSampleType.SAMPLE_PLAYER_DESTROYED, this.m_ship.getPosition().X);
+                this.m_ship.explode();
+                this.m_ship.kill();
+                this.m_scene.removeDeadActors();
+                this.m_ship = null;
+                //m_mode = m_mode.PLAYERDEAD;
+                m_mode.PLAYERDEAD;
+                //break;
+            }
 
             //if (m_reached_boss && CBoss::getShield() == 0) {
             //    playMusic(MUSIC_OUTRO);
@@ -683,7 +687,7 @@ class CPlayGameState extends CGameState {
 
     //-------------------------------------------------------------
 
-    public getPlayer(): CPlayer { // * CPlayGameState::*/ {
+    public getPlayer() { //: CPlayer { // * CPlayGameState::*/ {
         return this.m_player_list[this.m_active_player];
     }
 

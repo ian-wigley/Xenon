@@ -43,6 +43,14 @@
     public set bottom(value: number) {
         this.m_bottom = value;
     }
+
+    public get width(): number {
+        return this.m_right - this.m_left;
+    }
+
+    public get height(): number {
+        return this.m_bottom - this.m_top;
+    }
 }
 
 import Point = require("Point");
@@ -99,6 +107,15 @@ class gsCRectangle {
         this.m_rect.bottom = value;
     }
 
+    public get Width(): number {
+        return this.m_rect.width;
+    }
+
+    public get Height(): number {
+        return this.m_rect.height;
+    }
+
+
     public IsEmpty(): boolean {
 
         return (this.m_rect.left >= this.m_rect.right) || (this.m_rect.top >= this.m_rect.bottom);
@@ -129,14 +146,6 @@ class gsCRectangle {
         this.m_rect.right += offset.X;
         this.m_rect.bottom += offset.Y;
     }
-
-    //public Width() {
-    //    return this.m_width;
-    //}
-
-    //public Height() {
-    //    return this.m_height;
-    //}
 
     //contains(rect: gsCRectangle) {
     //    return (rect.Left >= this.m_rect.Left &&

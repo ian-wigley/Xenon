@@ -5,7 +5,7 @@ class CStarfield {
     private m_position: number;
     private m_layers: number;
     private m_point: Array<gsCVector>;
-    //    private Color[]m_colour;
+    //private Color[]m_colour;
     private m_layer: Array<number>;
     private m_offset: Array<number>;
     private m_width: number;
@@ -24,8 +24,6 @@ class CStarfield {
         this.m_layer = [];
         this.m_offset = [];
 
-        //Random rand;
-        //rand = new Random();
         for (var x = 0; x < this.m_width; x++) {
 
             this.m_point.push(new gsCVector(x, 0));

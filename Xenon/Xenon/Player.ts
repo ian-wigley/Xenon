@@ -1,16 +1,18 @@
-﻿class CPlayer {
+﻿import gsCVector = require("Vector");
 
-    INITIAL_LIVES:number = 3;
-    MAX_LIVES:number = 10;
+class CPlayer {
 
-//-------------------------------------------------------------
-  
-    private m_lives:number;
+    INITIAL_LIVES: number = 3;
+    MAX_LIVES: number = 10;
+
+    //-------------------------------------------------------------
+
+    private m_lives: number;
     private m_score: number;
-    private m_has_dive_pickup:boolean;
+    private m_has_dive_pickup: boolean;
 
-    //gsCVector m_checkpoint;
-    //int m_extra_life_scores[];
+    private m_checkpoint: gsCVector;
+    private m_extra_life_scores: Array<number> = [5000000, 10000000, 15000000, 20000000, 0];
 
     ////-------------------------------------------------------------
 
@@ -24,101 +26,92 @@
 
     //-------------------------------------------------------------
 
-    constructor(){
+    constructor() {
         this.m_lives = this.INITIAL_LIVES;
         this.m_score = 0;
         this.m_has_dive_pickup = false;
-    //    m_checkpoint = gsCVector(0.f, 0.f);
+        this.m_checkpoint = new gsCVector(0, 0);
     }
 
     //-------------------------------------------------------------
 
-    public getScore():number
-    {
+    public getScore(): number {
         return this.m_score;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void scoreBonus(int bonus)
-    //{
-    //    int old_score = m_score;
+    public scoreBonus(bonus: number): void {
+        var old_score: number = this.m_score;
 
-    //    m_score += bonus;
+        this.m_score += bonus;
+        var score_level = this.m_extra_life_scores;
 
-    //    int * score_level = m_extra_life_scores;
+        var count: number = 0;
+        while (score_level[count] != 0) {
+            if (old_score < score_level[count] &&
+                this.m_score >= score_level[count]) {
+                this.extraLife();
+                break;
+            }
+            //score_level++;
+            count++;
+        }
+    }
 
-    //    while (*score_level != 0) {
-    //        if (old_score < *score_level &&
-    //            m_score >= *score_level) {
-    //            extraLife();
-    //            break;
-    //        }
-    //        score_level++;
-    //    }
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
-
-    public getLives():number
-    {
+    public getLives(): number {
         return this.m_lives;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void extraLife()
-    //{
-    //    if (m_lives < MAX_LIVES)
-    //        m_lives++;
-    //}
+    public extraLife(): void {
+        if (this.m_lives < this.MAX_LIVES)
+            this.m_lives++;
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void loseLife()
-    //{
-    //    if (m_lives > 0)
-    //        m_lives--;
+    public loseLife(): void {
+        if (this.m_lives > 0) {
+            this.m_lives--;
+        }
+        this.m_has_dive_pickup = false;
+    }
 
-    //    m_has_dive_pickup = false;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public diveBonus(): void {
+        this.m_has_dive_pickup = true;
+    }
 
-    //void diveBonus()
-    //{
-    //    m_has_dive_pickup = true;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public hasDive(): boolean {
+        return this.m_has_dive_pickup;
+    }
 
-    //bool hasDive()
-    //{
-    //    return m_has_dive_pickup;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public useDive(): void {
+        this.m_has_dive_pickup = false;
+    }
 
-    //void useDive()
-    //{
-    //    m_has_dive_pickup = false;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public setCheckpoint(checkpoint: gsCVector): void {
+        this.m_checkpoint = checkpoint;
+    }
 
-    //void setCheckpoint(const gsCVector& checkpoint)
-    //    {
-    //        m_checkpoint = checkpoint;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public getCheckpoint(): gsCVector {
+        return this.m_checkpoint;
+    }
 
-    //gsCVector getCheckpoint()
-    //{
-    //    return m_checkpoint;
-    //}
-
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
 }
 export = CPlayer;

@@ -4,7 +4,11 @@ import CActor = require("Actor");
 import CScene = require("Scene");
 import CWeapon = require("Weapon");
 import CMissileWeapon = require("MissileWeapon");
+import CHomingMissileWeapon = require("HomingMissileWeapon");
+import CLaserWeapon = require("LaserWeapon");
 import enums = require("Enums");
+import CShip = require("Ship");
+import Pickup = require("Pickup");
 
 class CUpgrade extends CActor {
 
@@ -23,12 +27,16 @@ class CUpgrade extends CActor {
         this.m_weapon_type = enums.WeaponType.NO_WEAPON;
     }
 
+    //-------------------------------------------------------------
+
     public activate() {
         if (!this.isActive()) {
             this.setWeapon(enums.WeaponType.MISSILE_WEAPON);
         }
         return super.activate();
     }
+
+    //-------------------------------------------------------------
 
     public kill() {
         if (this.m_weapon) {
@@ -38,47 +46,50 @@ class CUpgrade extends CActor {
         super.kill();
     }
 
+   //-------------------------------------------------------------
+
     public setOffset(offset: gsCVector) {
         this.m_offset = offset;
     }
 
     //-------------------------------------------------------------
 
-    registerHit(energy: number, hitter: CActor) {
-        //	if (getOwner() &&
-        //		((CShip *) getOwner())- > getDiveLevel() > 0)
-        //		return;
-
-        //	CActor::registerHit(energy, hitter);
+    public registerHit(energy: number, hitter: CActor) {
+        if (this.getOwner() &&
+            (<CShip>this.getOwner()).getDiveLevel() > 0) {
+            return;
+        }
+        this.registerHit(energy, hitter);
     }
 
     //-------------------------------------------------------------
 
-    onCollisionWithActor(actor: CActor) {
-        //	if (getOwner() &&
-        //		((CShip *) getOwner())- > getDiveLevel() > 0)
-        //		return;
+    public onCollisionWithActor(actor: CActor) {
+        if (this.getOwner() &&
+            (<CShip>this.getOwner()).getDiveLevel() > 0) {
+            return;
+        }
 
-        //    switch (actor- > getActorInfo().m_type) {
-        //        case ACTOR_TYPE_PICKUP:
-        //			((CPickup *) actor)- > collect();
-        //			actor- > kill();
-        //            break;
-        //        case ACTOR_TYPE_ALIEN:
-        //            registerHit(1, this);
-        //			actor- > registerHit(1, this);
-        //            break;
-        //    }
+        switch (actor.getActorInfo().m_type) {
+            case enums.ActorType.ACTOR_TYPE_PICKUP:
+                //(<Pickup.CPickup> actor).collect();
+        			actor.kill();
+                    break;
+            case enums.ActorType.ACTOR_TYPE_ALIEN:
+                    this.registerHit(1, this);
+        			actor.registerHit(1, this);
+                    break;
+            }
     }
 
     //-------------------------------------------------------------
 
-    onCollisionWithMap(map: gsCMap, hits: number) {
-        //if (getOwner() &&
-        //    ((CShip *) getOwner())- > getDiveLevel() > 0)
-        //    return;
-
-        //    registerHit(UPGRADE_MAP_HIT, this);
+    public onCollisionWithMap(map: gsCMap, hits: number) {
+        if (this.getOwner() &&
+            (<CShip>this.getOwner()).getDiveLevel() > 0) {
+                return;
+        }
+        this.registerHit(this.UPGRADE_MAP_HIT, this);
     }
 
     //-------------------------------------------------------------
@@ -99,10 +110,10 @@ class CUpgrade extends CActor {
                 this.m_weapon = new CMissileWeapon(this.m_scene);
                 break;
             case enums.WeaponType.HOMING_MISSILE_WEAPON:
-                //this.m_weapon = new CHomingMissileWeapon(this.m_scene);
+                this.m_weapon = new CHomingMissileWeapon(this.m_scene);
                 break;
             case enums.WeaponType.LASER_WEAPON:
-                //this.m_weapon = new CLaserWeapon(this.m_scene);
+                this.m_weapon = new CLaserWeapon(this.m_scene);
                 break;
         }
 
@@ -116,16 +127,20 @@ class CUpgrade extends CActor {
 
     //-------------------------------------------------------------
 
-    upgradeWeapon() {
+    public upgradeWeapon() {
         if (this.m_weapon && this.m_weapon.upgrade()) {
             return true;
         }
         return false;
     }
 
+    //-------------------------------------------------------------
+
     public getWeapon() {
         return this.m_weapon;
     }
+
+    //-------------------------------------------------------------
 
     public getWeaponType() {
         return this.m_weapon_type;

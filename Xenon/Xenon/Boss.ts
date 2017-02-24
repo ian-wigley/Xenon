@@ -9,14 +9,14 @@ class CBoss extends CActor {
 
     //-------------------------------------------------------------
 
-    protected m_active_eyes: number;
-    m_mouth: CBossMouth;
+    protected m_active_eyes: number = 0;
+    protected m_mouth: CBossMouth;
 
     public CBoss() {
     }
 
     public getShield(): number {
-        return 0;
+        return 100 * this.m_active_eyes / this.BOSS_EYES_TOTAL;
     }
 }
 export = CBoss;

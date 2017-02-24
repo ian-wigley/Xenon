@@ -5,35 +5,26 @@ import gsCTimer = require("Timer");
 import enums = require("Enums");
 
 class CRusherGenerator extends CActor {
+    
+    private RUSHER_TOTAL: number = 6;	// total segments in chain
+    private RUSHER_DELAY: number = 0.5;	// time delay between generation
+
     //-------------------------------------------------------------
 
-    RUSHER_TOTAL: number = 6;		// total segments in chain
-    RUSHER_DELAY: number = 0.5;	// time delay between generation
-
-    //-------------------------------------------------------------
-    m_rushers_created: number;
-
-    //gsCTimer m_delay_timer;
+    private m_rushers_created: number;
+    private m_delay_timer:gsCTimer;
 
     constructor() {
         super();
         this.m_rushers_created = 0;
     }
 
-    //public CRusherGenerator() {
-    //    this.m_rushers_created = 0;
-    //}
-
-    public getActorInfo() //ActorInfo 
+    public getActorInfo()
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RUSHER_GENERATOR);
     }
 
-    //public ActorInfo getActorInfo()
-    //{
-    //    return null;// ActorInfoList[INFO_RUSHER_GENERATOR]; 
-    //}
 
     public activate(): boolean {
         if (!this.isActive()) {

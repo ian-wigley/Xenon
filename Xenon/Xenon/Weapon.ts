@@ -29,7 +29,7 @@ class CWeapon extends CActor {
 
     //-------------------------------------------------------------
 
-    activate() {
+    public activate() {
         if (!this.isActive()) {
             this.m_delay_fire = false;
             this.m_autofire = false;
@@ -39,7 +39,7 @@ class CWeapon extends CActor {
 
     //-------------------------------------------------------------
 
-    update(controls: gsCControls, gameTime: gsCTimer) {
+    public update(controls: gsCControls, gameTime: gsCTimer) {
         //if (controls || !getOwner())
         //    return false;
 
@@ -47,8 +47,9 @@ class CWeapon extends CActor {
         this.m_position.x = this.getOwner().getPosition().x + this.m_offset.x;
         this.m_position.y = this.getOwner().getPosition().y + this.m_offset.y;
 
-        if (this.m_mode == enums.WeaponFiringMode.WEAPON_MANUAL)
+        if (this.m_mode == enums.WeaponFiringMode.WEAPON_MANUAL) {
             return true;
+        }
 
         switch (this.getOwner().getActorInfo().m_type) {
             case enums.ActorType.ACTOR_TYPE_SHIP:
@@ -104,7 +105,8 @@ class CWeapon extends CActor {
                     {
                         this.m_delay_fire = true;
                         //    m_fire_timer.start();
-                        this.fire();
+                        // This needs investigating !!! Cause of all the new objects being created !!!
+                        //this.fire();
                     }
                 }
                 break;
@@ -115,13 +117,13 @@ class CWeapon extends CActor {
 
     //-------------------------------------------------------------
 
-    setGrade(grade: enums.WeaponGrade) {
+    public setGrade(grade: enums.WeaponGrade) {
         this.m_grade = grade;
     }
 
     //-------------------------------------------------------------
 
-    upgrade() {
+    public upgrade() {
         switch (this.m_grade) {
             case enums.WeaponGrade.WEAPON_STANDARD:
                 this.setGrade(enums.WeaponGrade.WEAPON_MEDIUM);
@@ -135,19 +137,19 @@ class CWeapon extends CActor {
 
     //-------------------------------------------------------------
 
-    setOffset(offset: gsCVector) {
+    public setOffset(offset: gsCVector) {
         this.m_offset = offset;
     }
 
     //-------------------------------------------------------------
 
-    setFiringMode(mode: enums.WeaponFiringMode) {
+    public setFiringMode(mode: enums.WeaponFiringMode) {
         this.m_mode = mode;
     }
 
     //-------------------------------------------------------------
 
-    isValidFiringPosition() {
+    public isValidFiringPosition() {
         //gsCScreen *screen = gsCApplication::getScreen();
 
         //if (!screen)
@@ -168,19 +170,19 @@ class CWeapon extends CActor {
 
     //-------------------------------------------------------------
 
-    setDirection(direction: enums.WeaponDirection) {
+    public setDirection(direction: enums.WeaponDirection) {
         this.m_direction = direction;
     }
 
     //-------------------------------------------------------------
 
-    getDirection() {
+    public getDirection() {
         return this.m_direction;
     }
 
     //-------------------------------------------------------------
 
-    fire() {
+    public fire() {
         return false;
     }
 }

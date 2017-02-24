@@ -13,49 +13,45 @@ import CShip = require("Ship");
 import CPlayGameState = require("PlayGameState");
 import CLevel = require("Level");
 import enums = require("Enums");
-import Point = require("Point");
+import gsCPoint = require("Point");
 import CSmallExplosion = require("SmallExplosion");
 
 class CScene {
 
-    m_textures: Array<HTMLImageElement>;
+    private m_textures: Array<HTMLImageElement>;
     private m_listOfActors: CActorInfoList;
 
     //gsCList<CActor *> m_actor_list;
     //gsCList<ImageEntry *> m_image_list;
-    //gsCCollisionList m_collision_list;
-    //List<gsCCollisionList> m_collision_list = new List<gsCCollisionList>();
-    m_frame_count: number;
-    m_map: gsCMap;
-    m_screen: gsCScreen;
-    COLLIDE_WITH_SHIP: number = 1;
-    lev: CLevel;
-    m_checkpoint_active: boolean;
-    m_checkpoint: gsCVector;
-    m_is_warping: boolean;
-    //void updateActorsOfType(ActorType type,Controls *controls);
-    //void drawActorsOfType(ActorType type,int total);
-    //static void actorCollisionCallback(void *object1,void *object2);
-    m_ship_is_cloaked: boolean;
-    m_actor_list: CActor[];
-    m_even: boolean = false;
-    time: number = 0;
+    private m_collision_list = []; //:gsCCollisionList;
+    private m_frame_count: number;
+    private m_map: gsCMap;
+    private m_screen: gsCScreen;
+    private lev: CLevel;
+    private m_checkpoint_active: boolean;
+    private m_checkpoint: gsCVector;
+    private m_is_warping: boolean;
+    private m_ship_is_cloaked: boolean;
+    private m_actor_list: CActor[];
+    private m_even: boolean = false;
+    private time: number = 0;
+
     //temp!
-    m_font: HTMLImageElement;
+    private m_font: HTMLImageElement;
+
+    private COLLIDE_WITH_SHIP: number = 1;
+    private COLLIDE_WITH_BULLETS: number = 2;
 
     constructor(image: HTMLImageElement, textures: Array<HTMLImageElement>, listOfActors: CActorInfoList) {
         this.m_textures = textures;
-        //m_font = font;
         this.m_listOfActors = listOfActors;
         this.m_frame_count = 0;
-        ////m_map = 0;
         this.m_checkpoint_active = false;
         this.m_is_warping = false;
         this.m_actor_list = [];
-        //m_collision_list = new gsCCollisionList();
+        this.m_collision_list = [];
         //m_screen = new gsCScreen();
         this.lev = new CLevel(image);//, font);
-        //lev.load("");
     }
 
     //-------------------------------------------------------------
@@ -68,11 +64,12 @@ class CScene {
         for (var i = 0; i < this.m_textures.length; i++) {
             if (this.m_textures[i] != null) {
                 var name = this.m_textures[i].id;
+                //console.log(name);
                 var temp = name.split(".")
                 if (temp[0].toLowerCase() == filename.toLowerCase()) {
                     // gsCTiledImage tile = new gsCTiledImage(name.Value, m_font);
                     var tile: gsCTiledImage = new gsCTiledImage(this.m_textures[i]);
-                    tile.setTileSize(new Point(this.m_listOfActors.GetTileWidth(i), this.m_listOfActors.GetTileHeight(i)));
+                    tile.setTileSize(new gsCPoint(this.m_listOfActors.GetTileWidth(i), this.m_listOfActors.GetTileHeight(i)));
                     //this.m_image_list.Add(tile);
                     return tile;
                 }
@@ -101,55 +98,59 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    addToCollisionList(actor: CActor, rect: gsCRectangle) {
-        //switch (actor.getActorInfo().m_type) {
-        //    case ActorType.ACTOR_TYPE_SHIP:
-        //        if (m_ship_is_cloaked)
-        //            break;
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_SHIP),
-        //                                          (1 << (int)ActorType.ACTOR_TYPE_PICKUP) | (1 << (int)ActorType.ACTOR_TYPE_ALIEN));
-        //        break;
-        //    case ActorType.ACTOR_TYPE_UPGRADE:
-        //        if (m_ship_is_cloaked)
-        //            break;
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_UPGRADE),
-        //                                          (1 << (int)ActorType.ACTOR_TYPE_PICKUP) | (1 << (int)ActorType.ACTOR_TYPE_ALIEN));
-        //        break;
-        //    case ActorType.ACTOR_TYPE_BULLET:
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_BULLET),
-        //                                          (1 << (int)ActorType.ACTOR_TYPE_ALIEN) | (1 << (int)ActorType.ACTOR_TYPE_ALIENBULLET));
-        //        break;
-        //    case ActorType.ACTOR_TYPE_ALIENBULLET:
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_ALIENBULLET),
-        //                                          (1 << (int)ActorType.ACTOR_TYPE_SHIP));
-        //        break;
-        //    case ActorType.ACTOR_TYPE_ALIEN:
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_ALIEN),
-        //                                          0);
-        //        break;
-        //    case ActorType.ACTOR_TYPE_PICKUP:
-        //        m_collision_list.addObject(actor,
-        //            rect,
-        //                                          (1 << (int) ActorType.ACTOR_TYPE_PICKUP),
-        //                                          0);
-        //        break;
-        //    case ActorType.ACTOR_TYPE_WEAPON:
-        //    case ActorType.ACTOR_TYPE_ENGINE:
-        //    case ActorType.ACTOR_TYPE_LABEL:
-        //    case ActorType.ACTOR_TYPE_EFFECT:
-        //        // no collision detection
-        //        break;
-        //}
+    public addToCollisionList(actor: CActor, rect: gsCRectangle): void {
+        switch (actor.getActorInfo().m_type) {
+            case enums.ActorType.ACTOR_TYPE_SHIP:
+                if (this.m_ship_is_cloaked)
+                    break;
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_SHIP),
+                    (1 << enums.ActorType.ACTOR_TYPE_PICKUP) | (1 << enums.ActorType.ACTOR_TYPE_ALIEN));
+                break;
+            case enums.ActorType.ACTOR_TYPE_UPGRADE:
+                if (this.m_ship_is_cloaked)
+                    break;
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_UPGRADE),
+                    (1 << enums.ActorType.ACTOR_TYPE_PICKUP) | (1 << enums.ActorType.ACTOR_TYPE_ALIEN));
+                break;
+            case enums.ActorType.ACTOR_TYPE_BULLET:
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_BULLET),
+                    (1 << enums.ActorType.ACTOR_TYPE_ALIEN) | (1 << enums.ActorType.ACTOR_TYPE_ALIENBULLET));
+                break;
+            case enums.ActorType.ACTOR_TYPE_ALIENBULLET:
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_ALIENBULLET),
+                    (1 << enums.ActorType.ACTOR_TYPE_SHIP));
+                break;
+            case enums.ActorType.ACTOR_TYPE_ALIEN:
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_ALIEN),
+                    0);
+                //this.m_collision_list.addObject(actor,
+                //    rect,
+                //    (1 << enums.ActorType.ACTOR_TYPE_ALIEN),
+                //    0);
+                break;
+            case enums.ActorType.ACTOR_TYPE_PICKUP:
+                this.m_collision_list.push(actor,
+                    rect,
+                    (1 << enums.ActorType.ACTOR_TYPE_PICKUP),
+                    0);
+                break;
+            case enums.ActorType.ACTOR_TYPE_WEAPON:
+            case enums.ActorType.ACTOR_TYPE_ENGINE:
+            case enums.ActorType.ACTOR_TYPE_LABEL:
+            case enums.ActorType.ACTOR_TYPE_EFFECT:
+                // no collision detection
+                break;
+        }
     }
 
     //-------------------------------------------------------------
@@ -185,7 +186,7 @@ class CScene {
 
         this.m_map = map;
         this.m_frame_count++;
-        //m_collision_list.clear();
+        this.m_collision_list = [];
         var total = this.m_actor_list.length;//.getSize();
         var ship = this.findShip();
 
@@ -219,6 +220,8 @@ class CScene {
         }
     }
 
+    //-------------------------------------------------------------
+
     // Main draw method for all Actors
     drawActorsOfType(type: enums.ActorType, total: number, ctx: CanvasRenderingContext2D) {
         for (var j = 0; j < this.m_actor_list.length; j++) {
@@ -231,18 +234,18 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    actorCollisionCallback(object1: Object, object2: Object) {
+    public actorCollisionCallback(object1: Object, object2: Object) {
         //gsASSERT(object1);
         //gsASSERT(object2);
 
-        //CActor *actor1 = (CActor *) object1;
-        //CActor *actor2 = (CActor *) object2;
+        var actor1: CActor = <CActor>object1;
+        var actor2: CActor = <CActor>object2;
 
-        //if (!actor1->isActive() ||
-        //    !actor2->isActive())
-        //    return;
+        if (!actor1.isActive() ||
+            !actor2.isActive())
+            return;
 
-        //actor1->onCollisionWithActor(actor2);
+        actor1.onCollisionWithActor(actor2);
     }
 
 
@@ -310,83 +313,80 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    public checkActorCollisions() {
-        ////           m_collision_list.scan();//actorCollisionCallback);
-
-        //           for (var i = 0; i < m_actor_list.Count; i++)
-        //           {
-        //       if (m_actor_list[i].isActive()) {
-        //           m_actor_list[i].postProcessCollision();
-        //       }
-        //   }
+    public checkActorCollisions(): void {
+        // m_collision_list.scan(actorCollisionCallback);
+        for (var i = 0; i < this.m_actor_list.length; i++) {
+            if (this.m_actor_list[i].isActive()) {
+                this.m_actor_list[i].postProcessCollision();
+            }
+        }
     }
 
     //-------------------------------------------------------------
 
-    checkMapCollisions(map: gsCMap) {
-        //        // check for collisions between actors and map
+    public checkMapCollisions(map: gsCMap): void {
+        // check for collisions between actors and map
+        for (var i = 0; i < this.m_actor_list.length; i++) {
+            var actor: CActor = this.m_actor_list[i];
+            if (actor.isActive()) {
+                switch (actor.getActorInfo().m_type) {
+                    case enums.ActorType.ACTOR_TYPE_SHIP:
+                    case enums.ActorType.ACTOR_TYPE_UPGRADE:
+                        if (this.m_ship_is_cloaked)
+                            break;
+                        {
+                            var rect: gsCRectangle = actor.getCollisionRect();
+                            //rect.move(-map.getPosition());
+                            var hits = map.hitBy(rect, this.COLLIDE_WITH_SHIP);
+                            if (hits > 0) {
+                                actor.onCollisionWithMap(map, hits);
+                            }
+                        }
+                        break;
 
-        //        for (int i = 0; i < m_actor_list.Count; i++)
-        //        {
-        //            CActor actor = m_actor_list[i];
-        //    if (actor.isActive()) {
-        //        switch (actor.getActorInfo().m_type) {
-        //            case ActorType.ACTOR_TYPE_SHIP:
-        //            case ActorType.ACTOR_TYPE_UPGRADE:
-        //                if (m_ship_is_cloaked)
-        //                    break;
-        //                {
-        //                            Rectangle rect = actor.getCollisionRect();
-        //                    //rect.move(-map.getPosition());
-        //                    //int hits = map.hitBy(rect, COLLIDE_WITH_SHIP);
-        //                    //if (hits > 0)
-        //                    //{
-        //                    //    actor.onCollisionWithMap(map, hits);
-        //                    //}
-        //                }
-        //                break;
-
-        //            case ActorType.ACTOR_TYPE_BULLET:
-        //            case ActorType.ACTOR_TYPE_ALIENBULLET:
-        //                {
-        //                            Rectangle rect = actor.getCollisionRect();
-        //                    //rect.move(-map.getPosition());
-        //                    //int hits = map.hitBy(rect, COLLIDE_WITH_BULLETS);
-        //                    //if (hits > 0)
-        //                    //{
-        //                    //    actor.onCollisionWithMap(map, hits);
-        //                    //}
-        //                }
-        //                break;
-        //        }
-        //    }
-        //}
+                    case enums.ActorType.ACTOR_TYPE_BULLET:
+                    case enums.ActorType.ACTOR_TYPE_ALIENBULLET:
+                        {
+                            var rect: gsCRectangle = actor.getCollisionRect();
+                            //rect.move(-map.getPosition());
+                            var hits = map.hitBy(rect, this.COLLIDE_WITH_BULLETS);
+                            if (hits > 0) {
+                                actor.onCollisionWithMap(map, hits);
+                            }
+                        }
+                        break;
+                }
+            }
+        }
     }
 
     //-------------------------------------------------------------
 
-    //public removeDeadActors() : void
-    //{
-    //    for (int i = m_actor_list.getSize() - 1; i >= 0; i--) {
-    //        if (!m_actor_list[i]->isActive()) {
-    //            delete m_actor_list[i];
-    //            m_actor_list.removeIndex(i);
-    //            }
-    //        }
-    //}
+    public removeDeadActors(): void {
+        var temp_actor_list = [];
+        for (var i = this.m_actor_list.length - 1; i >= 0; i--) {
+            if (this.m_actor_list[i].isActive()) {
+                temp_actor_list.push(this.m_actor_list[i]);
+            }
+        }
+        this.m_actor_list = [];
+        this.m_actor_list = temp_actor_list;
+    }
 
     //-------------------------------------------------------------
 
     public killAllActors(): void {
         var i;
 
-        //for (i = 0; i < m_actor_list.getSize(); i++)
-        //    m_actor_list[i]->kill();
+        for (i = 0; i < this.m_actor_list.length; i++) {
+            this.m_actor_list[i].kill();
+        }
 
-        //for (i = 0; i < m_actor_list.getSize(); i++)
-        //    delete m_actor_list[i];
+        for (i = 0; i < this.m_actor_list.length; i++) {
+            delete this.m_actor_list[i];
+        }
 
-        //m_actor_list.clear();
+        this.m_actor_list = [];
     }
 
     //-------------------------------------------------------------
@@ -410,18 +410,17 @@ class CScene {
     //-------------------------------------------------------------
 
     public findShip() {
-        //        for (var i = 0; i < m_actor_list.Count; i++)
-        //        {
-        //    if (m_actor_list[i].getActorInfo().m_type == ActorType.ACTOR_TYPE_SHIP) {
-        //                return (CShip) m_actor_list[i];
-        //    }
-        //}
+        for (var i = 0; i < this.m_actor_list.length; i++) {
+            if (this.m_actor_list[i].getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
+                return <CShip>this.m_actor_list[i];
+            }
+        }
         return null;
     }
 
     //-------------------------------------------------------------
 
-    //public void createLabel(Vector2 position: gsCVector, text:string):void{
+    //public createLabel(position: gsCVector, text: string): void {
     //    //CLabel label = new CLabel;
     //    //addActor(label);
 
@@ -435,7 +434,7 @@ class CScene {
     //-------------------------------------------------------------
 
     public createLabel(position: gsCVector, num: number): void {
-        //    CLabel *label = new CLabel;
+        //    var label:CLabel = new CLabel;
         //    addActor(label);
         //    label->activate();
         //    label->setText("%i",num);
@@ -446,57 +445,53 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    public createMapExplosion(map: gsCMap, position: Point) {
+    public createMapExplosion(map: gsCMap, position: gsCPoint) {
         var exp: CSmallExplosion = new CSmallExplosion();
         this.addActor(exp);
 
-        var tile_size: Point = map.getImage().getTileSize();
-        //Point tile_centre = tile_size / new Point(2,2);
-        var tile_centre: Point = new Point(tile_size.X / 2, tile_size.Y / 2);
+        var tile_size: gsCPoint = map.getImage().getTileSize();
+        var tile_centre: gsCPoint = new gsCPoint(tile_size.X / 2, tile_size.Y / 2);
 
-        //Point pos = position * tile_size + tile_centre;
-        var pos: Point = new Point(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
+        var pos: gsCPoint = new gsCPoint(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
         exp.setPosition(new gsCVector(pos.X, pos.Y));
         exp.activate();
     }
 
     //-------------------------------------------------------------
 
-    //        public CActor getActor(int index)
-    //        {
-    //    return m_actor_list[index];
-    //}
+    public getActor(index: number): CActor {
+        return this.m_actor_list[index];
+    }
 
     //-------------------------------------------------------------
 
-    //CActor *findNearestActor(ActorType type,const gsCVector& position,int dir)
-    //{
-    //    CActor *nearest_actor = 0;
-    //    float nearest_distance = 99999.f;
+    public findNearestActor(type: enums.ActorType, position: gsCVector, dir: number): CActor {
+        var nearest_actor: CActor = null;
+        var nearest_distance: number = 99999.0;
 
-    //    for (int i = 0; i < m_actor_list.getSize(); i++) {
-    //        CActor *actor = m_actor_list[i];
-    //        if (actor->isActive() &&
-    //            actor->getActorInfo().m_type == type) {
-    //            if (dir != 0) {
-    //                float sy = position.getY();
-    //                float ay = actor->getPosition().getY();
-    //                if (dir < 0 && sy < ay)
-    //                    continue;
-    //                if (dir > 0 && sy > ay)
-    //                    continue;
-    //                }
-    //            float d = (actor->getPosition() - position).length();
-    //            if (nearest_actor == 0 ||
-    //                d < nearest_distance) {
-    //                nearest_actor = actor;
-    //                nearest_distance = d;
-    //                }
-    //            }
-    //        }
+        for (var i = 0; i < this.m_actor_list.length; i++) {
+            var actor: CActor = this.m_actor_list[i];
+            if (actor.isActive() &&
+                actor.getActorInfo().m_type == type) {
+                if (dir != 0) {
+                    var sy: number = position.Y;
+                    var ay: number = actor.getPosition().Y;
+                    if (dir < 0 && sy < ay)
+                        continue;
+                    if (dir > 0 && sy > ay)
+                        continue;
+                }
+                var d: number = 0;//(actor.getPosition() - position).length();
+                if (nearest_actor == null ||
+                    d < nearest_distance) {
+                    nearest_actor = actor;
+                    nearest_distance = d;
+                }
+            }
+        }
 
-    //    return nearest_actor;
-    //}
+        return nearest_actor;
+    }
 
     //-------------------------------------------------------------
 
@@ -534,25 +529,25 @@ class CScene {
     public addActor(actor: CActor) {
         actor.setScene(this);
         this.m_actor_list.push(actor);
+        //console.log("Actor List Size : " + this.m_actor_list.length);
     }
 
     //-------------------------------------------------------------
 
     public removeActor(actor: CActor) {
         actor.setScene(null);
-        //m_actor_list.removeItem(actor);
+        //this.m_actor_list.removeItem(actor);
     }
 
     //-------------------------------------------------------------
 
-    getNumberOfImages() {
-        return 0;//m_image_list.getSize();
+    public getNumberOfImages() {
+        return 0;//this.m_image_list.length;
     }
 
     //-------------------------------------------------------------
 
-    //public setCollisionListSize(Point pixel_size, Point zones)
-    public setCollisionListSize(pixel_size: gsCVector, zones: gsCVector) {
+    public setCollisionListSize(pixel_size: gsCPoint, zones: gsCPoint) {
         //this.m_collision_list.setSize(pixel_size, zones);
     }
 
@@ -594,13 +589,18 @@ class CScene {
         return this.lev;
     }
 
+    //-------------------------------------------------------------
+
     public GetlistOfActors() {
         return this.m_listOfActors;
     }
 
+    //-------------------------------------------------------------
+
     public LevelLoaded() {
         return this.lev.LoadingComplete;
     }
+    //-------------------------------------------------------------
 
 }
 

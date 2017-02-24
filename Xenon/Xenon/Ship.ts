@@ -314,12 +314,12 @@ class CShip extends CActor {
         this.m_position.x = this.m_position.x + (this.m_velocity.x * tempVec.x);
         this.m_position.y = this.m_position.y + (this.m_velocity.y * tempVec.y);
 
-        //var map_y = this.m_scene.getMapFrontLayer().getPosition().Y;//.getY();
+        var map_y = this.m_scene.getMapFrontLayer().getPosition().Y;//.getY();
         //gsCScreen *screen = gsCApplication::getScreen();
 
         var minx: number = 64.0;
         var maxx: number = this.m_screenWidth - 64;
-        var miny: number = 64.0; //-map_y);
+        var miny: number = -map_y;//64.0; //
         var maxy = miny + this.m_screenHeight - 128;
 
         if (this.m_position.x < minx) {

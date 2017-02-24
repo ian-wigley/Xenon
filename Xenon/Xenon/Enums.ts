@@ -239,4 +239,38 @@ module enu {
     };
 
 
+    export enum GameSampleType {
+        SAMPLE_MENU_SELECTION,
+        SAMPLE_MENU_OPTION,
+        SAMPLE_MENU_CLICK,
+        SAMPLE_MENU_BACK,
+
+        SAMPLE_PLAYER_CREATED,
+        SAMPLE_PLAYER_DESTROYED,
+
+        SAMPLE_FIRE_MISSILE,
+        SAMPLE_FIRE_HOMING_MISSILE,
+        SAMPLE_FIRE_LASER,
+
+        SAMPLE_SMALL_EXPLOSION,
+        SAMPLE_MEDIUM_EXPLOSION,
+        SAMPLE_BIG_EXPLOSION,
+
+        SAMPLE_ASTEROID_BREAKUP,
+
+        SAMPLE_PICKUP,
+        SAMPLE_BONUS,
+
+        SAMPLE_DIVE_DOWN,
+        SAMPLE_DIVE_UP,
+
+        SAMPLE_HIT_BACKGROUND,
+
+        SAMPLE_ROAR,
+        SAMPLE_SNORT,
+
+        SAMPLE_CHECKPOINT,
+    }
+
+
 } 

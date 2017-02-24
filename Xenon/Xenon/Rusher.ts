@@ -14,7 +14,7 @@ class CRusher extends CAlien {
         this.m_weapon = null;
     }
 
-    public getActorInfo() //:ActorInfo
+    public getActorInfo()
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RUSHER);
@@ -25,11 +25,11 @@ class CRusher extends CAlien {
 
             //if (m_random.getInt(100) < 25) 
             //{
-                this.m_weapon = new CSpinnerWeapon();
-                this.m_scene.addActor(this.m_weapon);
-                this.m_weapon.activate();
-                this.m_weapon.setOwner(this);
-                this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
+            this.m_weapon = new CSpinnerWeapon();
+            this.m_scene.addActor(this.m_weapon);
+            this.m_weapon.activate();
+            this.m_weapon.setOwner(this);
+            this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             //}
 
             //m_timer.start();
@@ -40,36 +40,30 @@ class CRusher extends CAlien {
 
     //-------------------------------------------------------------
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-        {
-            this.gameTime = gameTime;
 
-            if (this.m_shield == 0) {
-                super.explode();
-                super.kill();
-                return true;
-            }
-
-            //if (this.m_weapon != null) {
-            //    var ship: CShip = this.m_scene.findShip();
-
-            //    //// fire weapon towards ship
-
-            //    if (ship != null && this.getPosition().Y < ship.getPosition().Y) {
-            //        var dir:gsCVector = ship.getPosition() - this.getPosition();
-            //        dir.Normalize();
-            //        this.m_weapon.setDirection(dir);
-            //    }
-            //}
-
-            this.m_position.plusEquals(this.m_velocity);
-
-            super.animate(enums.AnimationMode.ANIMATE_LOOP);
-
+        if (this.m_shield == 0) {
+            super.explode();
+            super.kill();
             return true;
         }
 
-        //-------------------------------------------------------------
+        if (this.m_weapon != null) {
+            var ship: CShip = this.m_scene.findShip();
 
+            // fire weapon towards ship
+            if (ship != null && this.getPosition().Y < ship.getPosition().Y) {
+                //var dir:gsCVector = ship.getPosition() - this.getPosition();
+                //dir.normalize();
+                //this.m_weapon.setDirection(dir);
+            }
+        }
+
+        this.m_position.plusEquals(this.m_velocity);
+        super.animate(enums.AnimationMode.ANIMATE_LOOP);
+        return true;
     }
+
+    //-------------------------------------------------------------
+
 }
 export = CRusher;

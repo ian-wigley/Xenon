@@ -29,13 +29,6 @@ class gsCScoreTable {
 
     //-------------------------------------------------------------
 
-    //    gsCScoreTable::~gsCScoreTable()
-    //{
-    //    destroy();
-    //}
-
-    ////-------------------------------------------------------------
-
     //void gsCScoreTable::destroy()
     //{
     //    for (int i = 0; i < m_score_list.getSize(); i++)
@@ -62,7 +55,7 @@ class gsCScoreTable {
         this.m_font = font;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     setSize(size: number): void {
         //    destroy();
@@ -75,7 +68,7 @@ class gsCScoreTable {
         }
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public insertScore(score: number, name: string): number {
 

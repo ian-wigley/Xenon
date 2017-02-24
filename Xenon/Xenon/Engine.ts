@@ -26,37 +26,27 @@ class CEngine extends CActor {
 
     constructor(theScene: CScene) {
         super(theScene);
+        this.m_offset = new gsCVector(0.0, 0.0);
         this.m_thrust = 0;
+        this.m_min_extent = new gsCVector(0.0, 0.0);
+        this.m_max_extent = new gsCVector(0.0, 0.0);
         this.m_thrust_rate = 0;
     }
 
-
-    //public CEngine(listOfActors: CActorInfoList) {
-    //    this.m_offset = new gsCVector(0.0, 0.0);
-    //    this.m_thrust = 0;
-
-    //    this.m_min_extent = new gsCVector(0.0, 0.0);
-    //    this.m_max_extent = new gsCVector(0.0, 0.0);
-    //    this.m_thrust_rate = 0.0;
-    //}
-
-
     //-------------------------------------------------------------
 
-
-    public activateEngine() {
+    public activateEngine(): boolean {
         if (!this.isActive()) {
             //        m_timer.start();
             //        m_thrust_timer.start();
         }
 
-        //    return CActor::activate();
         return super.activate();
     }
 
     //-------------------------------------------------------------
 
-    public applyThrust(thrust: number) {
+    public applyThrust(thrust: number): void {
         //    if (m_thrust_timer.getTime() > m_thrust_rate) {
         //        m_thrust_timer.start();
 
@@ -101,10 +91,9 @@ class CEngine extends CActor {
 
     //-------------------------------------------------------------
 
-    draw(ctx: CanvasRenderingContext2D) {
-        return super.Draw(ctx);
-    }
-
+    //public draw(ctx: CanvasRenderingContext2D) {
+    //    return super.Draw(ctx);
+    //}
 }
 
 export = CEngine;

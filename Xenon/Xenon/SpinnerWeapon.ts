@@ -4,22 +4,18 @@ import enums = require("Enums");
 import gsCVector = require("Vector");
 
 class CSpinnerWeapon extends CWeapon {
-    m_directionS: gsCVector;
+    private m_directionS: gsCVector;
 
     constructor() {
         super();
         this.m_directionS = new gsCVector(0.0, 1.0);
     }
 
-    public getActorInfo() //:ActorInfo 
+    public getActorInfo()
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPINNER_WEAPON);
     }
-    //public ActorInfo getActorInfo()
-    //{
-    //    return null;//ActorInfoList[INFO_SPINNER_WEAPON]; 
-    //}
 
 
     public fire(): boolean {
@@ -31,9 +27,11 @@ class CSpinnerWeapon extends CWeapon {
         this.m_scene.addActor(m);
 
         m.activate();
-       // m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
+        //m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
         m.setPosition(this.getPosition());
-        //           m.setVelocity(m.getActorInfo().m_speed[m_grade] * m_direction);
+
+        var p: gsCVector = this.m_directionS;
+        m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
 
         return true;
     }

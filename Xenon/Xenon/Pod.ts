@@ -20,7 +20,6 @@ class CPod extends CAlien {
         { }
     }
 
-    //public override ActorInfo getActorInfo() {
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_POD);
@@ -36,7 +35,6 @@ class CPod extends CAlien {
         return super.activate();
     }
 
-    //public override bool update(Controls controls, GameTime gametime) {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         this.gameTime = gameTime;
         if (this.m_shield == 0) {

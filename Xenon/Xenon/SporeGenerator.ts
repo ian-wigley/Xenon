@@ -24,7 +24,6 @@ class CSporeGenerator extends CActor {
 
     //-------------------------------------------------------------
 
-    //override public bool update(Controls controls, GameTime gameTime)
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
         if (this.m_spores_created != 16) {

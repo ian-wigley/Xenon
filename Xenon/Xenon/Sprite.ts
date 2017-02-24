@@ -93,7 +93,6 @@ class gsCSprite {
         return this.m_texture;
     }
 
-
     //public gsCTiledImage getImage()
     //{
     //    return m_image;
@@ -108,7 +107,6 @@ class gsCSprite {
     }
 
     //-------------------------------------------------------------
-
 
     // From Actor 
     public draw(ctx: CanvasRenderingContext2D) {

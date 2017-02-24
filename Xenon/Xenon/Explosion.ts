@@ -1,29 +1,27 @@
 ﻿import CActor = require("Actor");
+import Controls = require("Controls");
+import GameTime = require("Timer");
+import enums = require("Enums");
 
 class CExplosion extends CActor {
-    public CExplosion() {
-    }
 
-    activate() {
+    public activate(): boolean {
         if (!this.isActive()) {
             //	m_timer.start();
         }
-
         return super.activate();
     }
 
-    //update(controls: Controls, gametime: GameTime) {
-    //    this.gameTime = gametime;
-    //    //this.m_position += this.m_velocity;
+    public update(controls: Controls, gametime: GameTime): boolean {
+        this.m_position.plusEquals(this.m_velocity);
 
-    //    if (super.animate(AnimationMode.ANIMATE_ONESHOT)) {
-    //        super.kill();
-    //    }
+        if (super.animate(enums.AnimationMode.ANIMATE_ONESHOT)) {
+            super.kill();
+        }
+        return true;
+    }
 
-    //    return true;
-    //}
-
-    onLeavingScreen() {
+    public onLeavingScreen():void {
         super.kill();
     }
 

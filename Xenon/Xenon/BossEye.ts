@@ -33,9 +33,7 @@ class CBossEye extends CBoss {
         if (!this.isActive()) {
             //    m_timer.start();
         }
-
         return super.activate();
-        //return CActor::activate();
     }
 
     public kill(): void {
@@ -45,12 +43,9 @@ class CBossEye extends CBoss {
         x.activate();
 
         this.m_active_eyes--;
-
         super.kill();
-        //CActor::kill();
     }
 
-    //public update(Controls controls, GameTime gameTime): boolean {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         if (this.m_state != BossEyeState.BOSSEYE_OPEN) {
             this.m_is_hit = false;
@@ -62,7 +57,6 @@ class CBossEye extends CBoss {
         }
 
         this.m_sprite.setFrame(this.m_eye_number + this.m_state * this.BOSSEYE_TOTAL);
-
         return true;
     }
 
