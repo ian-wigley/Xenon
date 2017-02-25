@@ -70,6 +70,10 @@ class gsCTiledImage extends gsCImage {
 
     // Main tile Drawing method !! <gsCTiledImage>
     public draw(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
+        if (tile >= this.m_source_rects.length) {
+            return false;
+        }
+
         var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
         if (this.m_screen.contains(dest)) {
             ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);

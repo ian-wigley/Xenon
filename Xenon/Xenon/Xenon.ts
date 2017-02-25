@@ -13,42 +13,38 @@ class Point {
 }
 
 class Xenon {
-    canvas: HTMLCanvasElement;
-    ctx: CanvasRenderingContext2D;
+    private canvas: HTMLCanvasElement;
+    private ctx: CanvasRenderingContext2D;
 
-    WIDTH: number = 640;
-    HEIGHT: number = 480;
+    private WIDTH: number = 640;
+    private HEIGHT: number = 480;
 
-    shipTexture: HTMLImageElement;
-    engineTexture: HTMLImageElement;
-    starTexture: HTMLImageElement;
-    backgroundTexture: HTMLImageElement;
-    m_textures: Array<HTMLImageElement>;
-    m_font8x8: HTMLImageElement;
-    m_font16x16: HTMLImageElement;
+    private introTexture: HTMLImageElement;
+    private bbTexture: HTMLImageElement;
+    private shipTexture: HTMLImageElement;
+    private engineTexture: HTMLImageElement;
+    private starTexture: HTMLImageElement;
+    private backgroundTexture: HTMLImageElement;
+    private m_textures: Array<HTMLImageElement>;
+    private m_font8x8: HTMLImageElement;
+    private m_font16x16: HTMLImageElement;
 
-    m_gameState: CPlayGameState;
-    m_ship: CShip;
-    m_scene: CScene;
-    m_stars: CStarfield;
-    m_listOfActors: CActorInfoList;
-    m_level: CLevel;
+    private m_gameState: CPlayGameState;
+    private m_ship: CShip;
+    private m_scene: CScene;
+    private m_stars: CStarfield;
+    private m_listOfActors: CActorInfoList;
+    private m_level: CLevel;
 
-    m_screenWidth: number;
-    m_screenHeight: number;
+    private m_screenWidth: number;
+    private m_screenHeight: number;
 
-    test: boolean = false;
-    delta: number = 0;
-    m_ctrl: gsCControls = new gsCControls();
+    private test: boolean = false;
+    private delta: number = 0;
+    private m_ctrl: gsCControls = new gsCControls();
 
-    wtfnum: number = 0;
-
-    m_timer: gsCTimer = new gsCTimer();
-
-
+    private m_timer: gsCTimer = new gsCTimer();
     private m_gameOn: boolean = false; //TEMP!
-
-
     private testInterval;
 
     constructor() {
@@ -82,6 +78,8 @@ class Xenon {
 
     private LoadContent(): void {
 
+        this.introTexture = <HTMLImageElement>document.getElementById("Xlogo");
+        this.bbTexture = <HTMLImageElement>document.getElementById("bblogo");
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
         this.engineTexture = <HTMLImageElement>document.getElementById("Burner1");
         this.m_listOfActors = new CActorInfoList();
@@ -190,14 +188,11 @@ class Xenon {
     }
 
     private Update(): void {
-
+        this.m_stars.Update(4);
         if (this.m_gameOn) {
-            //m_gameState.update();
             this.m_timer.update();
-            this.m_stars.Update(4);
             this.m_scene.updateAllActors(this.m_ctrl, this.m_timer);
         }
-
         this.Draw(10);
     }
 
@@ -206,19 +201,18 @@ class Xenon {
         this.rect(0, 0, this.WIDTH, this.HEIGHT);
         this.ctx.beginPath();
 
+        this.ctx.drawImage(this.backgroundTexture, 0, 0);
+        this.m_stars.Draw(this.ctx);
+
         if (this.m_gameOn) {
-            this.ctx.drawImage(this.backgroundTexture, 0, 0);
-            this.m_stars.Draw(this.ctx);
-            //this.m_scene.drawAllActors(this.ctx, null);
             this.m_gameState.update(this.ctx);
-            //this.gsCMap mapFrontLayer = m_scene.getMapFrontLayer();
-            //this.gsCMap mapBackLayer = m_scene.getMapBackLayer();
-            //this.m_scene.drawAllActors(mapFrontLayer, mapBackLayer, this.ctx);
         }
         else {
-            this.ctx.font = "2px Arial";//20
+            this.ctx.drawImage(this.introTexture, 64, 10);
+            this.ctx.drawImage(this.bbTexture, 10, 360);
+            this.ctx.font = "20px Arial";//20
             this.ctx.fillStyle = "yellow";
-            this.ctx.fillText("Press X to Start the game", 400, 240);
+            this.ctx.fillText("Press X to Start the game", 260, 300);
         }
     }
 }

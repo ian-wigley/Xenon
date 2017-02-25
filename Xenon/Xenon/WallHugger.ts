@@ -47,6 +47,7 @@ class CWallHugger extends CAlien {
         this.m_grade = WallHuggerGrade.WALLHUGGER_STATIC;
         this.m_weapon = null;
         this.m_fired = false;
+        this.m_timer = new gsCTimer();
     }
 
     //-------------------------------------------------------------

@@ -9,7 +9,7 @@ class CMissile extends CBullet {
     MISSILE_FRAMES: number = 2;
 
     constructor(theScene: CScene) {
-        super();//theScene);
+        super();
     }
 
     public getActorInfo() {
@@ -23,7 +23,7 @@ class CMissile extends CBullet {
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE).m_speed.y;
     }
 
-    public update(controls: gsCControls)// , GameTime gameTime)
+    public update(controls: gsCControls)
     {
         this.m_position.x = this.m_position.x + this.m_velocity.x;
         this.m_position.y = this.m_position.y + this.m_velocity.y;

@@ -25,6 +25,7 @@ import gsCControls = require("Controls");
 import gsCVector = require("Vector");
 import gsCPoint = require("Point");
 import gsCTimer = require("Timer");
+import enums = require("Enums");
 
 class CBossControl extends CBoss {
 
@@ -40,13 +41,11 @@ class CBossControl extends CBoss {
     m_size: number;
     m_destruction_timer: gsCTimer;
 
-
-
     constructor() {
         super();
         this.m_is_started = false;
+        this.m_timer = new gsCTimer();
     }
-
 
     //-------------------------------------------------------------
 
@@ -238,20 +237,10 @@ class CBossControl extends CBoss {
 
     //-------------------------------------------------------------
 
-
-
-
-
-
-
-
-
-
-
-    //public getActorInfo()//:ActorInfo 
-    //{
-    //    return null;//ActorInfoList[INFO_BOSSCONTROL]; 
-    //}
+    public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSCONTROL);
+    }
 
     //public activate(): boolean {
     //    return false;

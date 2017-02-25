@@ -615,43 +615,43 @@ class CLevel {
                                 switch (type) {
                                     case PickupType.PICKUP_SHIELD:
                                         p = new Pickup.CShieldPickup();
-                                        //console.log("PICKUP_SHIELD");
+                                        console.log("PICKUP_SHIELD");
                                         break;
                                     case PickupType.PICKUP_SPEEDUP:
                                         p = new Pickup.CSpeedPickup();
-                                        //console.log("PICKUP_SPEEDUP");
+                                        console.log("PICKUP_SPEEDUP");
                                         break;
                                     case PickupType.PICKUP_WEAPONUP:
                                         p = new Pickup.CWeaponPickup();
-                                        //console.log("PICKUP_WEAPONUP");
+                                        console.log("PICKUP_WEAPONUP");
                                         break;
                                     case PickupType.PICKUP_CLOAK:
                                         p = new Pickup.CCloakPickup();
-                                        //console.log("PICKUP_CLOAK");
+                                        console.log("PICKUP_CLOAK");
                                         break;
                                     case PickupType.PICKUP_DIVE:
                                         p = new Pickup.CDivePickup();
-                                        //console.log("PICKUP_DIVE");
+                                        console.log("PICKUP_DIVE");
                                         break;
                                     case PickupType.PICKUP_SCOREBONUS:
                                         p = new Pickup.CScorePickup();
-                                        //console.log("PICKUP_SCOREBONUS");
+                                        console.log("PICKUP_SCOREBONUS");
                                         break;
                                     case PickupType.PICKUP_CLONE:
                                         p = new Pickup.CClonePickup();
-                                        //console.log("PICKUP_CLONE");
+                                        console.log("PICKUP_CLONE");
                                         break;
                                     case PickupType.PICKUP_WINGTIP:
                                         p = new Pickup.CWingtipPickup();
-                                        //console.log("PICKUP_WINGTIP");
+                                        console.log("PICKUP_WINGTIP");
                                         break;
                                     case PickupType.PICKUP_HOMINGMISSILE:
                                         p = new Pickup.CHomingMissilePickup();
-                                        //console.log("PICKUP_HOMINGMISSILE");
+                                        console.log("PICKUP_HOMINGMISSILE");
                                         break;
                                     case PickupType.PICKUP_LASER:
                                         p = new Pickup.CLaserPickup();
-                                        //console.log("PICKUP_LASER");
+                                        console.log("PICKUP_LASER");
                                         break;
                                 }
                                 if (p != null) {
@@ -675,15 +675,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CSmallStandardAsteroid();
-                                                        //console.log("CSmallStandardAsteroid");
+                                                        console.log("CSmallStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CSmallHighDensityAsteroid();
-                                                        //console.log("CSmallHighDensityAsteroid");
+                                                        console.log("CSmallHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CSmallIndestructibleAsteroid();
-                                                        //console.log("CSmallIndestructibleAsteroid");
+                                                        console.log("CSmallIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -691,15 +691,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CMediumStandardAsteroid();
-                                                        //console.log("CMediumStandardAsteroid");
+                                                        console.log("CMediumStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CMediumHighDensityAsteroid();
-                                                        //console.log("CMediumHighDensityAsteroid");
+                                                        console.log("CMediumHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CMediumIndestructibleAsteroid();
-                                                        //console.log("CMediumIndestructibleAsteroid");
+                                                        console.log("CMediumIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -707,15 +707,15 @@ class CLevel {
                                                 switch (grade) {
                                                     case 0:
                                                         a = new Asteroid.CBigStandardAsteroid();
-                                                        //console.log("CBigStandardAsteroid");
+                                                        console.log("CBigStandardAsteroid");
                                                         break;
                                                     case 1:
                                                         a = new Asteroid.CBigHighDensityAsteroid();
-                                                        //console.log("CBigHighDensityAsteroid");
+                                                        console.log("CBigHighDensityAsteroid");
                                                         break;
                                                     case 2:
                                                         a = new Asteroid.CBigIndestructibleAsteroid();
-                                                        //console.log("CBigIndestructibleAsteroid");
+                                                        console.log("CBigIndestructibleAsteroid");
                                                         break;
                                                 }
                                                 break;
@@ -737,15 +737,15 @@ class CLevel {
                                         switch (grade) {
                                             case 0:
                                                 l = new Loner.CStandardLoner();
-                                                //console.log("CStandardLoner");
+                                                console.log("CStandardLoner");
                                                 break;
                                             case 1:
                                                 l = new Loner.CMediumLoner();
-                                                //console.log("CMediumLoner");
+                                                console.log("CMediumLoner");
                                                 break;
                                             case 2:
                                                 l = new Loner.CArmouredLoner();
-                                                //console.log("CArmouredLoner");
+                                                console.log("CArmouredLoner");
                                                 break;
                                         }
 
@@ -761,7 +761,7 @@ class CLevel {
                                 case AlienType.HOMER:
                                     {
                                         var h: CHomer = new CHomer();
-                                        //console.log("HOMER");
+                                        console.log("HOMER");
                                         scene.addActor(h);
                                         h.setPosition(pos);
                                         h.setVelocity(new gsCVector(0.0, 0.5));
@@ -772,7 +772,7 @@ class CLevel {
                                 case AlienType.POD:
                                     {
                                         var pO: CPod = new CPod();
-                                        //console.log("POD");
+                                        console.log("POD");
                                         scene.addActor(pO);
                                         pO.setPosition(pos);
                                         pO.setVelocity(new gsCVector(0.0, 0.0));
@@ -783,7 +783,7 @@ class CLevel {
                                 case AlienType.RUSHER:
                                     {
                                         var r: CRusher = new CRusher();
-                                        //console.log("RUSHER");
+                                        console.log("RUSHER");
                                         scene.addActor(r);
                                         r.setPosition(pos);
                                         r.setVelocity(new gsCVector(0.0, 2.0));
@@ -794,7 +794,7 @@ class CLevel {
                                 case AlienType.WALLHUGGER:
                                     {
                                         var w: CWallHugger = new CWallHugger();
-                                        //console.log("WallHugger");
+                                        console.log("WallHugger");
                                         scene.addActor(w);
                                         w.setPosition(pos);
                                         w.setVelocity(new gsCVector(0.0, 0.0));
@@ -814,7 +814,7 @@ class CLevel {
                                 case AlienType.DRONE_GENERATOR:
                                     {
                                         var d: CDroneGenerator = new CDroneGenerator();
-                                        //console.log("DroneGenerator");
+                                        console.log("DroneGenerator");
                                         scene.addActor(d);
                                         d.setPosition(pos);
                                         d.activate();
@@ -824,7 +824,7 @@ class CLevel {
                                 case AlienType.REVERSE_RUSHER:
                                     {
                                         var r: CRusher = new CRusher();
-                                        //console.log("REVERSE_RUSHER");
+                                        console.log("REVERSE_RUSHER");
                                         scene.addActor(r);
                                         //r.setPosition(pos + new Vector2(0.0f,(float) screen.getSize().getY() + m_image.getTileSize().Y));
                                         r.setVelocity(new gsCVector(0.0, -4.0));
@@ -835,7 +835,7 @@ class CLevel {
                                 case AlienType.RUSHER_GENERATOR_LEFT:
                                     {
                                         var rG: CRusherGenerator = new CRusherGenerator();
-                                        //console.log("RusherGenerator");
+                                        console.log("RusherGenerator");
                                         scene.addActor(rG);
                                         rG.setPosition(pos);
                                         rG.setVelocity(new gsCVector(-2.0, 0.0));
@@ -846,7 +846,7 @@ class CLevel {
                                 case AlienType.RUSHER_GENERATOR_RIGHT:
                                     {
                                         rG = new CRusherGenerator();
-                                        //console.log("RusherGenerator");
+                                        console.log("RusherGenerator");
                                         scene.addActor(rG);
                                         rG.setPosition(pos);
                                         rG.setVelocity(new gsCVector(2.0, 0.0));
@@ -857,7 +857,7 @@ class CLevel {
                                 case AlienType.ORGANIC_GUN:
                                     {
                                         var oG: COrganicGun = new COrganicGun();
-                                        //console.log("OrganicGun");
+                                        console.log("OrganicGun");
                                         scene.addActor(oG);
                                         oG.setPosition(pos);
                                         oG.setVelocity(new gsCVector(0.0, 0.0));
@@ -871,7 +871,7 @@ class CLevel {
 
                                 default:
                                     var xp: CBigExplosion = new CBigExplosion();
-                                    //console.log("BigExplosion");
+                                    console.log("BigExplosion");
                                     scene.addActor(xp);
                                     xp.setPosition(pos);
                                     xp.activate();
@@ -894,7 +894,7 @@ class CLevel {
                         case TileId.ID_BOSS_MOUTH:
                             {
                                 var m: CBossMouth = new CBossMouth();
-                                //console.log("BossMouth");
+                                console.log("BossMouth");
                                 scene.addActor(m);
                                 m.setPosition(pos);
                                 m.setVelocity(new gsCVector(0.0, 0.0));
@@ -904,7 +904,7 @@ class CLevel {
                         case TileId.ID_BOSS_EYE:
                             {
                                 var e: CBossEye = new CBossEye();
-                                //console.log("BossEye");
+                                console.log("BossEye");
                                 e.setEyeNumber(type);
                                 scene.addActor(e);
                                 switch (type) {
@@ -930,7 +930,7 @@ class CLevel {
                         case TileId.ID_BOSS_CONTROL:
                             {
                                 var bC: CBossControl = new CBossControl();
-                                //console.log("BossControl");
+                                console.log("BossControl");
                                 scene.addActor(bC);
                                 bC.setPosition(pos);
                                 bC.setVelocity(new gsCVector(0.0, 0.0));

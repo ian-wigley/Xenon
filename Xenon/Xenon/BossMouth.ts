@@ -18,6 +18,8 @@ class CBossMouth extends CBoss {
         super();
         this.m_mouth = this;
         this.m_mode = -1;
+        this.m_timer = new gsCTimer();
+        this.m_firing_timer = new gsCTimer();
     }
 
     //-------------------------------------------------------------
@@ -114,10 +116,10 @@ class CBossMouth extends CBoss {
 
     //-------------------------------------------------------------
 
-    //public getActorInfo(): ActorInfo {
-    //    this.m_actorInfo = this.m_scene.GetlistOfActors();
-    //    return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSMOUTH);
-    //}
+    public getActorInfo(): ActorInfo {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSMOUTH);
+    }
 
 }
 

@@ -207,15 +207,15 @@ class CScene {
         }
         else {
             this.m_map.drawMap(ctx);
-            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, total, ctx);
-            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIEN, total, ctx);
-            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIENBULLET, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BULLET, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ENGINE, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);
-            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
-            //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_WEAPON, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_WEAPON, total, ctx);
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, total, ctx);
         }
     }
@@ -495,26 +495,26 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    clearCheckpoint() {
+    public clearCheckpoint() {
         this.m_checkpoint_active = false;
     }
 
     //-------------------------------------------------------------
 
-    setNextCheckpoint(position: gsCVector) {
+    public setNextCheckpoint(position: gsCVector) {
         this.m_checkpoint = position;
         this.m_checkpoint_active = true;
     }
 
     //-------------------------------------------------------------
 
-    hasCheckpoint() {
+    public hasCheckpoint() {
         return this.m_checkpoint_active;
     }
 
     //-------------------------------------------------------------
 
-    getCheckpoint() {
+    public getCheckpoint() {
         return this.m_checkpoint;
     }
 
@@ -529,7 +529,7 @@ class CScene {
     public addActor(actor: CActor) {
         actor.setScene(this);
         this.m_actor_list.push(actor);
-        //console.log("Actor List Size : " + this.m_actor_list.length);
+        console.log("Actor List Size : " + this.m_actor_list.length);
     }
 
     //-------------------------------------------------------------
