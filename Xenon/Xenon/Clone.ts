@@ -22,6 +22,7 @@ class CClone extends CUpgrade {
     m_required_angle: number;
     m_engine: CCloneEngine;
     scene: CScene
+    m_name = "clone";
 
     constructor(theScene: CScene) {
         super(theScene);
@@ -31,6 +32,14 @@ class CClone extends CUpgrade {
         this.m_current_angle = 0.0;
         this.m_required_angle = 0.0;
         this.m_engine = null;
+        this.m_name = "clone";
+    }
+
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLONE);
     }
 
     //-------------------------------------------------------------
@@ -43,7 +52,7 @@ class CClone extends CUpgrade {
             this.m_engine.setOffset(new gsCVector(0.0, 10.0));
             this.m_engine.setOwner(this);
             this.m_engine.setParams(new gsCVector(0.0, -16.0), new gsCVector(0.0, 0.0), 0.05);
-            //m_timer.start();
+            this.m_timer.start();
         }
 
         return super.activate();
@@ -65,8 +74,8 @@ class CClone extends CUpgrade {
 
         var ship: CShip = <CShip>this.getOwner();
 
-        if (ship != null) {
-            this.explode();
+        if (!ship){// != null) {
+            //this.explode();
             this.kill();
             return true;
         }
@@ -74,7 +83,7 @@ class CClone extends CUpgrade {
         if (this.getShield() == 0) {
             ship.detachClone(this);
             this.setOwner(null);
-            this.explode();
+            //this.explode();
             this.kill();
             return true;
         }
@@ -113,12 +122,17 @@ class CClone extends CUpgrade {
         }
 
         //m_offset = new Vector2::polar(CLONE_RADIUS, m_current_angle);
+        //this.m_offset = new gsCVector(0, 0);//this.CLONE_RADIUS, this.m_current_angle);
+        //this.m_offset.polar(this.CLONE_RADIUS, this.m_current_angle);
         this.m_offset = new gsCVector(this.CLONE_RADIUS, this.m_current_angle);
 
         var d:number = ship.getDiveLevel();
 
         if (d == 0) {
             this.m_position = ship.getPosition().plus1(this.m_offset);
+           // this.m_position.x = ship.getPosition().x + this.m_offset.x;
+           // this.m_position.y = ship.getPosition().y + this.m_offset.y;
+
             if (ship.isCloaked()) {
                 if (!ship.isCloakFlashing()) {
                     this.m_sprite.setFrame(this.CLONE_CLOAK_FRAME);
@@ -128,11 +142,12 @@ class CClone extends CUpgrade {
                 }
             }
             else {
-                //this.animate(enums.AnimationMode.ANIMATE_LOOP, 0, this.CLONE_FRAMES);
+                this.animations(enums.AnimationMode.ANIMATE_LOOP, 0, this.CLONE_FRAMES);
             }
         }
         else {
             //this.m_position = ship.getPosition() + m_offset * ship.getDiveScale();
+            this.m_position = ship.getPosition().plus1(this.m_offset).times1(ship.getDiveScale());
             this.m_sprite.setFrame(this.CLONE_DIVE_OFFSET + this.CLONE_DIVE_FRAMES * d / this.SHIP_DIVE_FRAMES);
         }
 

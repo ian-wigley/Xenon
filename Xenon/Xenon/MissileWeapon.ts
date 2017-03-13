@@ -1,7 +1,4 @@
-﻿//import gsCControls = require("Controls");
-//import gsCRectangle = require("Rectangle");
-//import gsCTiledImage = require("TiledImage");
-import gsCVector = require("Vector");
+﻿import gsCVector = require("Vector");
 import CScene = require("Scene");
 import CWeapon = require("Weapon");
 import CMissile = require("Missile");
@@ -11,6 +8,7 @@ class CMissileWeapon extends CWeapon {
 
     constructor(scene: CScene) {
         super(scene);
+        this.m_name = "MissileWeapon";
     }
 
     public getActorInfo() {

@@ -112,3 +112,4 @@ bool CCreditsState::destroy()
     */
 
 }
+export = CCreditsState;

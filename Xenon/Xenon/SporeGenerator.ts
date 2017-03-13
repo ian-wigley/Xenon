@@ -16,6 +16,7 @@ class CSporeGenerator extends CActor {
         this.m_spores_created = 0;
         this.m_spores_alive = 0;
         this.m_spores_killed = 0;
+        this.m_name = "SporeGenerator";
     }
 
     public activate(): boolean {
@@ -41,11 +42,11 @@ class CSporeGenerator extends CActor {
                     var angle: number = 45.0 * i + 22.5 * ring;
                     var offset: gsCVector = new gsCVector(radius * Math.sin(angle), radius * Math.cos(angle));
                     //s.setPosition(this.getPosition() + offset);
-                    s.setPosition(new gsCVector(0,0).plus(this.getPosition(), offset));
+                    s.setPosition(new gsCVector(0, 0).plus(this.getPosition(), offset));
                     var d: gsCVector = offset;
                     d.normalize();
                     //s.setVelocity(d * s.getActorInfo().m_speed[0]);
-                    s.setVelocity(new gsCVector(0, 0).times(d,s.getActorInfo().m_speed[0]));
+                    s.setVelocity(new gsCVector(0, 0).times(d, s.getActorInfo().m_speed[0]));
                     s.setOwner(this);
                     this.m_spores_created++;
                 }

@@ -88,7 +88,7 @@ class CWallHugger extends CAlien {
             this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             this.m_weapon.setFiringMode(enums.WeaponFiringMode.WEAPON_MANUAL);
             this.m_state = WallHuggerState.WALLHUGGER_STILL;
-           // this.m_timer.start();
+            this.m_timer.start();
         }
         return super.activate();
     }
@@ -110,7 +110,7 @@ class CWallHugger extends CAlien {
 
         this.gameTime = gameTime;
         if (this.m_shield == 0) {
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }
@@ -137,7 +137,7 @@ class CWallHugger extends CAlien {
                             //}
                         }
 
-                        //this.m_timer.start();
+                        this.m_timer.start();
                     }
                 }
                 break;
@@ -159,7 +159,7 @@ class CWallHugger extends CAlien {
                     if (this.m_timer.getTime() >= this.WALLHUGGER_WALK_TIME)
                     {
                         this.m_state = WallHuggerState.WALLHUGGER_STILL;
-                       // this.m_timer.start();
+                        this.m_timer.start();
                     }
                 }
                 break;
@@ -169,7 +169,7 @@ class CWallHugger extends CAlien {
                     if (frame >= this.WALLHUGGER_SHOT_FRAMES) {
                         this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
                         this.m_state = WallHuggerState.WALLHUGGER_STILL;
-                        //this.m_timer.start();
+                        this.m_timer.start();
                     }
                     else {
                         this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_SHOT_START + frame);

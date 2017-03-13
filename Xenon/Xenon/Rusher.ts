@@ -12,6 +12,8 @@ class CRusher extends CAlien {
     constructor() {
         super();
         this.m_weapon = null;
+        //this.m_timer = new gsCTimer();
+        this.m_name = "Rusher";
     }
 
     public getActorInfo()
@@ -32,7 +34,7 @@ class CRusher extends CAlien {
             this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             //}
 
-            //m_timer.start();
+            this.m_timer.start();
         }
 
         return super.activate();
@@ -42,7 +44,7 @@ class CRusher extends CAlien {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
         if (this.m_shield == 0) {
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }
@@ -52,9 +54,9 @@ class CRusher extends CAlien {
 
             // fire weapon towards ship
             if (ship != null && this.getPosition().Y < ship.getPosition().Y) {
-                //var dir:gsCVector = ship.getPosition() - this.getPosition();
+                //var dir: gsCVector = ship.getPosition().minus(this.getPosition());
                 //dir.normalize();
-                //this.m_weapon.setDirection(dir);
+                ////this.m_weapon.setDirection(dir);
             }
         }
 

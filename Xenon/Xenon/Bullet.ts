@@ -3,16 +3,17 @@ import enums = require("Enums");
 import gsCMap = require("Map");
 import gsCPoint = require("Point");
 import gsCMapTile = require("MapTile");
-import CPlayGameState = require("Gamestate");
+import CPlayGameState = require("PlayGameState");
 
 class CBullet extends CActor {
 
     protected m_grade: enums.BulletGrade;
-    private m_pgs: CPlayGameState;
+
 
     constructor() {
         super();
         this.m_grade = enums.BulletGrade.BULLET_STANDARD;
+        this.m_name = "Bullet";
     }
 
     //-------------------------------------------------------------
@@ -23,8 +24,9 @@ class CBullet extends CActor {
 
     //-------------------------------------------------------------
 
-    public draw(): boolean {
-        if (!this.draw()) {
+    public draw(ctx: CanvasRenderingContext2D): boolean {
+        //if (!super.draw(ctx)) {
+            if (!super.Draw(ctx)) {
             return false;
         }
 
@@ -62,9 +64,8 @@ class CBullet extends CActor {
                     this.m_scene.createMapExplosion(map, pos);
 
                     // NOTE: don't let alien bullets score points :)
-
                     if (this.getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_BULLET) {
-                        //this.m_pgs.getPlayer().scoreBonus(5);
+                        //this.m_playGameState.getPlayer().scoreBonus(5);
                     }
                 }
             }
@@ -79,10 +80,6 @@ class CBullet extends CActor {
         this.m_grade = grade;
     }
 
-    //-------------------------------------------------------------
-
-    public updatePlayGameState(state: CPlayGameState) {
-    }
 }
 
 export = CBullet;

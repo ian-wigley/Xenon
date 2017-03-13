@@ -4,20 +4,25 @@ import enums = require("Enums");
 import Pickup = require("Pickup");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CPlayGameState = require("PlayGameState");
 
 class CDrone extends CAlien {
 
     private m_generator: CDroneGenerator;
     private m_phase: number;
     //private m_timer:number = 0.0;
+    private m_playGameState: CPlayGameState;
 
     constructor(generator?: CDroneGenerator) {
         super();
         this.m_generator = generator;
         this.m_phase = 0.0;
+        this.m_name = "Drone";
     }
 
-    public getActorInfo() 
+    //-------------------------------------------------------------
+
+    public getActorInfo()
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DRONE);
@@ -26,17 +31,19 @@ class CDrone extends CAlien {
     //-------------------------------------------------------------
 
     public activate(): boolean {
-        //if (!isActive())
-        //    m_timer.start();
-
+        if (!this.isActive()) {
+            this.m_timer.start();
+        }
         return super.activate();
     }
 
     //-------------------------------------------------------------
 
-    public update(controls: gsCControls, gameTime: gsCTimer) {
+    public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
-        this.gameTime = this.gameTime = gameTime;;
+        this.m_timer.update(false);
+
+        //this.gameTime = this.gameTime = gameTime;;
         if (this.m_shield == 0) {
             var score: number = this.m_generator.droneKilled(true);
 
@@ -47,11 +54,11 @@ class CDrone extends CAlien {
                 s.activate();
             }
             else {
-                //m_scene.createLabel(getPosition(),score);
-                //CPlayGameState::getPlayer()->scoreBonus(score);
+                this.m_scene.createLabel(this.getPosition(), score.toString());
+                this.m_playGameState.getPlayer().scoreBonus(score);
             }
 
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }

@@ -38,6 +38,7 @@
     <TypeScriptCompile Include="Bullet.ts" />
     <TypeScriptCompile Include="Clone.ts" />
     <TypeScriptCompile Include="CloneEngine.ts" />
+    <TypeScriptCompile Include="CollisionList.ts" />
     <TypeScriptCompile Include="Controls.ts" />
     <TypeScriptCompile Include="Drone.ts" />
     <TypeScriptCompile Include="DroneGenerator.ts" />
@@ -48,6 +49,8 @@
     <TypeScriptCompile Include="GameState.ts" />
     <TypeScriptCompile Include="Homer.ts" />
     <TypeScriptCompile Include="HomerProjectileWeapon.ts" />
+    <TypeScriptCompile Include="HomingMissileWeapon.ts" />
+    <TypeScriptCompile Include="LaserWeapon.ts" />
     <TypeScriptCompile Include="Loner.ts" />
     <TypeScriptCompile Include="MainMenuState.ts" />
     <TypeScriptCompile Include="MapTile.ts" />

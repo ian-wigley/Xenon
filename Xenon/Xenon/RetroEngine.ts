@@ -9,6 +9,7 @@ class CRetroEngine extends CEngine {
     //private m_actorInfo: CActorInfoList;
 
     act: CActor;
+    m_name = "RetroEngine";
 
     public CRetroEngine(listOfActors: CActorInfoList) {
         this.m_direction = enums.RetroDirection.RETRO_NW;
@@ -35,7 +36,7 @@ class CRetroEngine extends CEngine {
                     this.animations(enums.AnimationMode.ANIMATE_LOOP, 6, 2);
                     break;
             }
-
+            //super.draw(ctx);
             super.Draw(ctx);
         }
 
@@ -48,10 +49,9 @@ class CRetroEngine extends CEngine {
         this.m_direction = direction;
     }
 
-    getActorInfo() {
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RETRO_ENGINE);
-
     }
 }
 export = CRetroEngine;

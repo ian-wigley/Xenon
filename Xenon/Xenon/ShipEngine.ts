@@ -7,6 +7,7 @@ class CShipEngine extends CEngine {
 
     constructor(theScene: CScene) {
         super(theScene);
+        this.m_name = "RusherGenerator";
     }
 
     public getActorInfo() {

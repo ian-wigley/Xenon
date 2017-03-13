@@ -51,16 +51,11 @@ class gsCFont extends gsCTiledImage {
     //-------------------------------------------------------------
 
     public printString(message: string): boolean {
-        //    va_list arglist;
-        //    static char message[1000];
-        //    va_start(arglist,format);
-        //    vsprintf(message,format,arglist);
-        //    va_end(arglist);
 
-        var length: number = message.length; //strlen(message);
+        var length: number = message.length;
 
-        //    if (length == 0)
-        //        return false;
+            if (length == 0)
+                return false;
         //    gsCScreen *screen = gsCApplication::getScreen();
         //    if (!screen)
         //        return false;
@@ -71,8 +66,7 @@ class gsCFont extends gsCTiledImage {
 
         var count: number = 0;
         while (length-- > 0) {
-            //            gsUBYTE c = *str++;
-            var c = message.charCodeAt(count++);//("M".charCodeAt(0));
+            var c = message.charCodeAt(count++);
             if (c >= 0x20 && c <= 0x7F) {
                 c -= 0x20;
                 if (c < this.m_num_tiles) {
@@ -81,7 +75,7 @@ class gsCFont extends gsCTiledImage {
                     }
                     else {
                         this.drawFast(c, this.m_text_cursor, this.m_ctx);
-                        this.m_text_cursor.add(new gsCPoint(this.m_tile_size.X, 0));// += new gsCPoint(m_tile_size.X, 0);
+                        this.m_text_cursor.add(new gsCPoint(this.m_tile_size.X, 0));
                     }
                 }
             }
@@ -110,12 +104,6 @@ class gsCFont extends gsCTiledImage {
     //-------------------------------------------------------------
 
     public justifyString(message: string): boolean {
-        //    va_list arglist;
-        //    static char message[1000];
-
-        //    va_start(arglist,format);
-        //    vsprintf(message,format,arglist);
-        //    va_end(arglist);
 
         //    gsCScreen *screen = gsCApplication::getScreen();
 

@@ -125,7 +125,7 @@ module enu {
         BULLET_MEDIUM,
         BULLET_BEST,
         BULLET_GRADES
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -272,5 +272,84 @@ module enu {
         SAMPLE_CHECKPOINT,
     }
 
+
+    export enum GameMusicType {
+        MUSIC_TITLE,
+        MUSIC_INTRO,
+        MUSIC_GAME,
+        MUSIC_HISCORE,
+        MUSIC_BOSS,
+        MUSIC_OUTRO,
+    };
+
+    //-------------------------------------------------------------
+
+    export enum DemoMode {
+        DEMO_OFF,
+        DEMO_RECORD,
+        DEMO_PLAYBACK
+    };
+
+    //-------------------------------------------------------------
+
+    export enum ControllerType {
+        KEYBOARD_LAYOUT_1,
+        KEYBOARD_LAYOUT_2,
+        JOYSTICK_1,
+        JOYSTICK_2,
+    };
+
+    //-------------------------------------------------------------
+
+    export enum OptionType {
+        OPTION_DIFFICULTY,
+        OPTION_HIRES,
+        OPTION_WINDOWED,
+        OPTION_COLOURDEPTH,
+        OPTION_JOYSTICK,
+        OPTION_MUSIC,
+        OPTION_SOUNDFX,
+        OPTION_PARTICLEFX,
+        OPTION_BACKDROP,
+        OPTION_DEBUGINFO,
+        OPTION_CHEATS,
+        OPTION_CONTROL1,
+        OPTION_CONTROL2,
+        TOTAL_OPTIONS
+    };
+
+    //-------------------------------------------------------------
+
+    export enum VideoMenuItem {
+        OM_HIRES,
+        OM_WINDOWED,
+        OM_COLOURDEPTH,
+        OM_PARTICLEFX,
+        OM_BACKDROP,
+        OM_SEPERATOR,
+        OM_APPLY,
+        OM_CANCEL
+    }
+
+    //-------------------------------------------------------------
+
+    export enum OptionsMenuItem {
+        OM_CONTROL,
+        OM_VIDEO,
+        OM_AUDIO,
+        OM_SEPERATOR,
+        OM_BACK
+    }
+
+    //-------------------------------------------------------------
+
+    export enum MainMenuItem {
+        MM_ONEPLAYER,
+        MM_TWOPLAYER,
+        MM_SCORES,
+        MM_OPTIONS,
+        MM_CREDITS,
+        MM_QUIT
+    };
 
 } 

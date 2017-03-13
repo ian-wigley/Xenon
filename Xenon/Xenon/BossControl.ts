@@ -18,6 +18,11 @@
 class BossScriptItem {
     public m_state: BossState;
     public m_param: number;
+
+    constructor(state: BossState, param: number) {
+        this.m_state = state;
+        this.m_param = param;
+    }
 }
 
 import CBoss = require("Boss")
@@ -26,25 +31,73 @@ import gsCVector = require("Vector");
 import gsCPoint = require("Point");
 import gsCTimer = require("Timer");
 import enums = require("Enums");
+import gsCMapTile = require("MapTile");
+import CBigExplosion = require("BigExplosion");
 
 class CBossControl extends CBoss {
 
-    m_is_started: boolean;
-    m_yscroll: number = 0; boolean;
-    m_state: BossState;
-    m_counter: number;
-    m_script: BossScriptItem[];
-    m_script_pointer: BossScriptItem;
-    m_loop_point: BossScriptItem;
+    private m_is_started: boolean;
+    private m_yscroll: number = 0; boolean;
+    private m_state: BossState;
+    private m_counter: number;
+    private m_script: Array<BossScriptItem>;
+    private m_script_pointer: BossScriptItem;
+    private m_loop_point: BossScriptItem;
 
-    m_tile_pos: gsCPoint;
-    m_size: number;
-    m_destruction_timer: gsCTimer;
+    private m_script_pointer_count = 0;
+    private m_tile_pos: gsCPoint;
+    private m_size: number;
+    private m_destruction_timer: gsCTimer;
 
     constructor() {
         super();
         this.m_is_started = false;
         this.m_timer = new gsCTimer();
+
+        this.m_script = [];
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_DOWN, 500));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_BEGIN_LOOP, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_ROAR, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_OPEN_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_UP, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SNORT, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SHUT_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_DOWN, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_ROAR, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_OPEN_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_UP, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SNORT, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 1));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 1));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SHUT_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_DOWN, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_ROAR, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_OPEN_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_UP, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SNORT, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 2));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 2));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SHUT_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_DOWN, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_ROAR, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_OPEN_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_UP, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SNORT, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 3));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_STATIC, 50));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_TRIGGER, 3));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_SHUT_EYES, 0));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_MOVE_DOWN, 200));
+        this.m_script.push(new BossScriptItem(BossState.BOSS_END_LOOP, 0));
     }
 
     //-------------------------------------------------------------
@@ -66,7 +119,6 @@ class CBossControl extends CBoss {
 
     public kill(): void {
         this.m_is_started = false;
-
         super.kill();
     }
 
@@ -99,60 +151,58 @@ class CBossControl extends CBoss {
 
             this.m_counter--;
         }
-
         return true;
     }
 
     //-------------------------------------------------------------
 
     public interpretScript(): void {
-        //    if (this.m_script_pointer.m_state == BossState.BOSS_BEGIN_LOOP)
-        //    this.m_loop_point = ++m_script_pointer;
+        if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
+            //this.m_loop_point = ++m_script_pointer;
+        }
+        if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP) {
+            //    this.m_script_pointer = this.m_loop_point;
+        }
+        if (this.m_script_pointer.m_state == BossState.BOSS_TRIGGER) {
+            switch (this.m_script_pointer.m_param) {
+                case 0:
+                    this.m_mouth.trigger(0, 16, 0.05);
+                    break;
+                case 1:
+                    this.m_mouth.trigger(1, 16, 0.05);
+                    break;
+                case 2:
+                    this.m_mouth.trigger(2, 16, 0.05);
+                    break;
+                case 3:
+                    this.m_mouth.trigger(3, 16, 0.05);
+                    break;
+            }
+            //this.m_script_pointer++;
+        }
 
-        //    if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP)
-        //    this.m_script_pointer = this.m_loop_point;
+        if (this.m_script_pointer.m_state == BossState.BOSS_ROAR) {
+            //    CGameState::playSample(SAMPLE_ROAR);
+            //    m_script_pointer++;
+        }
 
-        //if (m_script_pointer ->m_state == BOSS_TRIGGER) {
-        //    switch (m_script_pointer ->m_param) {
-        //        case 0:
-        //            m_mouth ->trigger(0, 16, 0.05f);
-        //            break;
-        //        case 1:
-        //            m_mouth ->trigger(1, 16, 0.05f);
-        //            break;
-        //        case 2:
-        //            m_mouth ->trigger(2, 16, 0.05f);
-        //            break;
-        //        case 3:
-        //            m_mouth ->trigger(3, 16, 0.05f);
-        //            break;
-        //    }
+        if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
+            //    CGameState::playSample(SAMPLE_SNORT);
+            //    m_script_pointer++;
+        }
 
-        //    m_script_pointer++;
-        //}
+        if (this.m_script_pointer.m_state == BossState.BOSS_OPEN_EYES) {
+            //    CBossEye::setState(BOSSEYE_OPEN);
+            //    m_script_pointer++;
+        }
 
-        //if (m_script_pointer ->m_state == BOSS_ROAR) {
-        //    CGameState::playSample(SAMPLE_ROAR);
-        //    m_script_pointer++;
-        //}
+        if (this.m_script_pointer.m_state == BossState.BOSS_SHUT_EYES) {
+            //    CBossEye::setState(BOSSEYE_SHUT);
+            //    m_script_pointer++;
+        }
 
-        //if (m_script_pointer ->m_state == BOSS_SNORT) {
-        //    CGameState::playSample(SAMPLE_SNORT);
-        //    m_script_pointer++;
-        //}
-
-        //if (m_script_pointer ->m_state == BOSS_OPEN_EYES) {
-        //    CBossEye::setState(BOSSEYE_OPEN);
-        //    m_script_pointer++;
-        //}
-
-        //if (m_script_pointer ->m_state == BOSS_SHUT_EYES) {
-        //    CBossEye::setState(BOSSEYE_SHUT);
-        //    m_script_pointer++;
-        //}
-
-        //m_counter = m_script_pointer ->m_param;
-        //m_state = m_script_pointer ->m_state;
+        this.m_counter = this.m_script_pointer.m_param;
+        this.m_state = this.m_script_pointer.m_state;
 
         //m_script_pointer++;
     }
@@ -165,7 +215,7 @@ class CBossControl extends CBoss {
 
     //-------------------------------------------------------------
 
-    getYScroll(): number {
+    public getYScroll(): number {
         return this.m_yscroll;
     }
 
@@ -173,66 +223,58 @@ class CBossControl extends CBoss {
 
     public initiateDestructionSequence(): void {
         this.m_state = BossState.BOSS_DESTROY;
-
         this.m_scene.findShip().setCloak(1000.0);
-
         this.m_yscroll = 1;
-
         var epicentre: gsCVector = this.m_mouth.getPosition();
-
         var tile_size: gsCPoint = this.m_scene.getMap().getImage().getTileSize();
-
-        //this.m_tile_pos = <gsCPoint>(epicentre) / tile_size;
-
+        this.m_tile_pos = <gsCPoint>(epicentre).divide(tile_size);
         this.m_size = 1;
-
         this.m_destruction_timer.start();
     }
 
     //-------------------------------------------------------------
 
     public updateDestructionSequence(): void {
-        //if (this.m_destruction_timer.getTime() > 0.1) {
-        //    this.m_destruction_timer.start();
+        if (this.m_destruction_timer.getTime() > 0.1) {
+            this.m_destruction_timer.start();
 
-        //    for (var x = 0; x < this.m_size; x++) {
-        //        explodeTile(m_tile_pos + new gsCPoint(x, 0));
-        //        explodeTile(m_tile_pos + new gsCPoint(x, m_size - 1));
-        //        explodeTile(m_tile_pos + new gsCPoint(0, x));
-        //        explodeTile(m_tile_pos + new gsCPoint(m_size - 1, x));
-        //    }
+            for (var x = 0; x < this.m_size; x++) {
+                this.explodeTile(this.m_tile_pos.add(new gsCPoint(x, 0)));
+                this.explodeTile(this.m_tile_pos.add(new gsCPoint(x, this.m_size - 1)));
+                this.explodeTile(this.m_tile_pos.add(new gsCPoint(0, x)));
+                this.explodeTile(this.m_tile_pos.add(new gsCPoint(this.m_size - 1, x)));
+            }
 
-        //    this.m_tile_pos = this.m_tile_pos - newgsCPoint(1, 1);
-        //    this.m_size += 2;
+            this.m_tile_pos = this.m_tile_pos.subtract(new gsCPoint(1, 1));
+            this.m_size += 2;
 
-        //    if (this.m_size > 21) {
-        //        this.m_state = BossState.BOSS_DEAD;
-        //    }
-        //}
+            if (this.m_size > 21) {
+                this.m_state = BossState.BOSS_DEAD;
+            }
+        }
     }
 
     //-------------------------------------------------------------
 
     public explodeTile(pos: gsCPoint): void {
-        //        gsCMap *map = m_scene->getMap();
+        var map = this.m_scene.getMap();
 
-        //gsCMapTile * tile = map ->getMapTile(pos);
+        var tile: gsCMapTile = map.getMapTile(pos);
 
-        //if (tile) {
-        //    if (!tile ->isEmpty() && !tile ->isHidden()) {
-        //        tile ->setHidden();
-
-        //        CBigExplosion * exp = new CBigExplosion();
-        //        m_scene ->addActor(exp);
-
-        //        gsCPoint tile_size = map ->getImage() ->getTileSize();
-        //        gsCPoint tile_centre = tile_size / gsCPoint(2, 2);
-
-        //        gsCPoint p = pos * tile_size + tile_centre;
-        //        exp ->setPosition(gsCVector((float) p.getX(), (float) p.getY()));
-        //        exp ->activate();
-        //    }
-        //}
+        if (tile) {
+            if (!tile.isEmpty() && !tile.isHidden()) {
+                tile.setHidden(true); //?
+                var exp: CBigExplosion = new CBigExplosion();
+                this.m_scene.addActor(exp);
+                var tile_size: gsCPoint = map.getImage().getTileSize();
+                //var tile_centre: gsCPoint = tile_size / new gsCPoint(2, 2);
+                var tile_centre: gsCPoint = tile_size.divide(new gsCPoint(2, 2));
+                //var p: gsCPoint = pos * tile_size + tile_centre;
+                var p: gsCPoint = pos.multiply(tile_size.add(tile_centre));
+                exp.setPosition(new gsCVector(p.X, p.Y));
+                exp.activate();
+            }
+        }
     }
 
     //-------------------------------------------------------------
@@ -241,38 +283,6 @@ class CBossControl extends CBoss {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSCONTROL);
     }
-
-    //public activate(): boolean {
-    //    return false;
-    //}
-
-    //public kill(): void { }
-
-    //public update(controls: gsCControls): boolean {
-    //    return false;
-    //}
-
-    //public getYScroll(): number {
-    //    return 0;
-    //}
-
-    //isStarted(): boolean {
-    //    return false;
-    //}
-
-    //interpretScript(): void {
-
-    //}
-
-
-
-    ////	void explodeTile(const Point pos);
-
-    //public initiateDestructionSequence(): void { }
-
-    //public updateDestructionSequence(): void { }
-
-
 }
 
 export = CBossControl;

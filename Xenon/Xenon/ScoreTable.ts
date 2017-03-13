@@ -1,5 +1,8 @@
 ﻿import gsCPoint = require("Point");
 import gsCFont = require("Font");
+import gsCTimer = require("Timer");
+import gsCScreen = require("Screen");
+import gsCRect = require("Rectangle");
 
 class gsScoreItem {
     m_score: number;
@@ -14,7 +17,9 @@ class gsCScoreTable {
     m_font: gsCFont;
     m_current_item: number;
     m_current_letter: number;
-    m_flash_timer;//.start();
+    m_flash_timer: gsCTimer;
+    gsSCORE_NAME_SIZE: number = 3;
+    m_score_list: Array<gsScoreItem>;
 
     //-------------------------------------------------------------
 
@@ -24,7 +29,8 @@ class gsCScoreTable {
         this.m_font = null;
         this.m_current_item = 0;
         this.m_current_letter = 0;
-        //m_flash_timer.start();
+        this.m_flash_timer = new gsCTimer();
+        this.m_flash_timer.start();
     }
 
     //-------------------------------------------------------------
@@ -49,7 +55,7 @@ class gsCScoreTable {
         this.m_spacing = spacing;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public setFont(font: gsCFont): void {
         this.m_font = font;
@@ -57,43 +63,44 @@ class gsCScoreTable {
 
     //-------------------------------------------------------------
 
-    setSize(size: number): void {
+    public setSize(size: number): void {
         //    destroy();
+        this.m_score_list = [];
 
         for (var i = 0; i < size; i++) {
             var si: gsScoreItem = new gsScoreItem();
-            //        si ->m_score = 0;
-            //        memset(si ->m_name, '.', gsSCORE_NAME_SIZE);
-            //        m_score_list.addItem(si);
+            si.m_score = 0;
+            //memset(si ->m_name, '.', gsSCORE_NAME_SIZE);
+            this.m_score_list.push(si);//.addItem(si);
         }
     }
 
     //-------------------------------------------------------------
 
     public insertScore(score: number, name: string): number {
-
-        //        for (var i = 0; i < m_score_list.getSize(); i++) {
-        //    if (score > m_score_list[i] ->m_score) {
-        //        int last = m_score_list.getSize() - 1;
-        //        gsScoreItem * si = m_score_list[last];
-        //        m_score_list.removeIndex(last);
-        //        si ->m_score = score;
-        //        for (unsigned int c = 0; c < gsSCORE_NAME_SIZE; c++) {
-        //            if (c < strlen(name))
-        //                si ->m_name[c] = name[c];
-        //				else
-        //            si ->m_name[c] = '.';
-        //        }
-        //        m_score_list.insertItem(i, si);
-        //        return i;
-        //    }
-        //}
+        for (var i = 0; i < this.m_score_list.length; i++) {
+            if (score > this.m_score_list[i].m_score) {
+                var last: number = this.m_score_list.length - 1;
+                var si: gsScoreItem = this.m_score_list[last];
+                this.m_score_list.pop();//.removeIndex(last);
+                si.m_score = score;
+                for (var c = 0; c < this.gsSCORE_NAME_SIZE; c++) {
+                    if (c < name.length)//strlen(name))
+                        si.m_name[c] = name[c];
+                    else
+                        si.m_name[c] = '.';
+                }
+                this.m_score_list[i] = si;//.insertItem(i, si);
+                return i;
+            }
+        }
         return -1;
     }
 
     //-------------------------------------------------------------
 
-    public draw(): boolean {
+    public draw(screen: gsCScreen, font: gsCFont, ctx: CanvasRenderingContext2D): boolean {
+   // public draw(): boolean {
 
         //    if (!m_font)
         //        return false;
@@ -103,71 +110,69 @@ class gsCScoreTable {
         //    if (!screen)
         //        return false;
 
-        //    bool flash = m_flash_timer.getTime() < 0.1f;
+        var flash: boolean = this.m_flash_timer.getTime() < 0.1;
 
-        //    if (m_flash_timer.getTime() > 0.15f)
-        //    m_flash_timer.start();
+        if (this.m_flash_timer.getTime() > 0.15) {
+            this.m_flash_timer.start();
+        }
 
         //    char buffer[100];
+        var buffer: string;
 
-        //    for (int i = 0; i < m_score_list.getSize(); i++) {
+        for (var i = 0; i < this.m_score_list.length; i++) {
 
-        //        gsScoreItem * item = m_score_list[i];
+            var item: gsScoreItem = this.m_score_list[i];
 
-        //        sprintf(buffer, "%8i  ", item ->m_score);
+            //        sprintf(buffer, "%8i  ", item ->m_score);
+            //        int p = strlen(buffer);
 
-        //        int p = strlen(buffer);
+            for (var c = 0; c < this.gsSCORE_NAME_SIZE; c++) {
+                if (i == this.m_current_item && c == this.m_current_letter && !flash) {
+                    //                buffer[p++] = ' ';
+                    //            else
+                    //                buffer[p++] = item ->m_name[c];
+                }
+            }
 
-        //        for (int c = 0; c < gsSCORE_NAME_SIZE; c++) {
-        //            if (i == m_current_item &&
-        //                c == m_current_letter &&
-        //                !flash)
-        //                buffer[p++] = ' ';
-        //            else
-        //                buffer[p++] = item ->m_name[c];
-        //        }
+            //        buffer[p++] = 0;
 
-        //        buffer[p++] = 0;
+            if (i == this.m_current_item) {
+                var size: gsCPoint = this.m_font.getStringSize(buffer);
+                var y = this.m_position.Y + this.m_spacing.Y * i;
+                //            screen.drawSolidRect(gsCRect((screen ->getSize().getX() - size.getX()) / 2 - 1,
+                //                y - 1,
+                //                (screen ->getSize().getX() + size.getX()) / 2 + 1,
+                //                y + size.getY() + 1),
+                //                gsCColour(128, 128, 128));
+                screen.drawSolidRect(new gsCRect((screen.m_rect.Right - size.X) / 2 - 1, y - 1, size.X + 2, size.Y + 2), "gray", ctx);
+            }
 
-        //        if (i == m_current_item) {
-        //            gsCPoint size = m_font ->getStringSize(buffer);
-        //            int y = m_position.getY() + m_spacing.getY() * i;
-        //            screen ->drawSolidRect(gsCRect((screen ->getSize().getX() - size.getX()) / 2 - 1,
-        //                y - 1,
-        //                (screen ->getSize().getX() + size.getX()) / 2 + 1,
-        //                y + size.getY() + 1),
-        //                gsCColour(128, 128, 128));
-        //        }
-
-        //        m_font ->setTextCursor(gsCPoint(0, m_position.getY() + m_spacing.getY() * i));
-        //        m_font ->justifyString(buffer);
-        //    }
+            this.m_font.setTextCursor(new gsCPoint(0, this.m_position.Y + this.m_spacing.Y * i));
+            this.m_font.justifyString(buffer);
+        }
 
         return true;
     }
 
     //-------------------------------------------------------------
 
-    //void gsCScoreTable::setCurrentItem(int item)
-    //{
-    //    m_current_item = item;
-    //}
+    public setCurrentItem(item: number): void {
+        this.m_current_item = item;
+    }
 
     //-------------------------------------------------------------
 
-    //int gsCScoreTable::getCurrentItem()
-    //{
-    //    return m_current_item;
-    //}
+    public getCurrentItem(): number {
+        return this.m_current_item;
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void gsCScoreTable::setCurrentLetter(int letter)
-    //{
-    //    m_current_letter = letter;
-    //}
+    public setCurrentLetter(letter: number) {
+        this.m_current_letter = letter;
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     //void gsCScoreTable::cycleLetter(int dir)
     //{
@@ -193,42 +198,38 @@ class gsCScoreTable {
     //    }
     //}
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void gsCScoreTable::scrollLetter(int dir)
-    //{
-    //    m_current_letter += dir;
+    public scrollLetter(dir: number): void {
+        this.m_current_letter += dir;
 
-    //    if (m_current_letter < 0)
-    //        m_current_letter = 0;
-    //    if (m_current_letter >= gsSCORE_NAME_SIZE)
-    //        m_current_letter = gsSCORE_NAME_SIZE - 1;
-    //}
-
-    ////-------------------------------------------------------------
-
-    public getScore(index: number): number {
-        //    gsScoreItem * item = m_score_list[index];
-
-        //    if (item)
-        //        return item ->m_score;
-        //    else
-        return 1000;
+        if (this.m_current_letter < 0)
+            this.m_current_letter = 0;
+        if (this.m_current_letter >= this.gsSCORE_NAME_SIZE)
+            this.m_current_letter = this.gsSCORE_NAME_SIZE - 1;
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //const char *gsCScoreTable::getName(int index)
-    //{
-    //    gsScoreItem * item = m_score_list[index];
+    public getScore(index: number): number {
+        var item: gsScoreItem = this.m_score_list[index];
+        if (item)
+            return item.m_score;
+        else
+            return 1000;
+    }
 
-    //    if (item)
-    //        return item ->m_name;
-    //    else
-    //        return 0;
-    //}
+    //-------------------------------------------------------------
 
-    ////-------------------------------------------------------------
+    public getName(index: number) {
+        var item: gsScoreItem = this.m_score_list[index];
+        if (item)
+            return item.m_name;
+        else
+            return [];
+    }
+
+    //-------------------------------------------------------------
 }
 
 export = gsCScoreTable;

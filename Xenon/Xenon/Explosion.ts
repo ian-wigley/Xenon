@@ -5,12 +5,20 @@ import enums = require("Enums");
 
 class CExplosion extends CActor {
 
+    constructor() {
+        super();
+    }
+
+    //-------------------------------------------------------------
+
     public activate(): boolean {
         if (!this.isActive()) {
-            //	m_timer.start();
+            this.m_timer.start();
         }
         return super.activate();
     }
+
+    //-------------------------------------------------------------
 
     public update(controls: Controls, gametime: GameTime): boolean {
         this.m_position.plusEquals(this.m_velocity);
@@ -21,7 +29,9 @@ class CExplosion extends CActor {
         return true;
     }
 
-    public onLeavingScreen():void {
+    //-------------------------------------------------------------
+
+    public onLeavingScreen(): void {
         super.kill();
     }
 

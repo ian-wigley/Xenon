@@ -9,6 +9,15 @@ class CCloneEngine extends CEngine {
         super(theScene);
     }
 
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLONE_ENGINE);
+    }
+
+    //-------------------------------------------------------------
+
     public draw(ctx: CanvasRenderingContext2D) {
         if (this.getOwner() != null && this.getOwner().getOwner() != null &&
             this.getOwner().getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP &&
@@ -17,6 +26,7 @@ class CCloneEngine extends CEngine {
 
         if (this.m_thrust > 0) {
             this.animate(enums.AnimationMode.ANIMATE_LOOP);
+            //super.draw(ctx);
             super.Draw(ctx);
         }
         return true;

@@ -16,8 +16,8 @@ class CPod extends CAlien {
     //-------------------------------------------------------------
 
     constructor() {
-        super()
-        { }
+        super();
+        this.m_name = "POD";
     }
 
     public getActorInfo() {
@@ -27,11 +27,9 @@ class CPod extends CAlien {
 
 
     public activate(): boolean {
-        //if (!isActive())
-        //{
-        //    m_timer.start();
-        //}
-
+        if (!this.isActive()) {
+            this.m_timer.start();
+        }
         return super.activate();
     }
 
@@ -44,7 +42,7 @@ class CPod extends CAlien {
             gen.activate();
             gen.setPosition(this.getPosition());
 
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }

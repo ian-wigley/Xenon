@@ -10,19 +10,8 @@ class CPlayer {
     private m_lives: number;
     private m_score: number;
     private m_has_dive_pickup: boolean;
-
     private m_checkpoint: gsCVector;
     private m_extra_life_scores: Array<number> = [5000000, 10000000, 15000000, 20000000, 0];
-
-    ////-------------------------------------------------------------
-
-    //int m_extra_life_scores[] = {
-    //    5000000,
-    //    10000000,
-    //    15000000,
-    //    20000000,
-    //    0
-    //};
 
     //-------------------------------------------------------------
 

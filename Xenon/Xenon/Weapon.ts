@@ -4,6 +4,7 @@ import gsCTimer = require("Timer");
 import CActor = require("Actor");
 import CScene = require("Scene");
 import enums = require("Enums");
+import CPlayGameState = require("PlayGameState");
 
 class CWeapon extends CActor {
     m_grade: enums.WeaponGrade;
@@ -16,6 +17,8 @@ class CWeapon extends CActor {
     m_mode: enums.WeaponFiringMode;
     m_direction: enums.WeaponDirection;
     WEAPON_ONSCREEN_RADIUS: number;
+
+    protected m_playGameState: CPlayGameState;
 
     constructor(scene?: CScene) {
         super(scene);
@@ -185,5 +188,12 @@ class CWeapon extends CActor {
     public fire() {
         return false;
     }
+
+    //-------------------------------------------------------------
+
+    //public setPlayGameState(state: CPlayGameState) {
+    //    this.m_playGameState = state;
+    //}
+
 }
 export = CWeapon;

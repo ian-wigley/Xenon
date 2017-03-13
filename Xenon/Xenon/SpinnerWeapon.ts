@@ -9,6 +9,7 @@ class CSpinnerWeapon extends CWeapon {
     constructor() {
         super();
         this.m_directionS = new gsCVector(0.0, 1.0);
+        this.m_name = "SpinnerWeapon";
     }
 
     public getActorInfo()

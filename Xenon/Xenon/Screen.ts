@@ -35,6 +35,12 @@ class gsCScreen {
 
     //-------------------------------------------------------------
 
+    public getSize() {
+        return this.m_rect.getSize();
+    }
+
+
+
     /*
         //    bool gsCScreen::createWindowed(HWND window) {
         //        m_isWindowed = true;
@@ -854,11 +860,10 @@ class gsCScreen {
 
     //-------------------------------------------------------------
 
-    drawSolidRect(rect: gsCRectangle, colour: string, ctx: CanvasRenderingContext2D): boolean {
+   public drawSolidRect(rect: gsCRectangle, colour: string, ctx: CanvasRenderingContext2D): boolean {
         if (rect != null) {
             ctx.beginPath();
-            ctx.lineWidth = 2;
-            ctx.strokeStyle = colour;
+            ctx.fillStyle = colour;
             ctx.fillRect(rect.Left, rect.Top, rect.Right - 1, rect.Bottom - 1);
             ctx.stroke();
             return true
@@ -870,462 +875,462 @@ class gsCScreen {
 
     //-------------------------------------------------------------
 
-/*
-    void gsCScreen::drawPoints(int num_points,const gsCPoint *points,const gsCColour *colours, bool clip)
-        {
-            if (!m_back_surface) {
-                gsREPORT("gsCScreen::drawPoint called with no back surface");
-    return;
-    		}
-
-    if (lock()) {
-        draw_pixels(num_points, points, colours, clip);
-        unlock();
-    }
-    }
-
-    //-------------------------------------------------------------
-
-    //void gsCScreen::drawLines(int num_points,const gsCPoint *points,const gsCColour *colours)
-    //    {
-    //        gsREPORT("gsCScreen::drawLines not yet implemented");
-    //}
-
-    ////-------------------------------------------------------------
-
-    //// Blit image in solid colour
-    ////
-    //// Pixel which are non-MAGENTA are drawn in the fill colour
-
-    //bool gsCScreen::bltSolid(const gsCRect& dest, gsDDSURFACEDESC& source_ddsd,const gsCRect& source,const gsCColour& fill_colour)
-    //    {
-    //        if (lock()) {
-
-    //            gsUBYTE * src = (gsUBYTE *) source_ddsd.lpSurface + source.getTop() * source_ddsd.lPitch
-    //                + source.getLeft() * m_bpp;
-
-    //            gsUBYTE * dst = (gsUBYTE *) m_ddsd.lpSurface + dest.getTop() * m_ddsd.lPitch
-    //												    + dest.getLeft() * m_bpp;
-
-    //            gsUDWORD trans = gsCColour(gsMAGENTA).getRaw();
-    //            gsUDWORD fill = fill_colour.getRaw();
-
-    //            int h = dest.getHeight();
-    //            int w = dest.getWidth();
-
-    //            switch (m_bpp) {
-    //                case 1:
-    //                    {
-    //                        while (h-- > 0) {
-    //                            gsUBYTE * s = (gsUBYTE *) src;
-    //                            gsUBYTE * d = (gsUBYTE *) dst;
-    //                            int count = w;
-    //                            while (count >= 4) {
-    //                                if (*s != (gsUBYTE) trans)
-    //								*d = (gsUBYTE) fill;
-    //                                if (*(s + 1) != (gsUBYTE) trans)
-    //								*(d + 1) = (gsUBYTE) fill;
-    //                                if (*(s + 2) != (gsUBYTE) trans)
-    //								*(d + 2) = (gsUBYTE) fill;
-    //                                if (*(s + 3) != (gsUBYTE) trans)
-    //								*(d + 3) = (gsUBYTE) fill;
-    //                                s += 4;
-    //                                d += 4;
-    //                                count -= 4;
-    //                            }
-    //                            while (count-- > 0) {
-    //                                if (*s != (gsUBYTE) trans)
-    //								*d = (gsUBYTE) fill;
-    //                                s++;
-    //                                d++;
-    //                            }
-    //                            src += source_ddsd.lPitch;
-    //                            dst += m_ddsd.lPitch;
-    //                        }
-    //                    }
-    //                    break;
-    //                case 2:
-    //                    {
-    //                        while (h-- > 0) {
-    //                            gsUWORD * s = (gsUWORD *) src;
-    //                            gsUWORD * d = (gsUWORD *) dst;
-    //                            int count = w;
-    //                            while (count >= 4) {
-    //                                if (*s != (gsUWORD) trans)
-    //								*d = (gsUWORD) fill;
-    //                                if (*(s + 1) != (gsUWORD) trans)
-    //								*(d + 1) = (gsUWORD) fill;
-    //                                if (*(s + 2) != (gsUWORD) trans)
-    //								*(d + 2) = (gsUWORD) fill;
-    //                                if (*(s + 3) != (gsUWORD) trans)
-    //								*(d + 3) = (gsUWORD) fill;
-    //                                s += 4;
-    //                                d += 4;
-    //                                count -= 4;
-    //                            }
-    //                            while (count-- > 0) {
-    //                                if (*s != (gsUWORD) trans)
-    //								*d = (gsUWORD) fill;
-    //                                s++;
-    //                                d++;
-    //                            }
-    //                            src += source_ddsd.lPitch;
-    //                            dst += m_ddsd.lPitch;
-    //                        }
-    //                    }
-    //                    break;
-    //                case 3:
-    //                    {
-    //                        while (h-- > 0) {
-    //                            gsUBYTE * s = (gsUBYTE *) src;
-    //                            gsUBYTE * d = (gsUBYTE *) dst;
-    //                            int count = w;
-    //                            gsUBYTE trans_h = (gsUBYTE)(trans >> 16);
-    //                            gsUBYTE fill_h = (gsUBYTE)(fill >> 16);
-    //                            while (count >= 4) {
-    //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) fill;
-    //								*(d + 2) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 3)) != (gsUWORD) trans || *(s + 5) != trans_h) {
-    //								*((gsUWORD *) (d + 3)) = (gsUWORD) fill;
-    //								*(d + 6) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 6)) != (gsUWORD) trans || *(s + 8) != trans_h) {
-    //								*((gsUWORD *) (d + 6)) = (gsUWORD) fill;
-    //								*(d + 9) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 9)) != (gsUWORD) trans || *(s + 11) != trans_h) {
-    //								*((gsUWORD *) (d + 9)) = (gsUWORD) fill;
-    //								*(d + 11) = fill_h;
-    //                                }
-    //                                s += 12;
-    //                                d += 12;
-    //                                count -= 3;
-    //                            }
-    //                            while (count-- > 0) {
-    //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) fill;
-    //								*(d + 2) = fill_h;
-    //                                }
-    //                                s += 3;
-    //                                d += 3;
-    //                            }
-    //                            src += source_ddsd.lPitch;
-    //                            dst += m_ddsd.lPitch;
-    //                        }
-    //                    }
-    //                    break;
-    //                case 4:
-    //                    {
-    //                        while (h-- > 0) {
-    //                            gsUBYTE * s = (gsUBYTE *) src;
-    //                            gsUBYTE * d = (gsUBYTE *) dst;
-    //                            int count = w;
-    //                            gsUBYTE trans_h = (gsUBYTE)(trans >> 16);
-    //                            gsUBYTE fill_h = (gsUBYTE)(fill >> 16);
-    //                            while (count >= 4) {
-    //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) fill;
-    //								*(d + 2) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 4)) != (gsUWORD) trans || *(s + 6) != trans_h) {
-    //								*((gsUWORD *) (d + 4)) = (gsUWORD) fill;
-    //								*(d + 6) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 8)) != (gsUWORD) trans || *(s + 10) != trans_h) {
-    //								*((gsUWORD *) (d + 8)) = (gsUWORD) fill;
-    //								*(d + 10) = fill_h;
-    //                                }
-    //                                if (*((gsUWORD *) (s + 12)) != (gsUWORD) trans || *(s + 14) != trans_h) {
-    //								*((gsUWORD *) (d + 12)) = (gsUWORD) fill;
-    //								*(d + 14) = fill_h;
-    //                                }
-    //                                s += 16;
-    //                                d += 16;
-    //                                count -= 4;
-    //                            }
-    //                            while (count-- > 0) {
-    //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) fill;
-    //								*(d + 2) = fill_h;
-    //                                }
-    //                                s += 4;
-    //                                d += 4;
-    //                            }
-    //                            src += source_ddsd.lPitch;
-    //                            dst += m_ddsd.lPitch;
-    //                        }
-    //                    }
-    //                    break;
-    //            }
-
-    //            unlock();
-
-    //            return true;
-    //        }
-
-    //	return false;
-    //}
-
-    ////-------------------------------------------------------------
-    //// Blit image with colour tint
-    ////
-    //// Pixels which are white are replaced by the tint colour
-    //// Other pixels are drawn normally
-
-    //bool gsCScreen::bltTinted(const gsCRect& dest, gsDDSURFACEDESC& source_ddsd,const gsCRect& source,const gsCColour& tint_colour)
-    //    {
-    //        if (lock()) {
-
-    //            gsUBYTE * src = (gsUBYTE *) source_ddsd.lpSurface + source.getTop() * source_ddsd.lPitch
-    //                + source.getLeft() * m_bpp;
-
-    //            gsUBYTE * dst = (gsUBYTE *) m_ddsd.lpSurface + dest.getTop() * m_ddsd.lPitch
-    //												    + dest.getLeft() * m_bpp;
-
-    //            gsUDWORD base = gsCColour(gsWHITE).getRaw();
-    //            gsUDWORD tint = tint_colour.getRaw();
-
-    //            int h = dest.getHeight();
-    //            int w = dest.getWidth();
-
-    //            switch (m_bpp) {
-    //                case 1:
-    //                    {
-    //                        while (h-- > 0) {
-    //                            gsUBYTE * s = (gsUBYTE *) src;
-    //                            gsUBYTE * d = (gsUBYTE *) dst;
-    //                            int count = w;
-    //                            while (count >= 4) {
-    //                                if (*s == (gsUBYTE) base)
-    //								*d = (gsUBYTE) tint;
-    //							else
-    //								*d = *s;
-    //if (*(s + 1) == (gsUBYTE) base)
-    //								*(d + 1) = (gsUBYTE) tint;
-    //							else
-    //								*(d + 1) = *(s + 1);
-    //if (*(s + 2) == (gsUBYTE) base)
-    //								*(d + 2) = (gsUBYTE) tint;
-    //							else
-    //								*(d + 2) = *(s + 2);
-    //if (*(s + 3) == (gsUBYTE) base)
-    //								*(d + 3) = (gsUBYTE) tint;
-    //							else
-    //								*(d + 3) = *(s + 3);
-    //s += 4;
-    //d += 4;
-    //count -= 4;
-    //							}
-    //while (count-- > 0) {
-    //    if (*s == (gsUBYTE) base)
-    //								*d = (gsUBYTE) tint;
-    //							else
-    //								*d = *s;
-    //}
-    //src += source_ddsd.lPitch;
-    //dst += m_ddsd.lPitch;
-    //						}
-    //				}
-    //break;
-    //			case 2:
-    //{
-    //    while (h-- > 0) {
-    //        gsUWORD * s = (gsUWORD *) src;
-    //        gsUWORD * d = (gsUWORD *) dst;
-    //        int count = w;
-    //        while (count >= 4) {
-    //            if (*s == (gsUWORD) base)
-    //								*d = (gsUWORD) tint;
-    //							else
-    //								*d = *s;
-    //            if (*(s + 1) == (gsUWORD) base)
-    //								*(d + 1) = (gsUWORD) tint;
-    //							else
-    //								*(d + 1) = *(s + 1);
-    //            if (*(s + 2) == (gsUWORD) base)
-    //								*(d + 2) = (gsUWORD) tint;
-    //							else
-    //								*(d + 3) = *(s + 3);
-    //            if (*(s + 3) == (gsUWORD) base)
-    //								*(d + 3) = (gsUWORD) tint;
-    //							else
-    //								*(d + 3) = *(s + 3);
-    //            s += 4;
-    //            d += 4;
-    //            count -= 4;
-    //        }
-    //        while (count-- > 0) {
-    //            if (*s != (gsUWORD) base)
-    //								*d = (gsUWORD) tint;
-    //							else
-    //								*d = *s;
-    //            s++;
-    //            d++;
-    //        }
-    //        src += source_ddsd.lPitch;
-    //        dst += m_ddsd.lPitch;
-    //    }
-    //}
-    //break;
-    //			case 3:
-    //{
-    //    while (h-- > 0) {
-    //        gsUBYTE * s = (gsUBYTE *) src;
-    //        gsUBYTE * d = (gsUBYTE *) dst;
-    //        int count = w;
-    //        gsUBYTE base_h = (gsUBYTE)(base >> 16);
-    //        gsUBYTE tint_h = (gsUBYTE)(tint >> 16);
-    //        while (count-- > 0) {
-    //            if (*((gsUWORD *) s) == (gsUWORD) base &&
-    //								*(s + 2) == base_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) tint;
-    //								*(d + 2) = tint_h;
-    //            }
-    //							else {
-    //								*((gsUWORD *) d) = *((gsUWORD *) s);
-    //								*(d + 2) = *(s + 2);
-    //            }
-    //            s += 3;
-    //            d += 3;
-    //        }
-    //        src += source_ddsd.lPitch;
-    //        dst += m_ddsd.lPitch;
-    //    }
-    //}
-    //break;
-    //			case 4:
-    //{
-    //    while (h-- > 0) {
-    //        gsUBYTE * s = (gsUBYTE *) src;
-    //        gsUBYTE * d = (gsUBYTE *) dst;
-    //        int count = w;
-    //        gsUBYTE base_h = (gsUBYTE)(base >> 16);
-    //        gsUBYTE tint_h = (gsUBYTE)(tint >> 16);
-    //        while (count-- > 0) {
-    //            if (*((gsUWORD *) s) == (gsUWORD) base &&
-    //								*(s + 2) == base_h) {
-    //								*((gsUWORD *) d) = (gsUWORD) tint;
-    //								*(d + 2) = tint_h;
-    //            }
-    //							else {
-    //								*((gsUWORD *) d) = *((gsUWORD *) s);
-    //								*(d + 2) = *(s + 2);
-    //            }
-    //            s += 4;
-    //            d += 4;
-    //        }
-    //        src += source_ddsd.lPitch;
-    //        dst += m_ddsd.lPitch;
-    //    }
-    //}
-    //break;
-    //			}
-
-    //unlock();
-
-    //return true;
-    //		}
-
-    //return false;
-    //}
-
-    ////-------------------------------------------------------------
-
-    //bool gsCScreen::destroy()
-    //{
-    //    if (m_display_mode_set) {
-    //        m_direct_draw ->RestoreDisplayMode();
-    //        m_display_mode_set = false;
-    //    }
-
-    //    //	gsCColour::setupColourConversion(0);
-
-    //    gsCApplication::m_screen = 0;
-
-    //    if (m_clipper) {
-    //        m_clipper ->Release();
-    //        m_clipper = 0;
-    //    }
-
-    //    if (m_back_surface) {
-    //        m_back_surface ->Release();
-    //        m_back_surface = 0;
-    //    }
-
-    //    if (m_primary_surface) {
-    //        m_primary_surface ->Release();
-    //        m_primary_surface = 0;
-    //    }
-
-    //    if (m_palette) {
-    //        m_palette ->Release();
-    //        m_palette = 0;
-    //    }
-
-    //    gsREPORT("gsCScreen destroyed");
-
-    //    return true;
-    //}
-
-    ////-------------------------------------------------------------
-
-    //void gsCScreen::findBPP()
-    //{
-    //    gsDDSURFACEDESC ddsd;
-    //    HRESULT hr;
-
-    //    ddsd.dwSize = sizeof(ddsd);
-    //    while ((hr = m_primary_surface ->Lock(NULL, &ddsd, 0, NULL)) == DDERR_WASSTILLDRAWING);
-
-    //    if (hr == DD_OK) {
-    //        m_bpp = ddsd.ddpfPixelFormat.dwRGBBitCount / 8;
-    //        m_primary_surface ->Unlock(NULL);
-    //    }
-    //}
-
-    ////-------------------------------------------------------------
-
-    //int gsCScreen::getBytesPerPixel()
-    //{
-    //    return m_bpp;
-    //}
-
-
-    ////-------------------------------------------------------------
-
-    //bool gsCScreen::loadPalette(const char *filename)
-    //    {
-    //        if (m_bpp != 1)
-    //		return false;
-
-    //gsCFile file;
-
-    //if (!file.open(filename))
-    //    return false;
-
-    //int i;
-
-    //for (i = 0; i < 24; i++)
-    //    file.getByte();
-
-    //for (i = 0; i < 256; i++) {
-    //    m_palette_colours[i].peRed = (gsBYTE) file.getByte();
-    //    m_palette_colours[i].peGreen = (gsBYTE) file.getByte();
-    //    m_palette_colours[i].peBlue = (gsBYTE) file.getByte();
-    //    m_palette_colours[i].peFlags = 0;
-    //    file.getByte();
-    //}
-
-    //m_palette ->SetEntries(0, 0, 256, m_palette_colours);
-
-    //file.close();
-
-    //return true;
-    //}
-
-    */
+    /*
+        void gsCScreen::drawPoints(int num_points,const gsCPoint *points,const gsCColour *colours, bool clip)
+            {
+                if (!m_back_surface) {
+                    gsREPORT("gsCScreen::drawPoint called with no back surface");
+        return;
+                }
+    
+        if (lock()) {
+            draw_pixels(num_points, points, colours, clip);
+            unlock();
+        }
+        }
+    
+        //-------------------------------------------------------------
+    
+        //void gsCScreen::drawLines(int num_points,const gsCPoint *points,const gsCColour *colours)
+        //    {
+        //        gsREPORT("gsCScreen::drawLines not yet implemented");
+        //}
+    
+        ////-------------------------------------------------------------
+    
+        //// Blit image in solid colour
+        ////
+        //// Pixel which are non-MAGENTA are drawn in the fill colour
+    
+        //bool gsCScreen::bltSolid(const gsCRect& dest, gsDDSURFACEDESC& source_ddsd,const gsCRect& source,const gsCColour& fill_colour)
+        //    {
+        //        if (lock()) {
+    
+        //            gsUBYTE * src = (gsUBYTE *) source_ddsd.lpSurface + source.getTop() * source_ddsd.lPitch
+        //                + source.getLeft() * m_bpp;
+    
+        //            gsUBYTE * dst = (gsUBYTE *) m_ddsd.lpSurface + dest.getTop() * m_ddsd.lPitch
+        //												    + dest.getLeft() * m_bpp;
+    
+        //            gsUDWORD trans = gsCColour(gsMAGENTA).getRaw();
+        //            gsUDWORD fill = fill_colour.getRaw();
+    
+        //            int h = dest.getHeight();
+        //            int w = dest.getWidth();
+    
+        //            switch (m_bpp) {
+        //                case 1:
+        //                    {
+        //                        while (h-- > 0) {
+        //                            gsUBYTE * s = (gsUBYTE *) src;
+        //                            gsUBYTE * d = (gsUBYTE *) dst;
+        //                            int count = w;
+        //                            while (count >= 4) {
+        //                                if (*s != (gsUBYTE) trans)
+        //								*d = (gsUBYTE) fill;
+        //                                if (*(s + 1) != (gsUBYTE) trans)
+        //								*(d + 1) = (gsUBYTE) fill;
+        //                                if (*(s + 2) != (gsUBYTE) trans)
+        //								*(d + 2) = (gsUBYTE) fill;
+        //                                if (*(s + 3) != (gsUBYTE) trans)
+        //								*(d + 3) = (gsUBYTE) fill;
+        //                                s += 4;
+        //                                d += 4;
+        //                                count -= 4;
+        //                            }
+        //                            while (count-- > 0) {
+        //                                if (*s != (gsUBYTE) trans)
+        //								*d = (gsUBYTE) fill;
+        //                                s++;
+        //                                d++;
+        //                            }
+        //                            src += source_ddsd.lPitch;
+        //                            dst += m_ddsd.lPitch;
+        //                        }
+        //                    }
+        //                    break;
+        //                case 2:
+        //                    {
+        //                        while (h-- > 0) {
+        //                            gsUWORD * s = (gsUWORD *) src;
+        //                            gsUWORD * d = (gsUWORD *) dst;
+        //                            int count = w;
+        //                            while (count >= 4) {
+        //                                if (*s != (gsUWORD) trans)
+        //								*d = (gsUWORD) fill;
+        //                                if (*(s + 1) != (gsUWORD) trans)
+        //								*(d + 1) = (gsUWORD) fill;
+        //                                if (*(s + 2) != (gsUWORD) trans)
+        //								*(d + 2) = (gsUWORD) fill;
+        //                                if (*(s + 3) != (gsUWORD) trans)
+        //								*(d + 3) = (gsUWORD) fill;
+        //                                s += 4;
+        //                                d += 4;
+        //                                count -= 4;
+        //                            }
+        //                            while (count-- > 0) {
+        //                                if (*s != (gsUWORD) trans)
+        //								*d = (gsUWORD) fill;
+        //                                s++;
+        //                                d++;
+        //                            }
+        //                            src += source_ddsd.lPitch;
+        //                            dst += m_ddsd.lPitch;
+        //                        }
+        //                    }
+        //                    break;
+        //                case 3:
+        //                    {
+        //                        while (h-- > 0) {
+        //                            gsUBYTE * s = (gsUBYTE *) src;
+        //                            gsUBYTE * d = (gsUBYTE *) dst;
+        //                            int count = w;
+        //                            gsUBYTE trans_h = (gsUBYTE)(trans >> 16);
+        //                            gsUBYTE fill_h = (gsUBYTE)(fill >> 16);
+        //                            while (count >= 4) {
+        //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) fill;
+        //								*(d + 2) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 3)) != (gsUWORD) trans || *(s + 5) != trans_h) {
+        //								*((gsUWORD *) (d + 3)) = (gsUWORD) fill;
+        //								*(d + 6) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 6)) != (gsUWORD) trans || *(s + 8) != trans_h) {
+        //								*((gsUWORD *) (d + 6)) = (gsUWORD) fill;
+        //								*(d + 9) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 9)) != (gsUWORD) trans || *(s + 11) != trans_h) {
+        //								*((gsUWORD *) (d + 9)) = (gsUWORD) fill;
+        //								*(d + 11) = fill_h;
+        //                                }
+        //                                s += 12;
+        //                                d += 12;
+        //                                count -= 3;
+        //                            }
+        //                            while (count-- > 0) {
+        //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) fill;
+        //								*(d + 2) = fill_h;
+        //                                }
+        //                                s += 3;
+        //                                d += 3;
+        //                            }
+        //                            src += source_ddsd.lPitch;
+        //                            dst += m_ddsd.lPitch;
+        //                        }
+        //                    }
+        //                    break;
+        //                case 4:
+        //                    {
+        //                        while (h-- > 0) {
+        //                            gsUBYTE * s = (gsUBYTE *) src;
+        //                            gsUBYTE * d = (gsUBYTE *) dst;
+        //                            int count = w;
+        //                            gsUBYTE trans_h = (gsUBYTE)(trans >> 16);
+        //                            gsUBYTE fill_h = (gsUBYTE)(fill >> 16);
+        //                            while (count >= 4) {
+        //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) fill;
+        //								*(d + 2) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 4)) != (gsUWORD) trans || *(s + 6) != trans_h) {
+        //								*((gsUWORD *) (d + 4)) = (gsUWORD) fill;
+        //								*(d + 6) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 8)) != (gsUWORD) trans || *(s + 10) != trans_h) {
+        //								*((gsUWORD *) (d + 8)) = (gsUWORD) fill;
+        //								*(d + 10) = fill_h;
+        //                                }
+        //                                if (*((gsUWORD *) (s + 12)) != (gsUWORD) trans || *(s + 14) != trans_h) {
+        //								*((gsUWORD *) (d + 12)) = (gsUWORD) fill;
+        //								*(d + 14) = fill_h;
+        //                                }
+        //                                s += 16;
+        //                                d += 16;
+        //                                count -= 4;
+        //                            }
+        //                            while (count-- > 0) {
+        //                                if (*((gsUWORD *) s) != (gsUWORD) trans || *(s + 2) != trans_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) fill;
+        //								*(d + 2) = fill_h;
+        //                                }
+        //                                s += 4;
+        //                                d += 4;
+        //                            }
+        //                            src += source_ddsd.lPitch;
+        //                            dst += m_ddsd.lPitch;
+        //                        }
+        //                    }
+        //                    break;
+        //            }
+    
+        //            unlock();
+    
+        //            return true;
+        //        }
+    
+        //	return false;
+        //}
+    
+        ////-------------------------------------------------------------
+        //// Blit image with colour tint
+        ////
+        //// Pixels which are white are replaced by the tint colour
+        //// Other pixels are drawn normally
+    
+        //bool gsCScreen::bltTinted(const gsCRect& dest, gsDDSURFACEDESC& source_ddsd,const gsCRect& source,const gsCColour& tint_colour)
+        //    {
+        //        if (lock()) {
+    
+        //            gsUBYTE * src = (gsUBYTE *) source_ddsd.lpSurface + source.getTop() * source_ddsd.lPitch
+        //                + source.getLeft() * m_bpp;
+    
+        //            gsUBYTE * dst = (gsUBYTE *) m_ddsd.lpSurface + dest.getTop() * m_ddsd.lPitch
+        //												    + dest.getLeft() * m_bpp;
+    
+        //            gsUDWORD base = gsCColour(gsWHITE).getRaw();
+        //            gsUDWORD tint = tint_colour.getRaw();
+    
+        //            int h = dest.getHeight();
+        //            int w = dest.getWidth();
+    
+        //            switch (m_bpp) {
+        //                case 1:
+        //                    {
+        //                        while (h-- > 0) {
+        //                            gsUBYTE * s = (gsUBYTE *) src;
+        //                            gsUBYTE * d = (gsUBYTE *) dst;
+        //                            int count = w;
+        //                            while (count >= 4) {
+        //                                if (*s == (gsUBYTE) base)
+        //								*d = (gsUBYTE) tint;
+        //							else
+        //								*d = *s;
+        //if (*(s + 1) == (gsUBYTE) base)
+        //								*(d + 1) = (gsUBYTE) tint;
+        //							else
+        //								*(d + 1) = *(s + 1);
+        //if (*(s + 2) == (gsUBYTE) base)
+        //								*(d + 2) = (gsUBYTE) tint;
+        //							else
+        //								*(d + 2) = *(s + 2);
+        //if (*(s + 3) == (gsUBYTE) base)
+        //								*(d + 3) = (gsUBYTE) tint;
+        //							else
+        //								*(d + 3) = *(s + 3);
+        //s += 4;
+        //d += 4;
+        //count -= 4;
+        //							}
+        //while (count-- > 0) {
+        //    if (*s == (gsUBYTE) base)
+        //								*d = (gsUBYTE) tint;
+        //							else
+        //								*d = *s;
+        //}
+        //src += source_ddsd.lPitch;
+        //dst += m_ddsd.lPitch;
+        //						}
+        //				}
+        //break;
+        //			case 2:
+        //{
+        //    while (h-- > 0) {
+        //        gsUWORD * s = (gsUWORD *) src;
+        //        gsUWORD * d = (gsUWORD *) dst;
+        //        int count = w;
+        //        while (count >= 4) {
+        //            if (*s == (gsUWORD) base)
+        //								*d = (gsUWORD) tint;
+        //							else
+        //								*d = *s;
+        //            if (*(s + 1) == (gsUWORD) base)
+        //								*(d + 1) = (gsUWORD) tint;
+        //							else
+        //								*(d + 1) = *(s + 1);
+        //            if (*(s + 2) == (gsUWORD) base)
+        //								*(d + 2) = (gsUWORD) tint;
+        //							else
+        //								*(d + 3) = *(s + 3);
+        //            if (*(s + 3) == (gsUWORD) base)
+        //								*(d + 3) = (gsUWORD) tint;
+        //							else
+        //								*(d + 3) = *(s + 3);
+        //            s += 4;
+        //            d += 4;
+        //            count -= 4;
+        //        }
+        //        while (count-- > 0) {
+        //            if (*s != (gsUWORD) base)
+        //								*d = (gsUWORD) tint;
+        //							else
+        //								*d = *s;
+        //            s++;
+        //            d++;
+        //        }
+        //        src += source_ddsd.lPitch;
+        //        dst += m_ddsd.lPitch;
+        //    }
+        //}
+        //break;
+        //			case 3:
+        //{
+        //    while (h-- > 0) {
+        //        gsUBYTE * s = (gsUBYTE *) src;
+        //        gsUBYTE * d = (gsUBYTE *) dst;
+        //        int count = w;
+        //        gsUBYTE base_h = (gsUBYTE)(base >> 16);
+        //        gsUBYTE tint_h = (gsUBYTE)(tint >> 16);
+        //        while (count-- > 0) {
+        //            if (*((gsUWORD *) s) == (gsUWORD) base &&
+        //								*(s + 2) == base_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) tint;
+        //								*(d + 2) = tint_h;
+        //            }
+        //							else {
+        //								*((gsUWORD *) d) = *((gsUWORD *) s);
+        //								*(d + 2) = *(s + 2);
+        //            }
+        //            s += 3;
+        //            d += 3;
+        //        }
+        //        src += source_ddsd.lPitch;
+        //        dst += m_ddsd.lPitch;
+        //    }
+        //}
+        //break;
+        //			case 4:
+        //{
+        //    while (h-- > 0) {
+        //        gsUBYTE * s = (gsUBYTE *) src;
+        //        gsUBYTE * d = (gsUBYTE *) dst;
+        //        int count = w;
+        //        gsUBYTE base_h = (gsUBYTE)(base >> 16);
+        //        gsUBYTE tint_h = (gsUBYTE)(tint >> 16);
+        //        while (count-- > 0) {
+        //            if (*((gsUWORD *) s) == (gsUWORD) base &&
+        //								*(s + 2) == base_h) {
+        //								*((gsUWORD *) d) = (gsUWORD) tint;
+        //								*(d + 2) = tint_h;
+        //            }
+        //							else {
+        //								*((gsUWORD *) d) = *((gsUWORD *) s);
+        //								*(d + 2) = *(s + 2);
+        //            }
+        //            s += 4;
+        //            d += 4;
+        //        }
+        //        src += source_ddsd.lPitch;
+        //        dst += m_ddsd.lPitch;
+        //    }
+        //}
+        //break;
+        //			}
+    
+        //unlock();
+    
+        //return true;
+        //		}
+    
+        //return false;
+        //}
+    
+        ////-------------------------------------------------------------
+    
+        //bool gsCScreen::destroy()
+        //{
+        //    if (m_display_mode_set) {
+        //        m_direct_draw ->RestoreDisplayMode();
+        //        m_display_mode_set = false;
+        //    }
+    
+        //    //	gsCColour::setupColourConversion(0);
+    
+        //    gsCApplication::m_screen = 0;
+    
+        //    if (m_clipper) {
+        //        m_clipper ->Release();
+        //        m_clipper = 0;
+        //    }
+    
+        //    if (m_back_surface) {
+        //        m_back_surface ->Release();
+        //        m_back_surface = 0;
+        //    }
+    
+        //    if (m_primary_surface) {
+        //        m_primary_surface ->Release();
+        //        m_primary_surface = 0;
+        //    }
+    
+        //    if (m_palette) {
+        //        m_palette ->Release();
+        //        m_palette = 0;
+        //    }
+    
+        //    gsREPORT("gsCScreen destroyed");
+    
+        //    return true;
+        //}
+    
+        ////-------------------------------------------------------------
+    
+        //void gsCScreen::findBPP()
+        //{
+        //    gsDDSURFACEDESC ddsd;
+        //    HRESULT hr;
+    
+        //    ddsd.dwSize = sizeof(ddsd);
+        //    while ((hr = m_primary_surface ->Lock(NULL, &ddsd, 0, NULL)) == DDERR_WASSTILLDRAWING);
+    
+        //    if (hr == DD_OK) {
+        //        m_bpp = ddsd.ddpfPixelFormat.dwRGBBitCount / 8;
+        //        m_primary_surface ->Unlock(NULL);
+        //    }
+        //}
+    
+        ////-------------------------------------------------------------
+    
+        //int gsCScreen::getBytesPerPixel()
+        //{
+        //    return m_bpp;
+        //}
+    
+    
+        ////-------------------------------------------------------------
+    
+        //bool gsCScreen::loadPalette(const char *filename)
+        //    {
+        //        if (m_bpp != 1)
+        //		return false;
+    
+        //gsCFile file;
+    
+        //if (!file.open(filename))
+        //    return false;
+    
+        //int i;
+    
+        //for (i = 0; i < 24; i++)
+        //    file.getByte();
+    
+        //for (i = 0; i < 256; i++) {
+        //    m_palette_colours[i].peRed = (gsBYTE) file.getByte();
+        //    m_palette_colours[i].peGreen = (gsBYTE) file.getByte();
+        //    m_palette_colours[i].peBlue = (gsBYTE) file.getByte();
+        //    m_palette_colours[i].peFlags = 0;
+        //    file.getByte();
+        //}
+    
+        //m_palette ->SetEntries(0, 0, 256, m_palette_colours);
+    
+        //file.close();
+    
+        //return true;
+        //}
+    
+        */
 
     //-------------------------------------------------------------
 }

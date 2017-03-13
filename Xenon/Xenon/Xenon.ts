@@ -3,9 +3,15 @@ import gsCTimer = require("Timer");
 import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import CActorInfoList = require("ActorInfoList");
-import CShip = require("Ship");
+//import CShip = require("Ship");
+
+
+import CGameState = require("GameState");
 import CPlayGameState = require("PlayGameState");
+import CMainMenuState = require("MainMenuState");
 import CLevel = require("Level");
+import COptions = require("Options");
+
 
 class Point {
     public X: number;
@@ -30,7 +36,8 @@ class Xenon {
     private m_font16x16: HTMLImageElement;
 
     private m_gameState: CPlayGameState;
-    private m_ship: CShip;
+    private m_mainMenuState: CMainMenuState;
+    //private m_ship: CShip;
     private m_scene: CScene;
     private m_stars: CStarfield;
     private m_listOfActors: CActorInfoList;
@@ -46,6 +53,11 @@ class Xenon {
     private m_timer: gsCTimer = new gsCTimer();
     private m_gameOn: boolean = false; //TEMP!
     private testInterval;
+
+
+    private m_state: CGameState;
+
+    private m_options: COptions;
 
     constructor() {
         this.m_timer = new gsCTimer();
@@ -106,18 +118,15 @@ class Xenon {
         this.m_font8x8 = <HTMLImageElement>document.getElementById("Font8x8");
         this.m_font16x16 = <HTMLImageElement>document.getElementById("font16x16");
 
-        // Needs to wait until level is loaded before configuring the gamestate !!
-        //this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars);
-
         this.testInterval = setInterval(() => this.testIfLoaded(), 10);
     }
 
     private testIfLoaded(): void {
         if (this.m_scene.LevelLoaded()) {
-            // Needs to wait until level is loaded before configuring the gamestate !!
-            this.m_gameState = new CPlayGameState(this.m_ship, this.m_scene, this.m_stars, this.m_font8x8, this.m_font16x16, this.ctx);
-            clearInterval(this.testInterval);
+            this.m_mainMenuState = new CMainMenuState(this.m_scene, this.m_stars, this.m_font8x8, this.m_font16x16, this.ctx);
+            //this.m_gameState = new CPlayGameState(this.m_scene, this.m_stars, this.m_font8x8, this.m_font16x16, this.ctx, this.m_mainMenuState, this.m_options);
 
+            clearInterval(this.testInterval);
             setInterval(() => this.Update(), 10);
         }
     }
@@ -164,6 +173,14 @@ class Xenon {
             case 88:
                 this.m_gameOn = true;
                 break;
+            case 13:
+                this.m_ctrl.enterPressed = true;
+                this.m_ctrl.returnPressed = true;
+                break;
+            case 17:
+                this.m_ctrl.lcontrolPressed = true;
+                break;
+
         }
     }
 
@@ -184,15 +201,26 @@ class Xenon {
             case 40:
                 this.m_ctrl.down = false;
                 break;
+            case 13:
+                this.m_ctrl.enterPressed = false;
+                this.m_ctrl.returnPressed = false;
+                break;
+            case 17:
+                this.m_ctrl.lcontrolPressed = false;
+                break;
         }
     }
 
     private Update(): void {
-        this.m_stars.Update(4);
-        if (this.m_gameOn) {
-            this.m_timer.update();
-            this.m_scene.updateAllActors(this.m_ctrl, this.m_timer);
-        }
+
+        this.m_state = this.m_mainMenuState.instance();
+
+
+        ////this.m_stars.Update(4);
+        ////if (this.m_gameOn) {
+        ////    this.m_timer.update(false);// Remove !
+        //    this.m_scene.updateAllActors(this.m_ctrl, this.m_timer);
+        ////}
         this.Draw(10);
     }
 
@@ -201,19 +229,23 @@ class Xenon {
         this.rect(0, 0, this.WIDTH, this.HEIGHT);
         this.ctx.beginPath();
 
-        this.ctx.drawImage(this.backgroundTexture, 0, 0);
-        this.m_stars.Draw(this.ctx);
 
-        if (this.m_gameOn) {
-            this.m_gameState.update(this.ctx);
-        }
-        else {
-            this.ctx.drawImage(this.introTexture, 64, 10);
-            this.ctx.drawImage(this.bbTexture, 10, 360);
-            this.ctx.font = "20px Arial";//20
-            this.ctx.fillStyle = "yellow";
-            this.ctx.fillText("Press X to Start the game", 260, 300);
-        }
+        this.m_state.update(this.ctx, this.m_ctrl);
+
+
+        //////this.ctx.drawImage(this.backgroundTexture, 0, 0);
+        //////this.m_stars.Draw(this.ctx);
+
+        //if (!this.m_gameOn) {
+        //    this.m_gameState.update(this.ctx, this.m_ctrl);
+        //}
+        //else {
+        //    ////this.ctx.drawImage(this.introTexture, 64, 10);
+        //    ////this.ctx.drawImage(this.bbTexture, 10, 360);
+        //    ////this.ctx.font = "20px Arial";
+        //    ////this.ctx.fillStyle = "yellow";
+        //    ////this.ctx.fillText("Press X to Start the game", 260, 300);
+        //}
     }
 }
 

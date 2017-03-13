@@ -22,6 +22,7 @@ class CBossEye extends CBoss {
         super();
         this.m_eye_number = 0;
         this.m_state = BossEyeState.BOSSEYE_SHUT;
+        this.m_name = "Boss Eye";
     }
 
     public getActorInfo(): ActorInfo {
@@ -31,7 +32,7 @@ class CBossEye extends CBoss {
 
     public activate(): boolean {
         if (!this.isActive()) {
-            //    m_timer.start();
+            this.m_timer.start();
         }
         return super.activate();
     }
@@ -51,7 +52,7 @@ class CBossEye extends CBoss {
             this.m_is_hit = false;
         }
         if (this.m_shield == 0) {
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }
@@ -63,7 +64,6 @@ class CBossEye extends CBoss {
     public registerHit(energy: number, hitter: CActor): void {
         if (this.m_state == BossEyeState.BOSSEYE_OPEN) {
             super.registerHit(energy, hitter);
-            //CActor::registerHit(energy,hitter);
         }
     }
 

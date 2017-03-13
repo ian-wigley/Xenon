@@ -15,7 +15,7 @@ module Asteroid {
 
         public activate(): boolean {
             if (!this.isActive()) {
-                //this.m_timer.start();
+                this.m_timer.start();
             }
             return super.activate();
         }
@@ -47,7 +47,7 @@ module Asteroid {
         }
 
         public fragment(): void {
-            super.explode();
+            //super.explode();
             super.kill();
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
         }

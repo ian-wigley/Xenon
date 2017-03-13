@@ -7,10 +7,10 @@ import gsCTimer = require("Timer");
 import CScene = require("Scene");
 import CActorInfoList = require("ActorInfoList");
 import ActorInfo = require("ActorInfo");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
+//import CExplosion = require("Explosion");
+//import CSmallExplosion = require("SmallExplosion");
+//import CMediumExplosion = require("MediumExplosion");
+//import CBigExplosion = require("BigExplosion");
 import enums = require("Enums");
 import Point = require("Point");
 
@@ -38,6 +38,8 @@ class CActor {
     protected gameTime: gsCTimer;
     protected timerTest: number = 0.0;
 
+    protected m_name: string = "";
+
     private frame: number = 0;
 
     constructor(theScene?: CScene) {
@@ -51,20 +53,8 @@ class CActor {
         this.m_is_on_screen = true;
         this.m_is_hit = false;
         this.m_score_multiplier = 1.0;
+        this.m_timer = new gsCTimer();
     }
-
-    //constructor(listOfActors: CActorInfoList) {
-    //    if (this.m_scene != null) {
-    //        this.m_actorInfo = this.m_scene.GetlistOfActors();
-    //    }
-    //    this.m_scene = null;// 0;
-    //    this.m_owner = null;// 0;
-    //    this.m_is_active = false;
-    //    this.m_is_on_screen = true;
-    //    this.m_is_hit = false;
-    //    this.m_score_multiplier = 1.0;
-    //    this.m_actorInfo = listOfActors;
-    //}
 
     //-------------------------------------------------------------
 
@@ -205,28 +195,33 @@ class CActor {
 
     //-------------------------------------------------------------
 
-    public explode() {
-        var x: CExplosion = null;
+    // Moved to the ship during testing... 07/03/2017..
+    // Recursive explosion problems !
+    //
+    //public explode() {
 
-        if (this.m_image != null) {
-            var size: Point = this.m_image.getTileSize();
-            var area = size.X * size.Y;
+    //    var x : CExplosion = null;
 
-            if (area <= 32 * 32) {
-                x = new CSmallExplosion();
-            }
-            else if (area <= 64 * 64) {
-                x = new CMediumExplosion();
-            }
-            else {
-                x = new CBigExplosion();
-            }
+    //    if (this.m_image != null) {
+    //        var size: Point = this.m_image.getTileSize();
+    //        var area = size.X * size.Y;
 
-            this.m_scene.addActor(x);
-            x.setPosition(this.getPosition());
-            x.activate();
-        }
-    }
+    //        if (area <= 32 * 32) {
+    //            x = new CSmallExplosion();
+    //        }
+    //        else if (area <= 64 * 64) {
+    //            x = new CMediumExplosion();
+    //            //x = inter.explodeMiddle();
+    //        }
+    //        else {
+    //            x = new CBigExplosion();
+    //        }
+
+    //        this.m_scene.addActor(x);
+    //        x.setPosition(this.getPosition());
+    //        x.activate();
+    //    }
+    //}
 
     //-------------------------------------------------------------
 
@@ -248,13 +243,13 @@ class CActor {
     //-------------------------------------------------------------
 
     public onKilled() {
-        var bonus = 0;//getActorInfo().m_kill_bonus; 
+        var bonus = this.getActorInfo().m_kill_bonus;// 0;//getActorInfo().m_kill_bonus; 
 
         if (bonus > 0) {
             var score = bonus * this.m_score_multiplier;
 
             //CPlayGameState::getPlayer()->scoreBonus(score);
-            //m_scene.createLabel(getPosition(),score);
+            this.m_scene.createLabel(this.getPosition(), score.toString());
         }
     }
 
@@ -264,6 +259,7 @@ class CActor {
         //this.timerTest += gameTime;//.time;//.ElapsedGameTime.Milliseconds;
         return true;
     }
+
 
     public Draw(ctx: CanvasRenderingContext2D) {
 
@@ -302,6 +298,10 @@ class CActor {
             if (this.m_is_on_screen) {
                 this.m_scene.addToCollisionList(this, this.getCollisionRect());
             }
+        }
+
+        if (this.m_image == null) {
+            console.log("Image is null !");
         }
 
         return true;
@@ -358,6 +358,7 @@ class CActor {
 
     public getActorInfo() {
         return null;
+        //return this.m_scene.GetlistOfActors();
     }
 
     //-------------------------------------------------------------
@@ -368,9 +369,10 @@ class CActor {
 
     //-------------------------------------------------------------
 
-    public GetActorInfo() {
-        return this.m_scene.GetlistOfActors();
+    public get name(): string {
+        return this.m_name;
     }
+
 }
 
 export = CActor;

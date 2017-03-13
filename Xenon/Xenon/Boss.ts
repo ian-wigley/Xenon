@@ -12,7 +12,8 @@ class CBoss extends CActor {
     protected m_active_eyes: number = 0;
     protected m_mouth: CBossMouth;
 
-    public CBoss() {
+    constructor() {
+        super();
     }
 
     public getShield(): number {

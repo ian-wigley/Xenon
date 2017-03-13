@@ -25,18 +25,18 @@ class gsCTimer {
     initialize() {
         this.m_time0 = Date.now();
         var t: number = this.getCurrentTime();
-        this.m_system_time = t;
-        this.m_previous_time = t;
+        this.m_system_time = t;// (t*100);
+        this.m_previous_time = t;//(t*100);
     }
 
     //-------------------------------------------------------------
     // Update internal copy of system time
     //
     // Call once per game loop
-    update() {//frame_done: boolean) {
-        //if (!frame_done) {
-        //    this.m_previous_time = this.m_system_time;
-        //}
+    update(frame_done: boolean) {
+        if (!frame_done) {
+            this.m_previous_time = this.m_system_time;
+        }
         this.m_system_time = this.getCurrentTime();
     }
 
@@ -106,7 +106,7 @@ class gsCTimer {
     // Get delta time (between current and previous frame)
 
     public getDeltaTime() {
-        return this.m_system_time - this.m_previous_time;
+        return 5000 * (this.m_system_time - this.m_previous_time);
     }
 
     //-------------------------------------------------------------

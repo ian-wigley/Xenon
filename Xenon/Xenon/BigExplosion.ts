@@ -3,14 +3,19 @@ import enums = require("Enums");
 
 class CBigExplosion extends CExplosion {
 
-    getActorInfo() {
+    constructor() {
+        super();
+    }
+
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_EXPLOSION);
     }
 
-    activate() {
+    public activate() {
         //CGameState::playSample(SAMPLE_BIG_EXPLOSION,getPosition().getX());
         return super.activate();
     }
 }
+
 export = CBigExplosion;

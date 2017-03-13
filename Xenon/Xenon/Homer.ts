@@ -12,6 +12,7 @@ class CHomer extends CAlien {
 
     constructor() {
         super();
+        this.m_name = "Homer";
     }
 
     public getActorInfo() { //: ActorInfo {
@@ -35,7 +36,7 @@ class CHomer extends CAlien {
             //weapon.setOffset(new Vector2(0.0f, 0.0f));
             //weapon.detonate();
 
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }

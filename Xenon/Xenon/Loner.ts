@@ -3,13 +3,16 @@ import gsCTimer = require("Timer");
 import CAlien = require("Alien");
 import enums = require("Enums");
 import ActorInfo = require("ActorInfo")
+import CShip = require("Ship");
+import gsCVector = require("Vector");
+import CSpinnerWeapon = require("SpinnerWeapon");
 
 export = Loner;
 module Loner {
 
     export class CLoner extends CAlien {
 
-        //m_weapon: CSpinnerWeapon;
+        m_weapon: CSpinnerWeapon;
 
         constructor() {
             super();
@@ -18,57 +21,52 @@ module Loner {
         //-------------------------------------------------------------
 
         public activate(): boolean {
-            //if (!isActive()) {
-            //    this.m_weapon = new CSpinnerWeapon();
-            //    this.m_scene.addActor(m_weapon);
-            //    this.m_weapon.activate();
-            //    this.m_weapon.setOwner(this);
-            //    this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
-
-            //    //m_timer.start();
-            //}
+            if (!this.isActive()) {
+                this.m_weapon = new CSpinnerWeapon();
+                this.m_scene.addActor(this.m_weapon);
+                this.m_weapon.activate();
+                this.m_weapon.setOwner(this);
+                this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
+                this.m_timer.start();
+            }
             return super.activate();
         }
 
         //-------------------------------------------------------------
 
-        //public kill(): void {
-        //    if (m_weapon != null) {
-        //        m_weapon.kill();
-        //        m_weapon = null;
-        //    }
-
-        //    super.kill();
-        //    //CActor::kill();
-        //}
+        public kill(): void {
+            if (this.m_weapon != null) {
+                this.m_weapon.kill();
+                this.m_weapon = null;
+            }
+            super.kill();
+            //CActor::kill();
+        }
 
         //-------------------------------------------------------------
 
-        //public override bool update(Controls controls, GameTime gametime) {
-        //    this.gameTime = gametime;
-        //    if (m_shield == 0) {
-        //        super.explode();
-        //        super.kill();
-        //        return true;
-        //    }
+        public update(controls: gsCControls, gameTime: gsCTimer): boolean {
+            //this.gameTime = gametime;
+            if (this.m_shield == 0) {
+                //super.explode();
+                super.kill();
+                return true;
+            }
 
-        //CShip ship = m_scene->findShip();
+            var ship: CShip = this.m_scene.findShip();
 
-        // fire weapon towards ship
+            //fire weapon towards ship
+            if (ship != null) {
+                var dir: gsCVector = ship.getPosition().minus(this.getPosition());
+                dir.normalize();
+                //this.m_weapon.setDirection(dir);
+            }
 
-        //if (ship != null)
-        //{
-        //    gsCVector dir = ship->getPosition() - getPosition();
-        //    dir.normalize();
-        //    m_weapon->setDirection(dir);
-        //}
+            this.m_position.plusEquals(this.m_velocity);
+            this.animate(enums.AnimationMode.ANIMATE_LOOP);
 
-        //    m_position += m_velocity;
-
-        //    animate(AnimationMode.ANIMATE_LOOP);
-
-        //    return true;
-        //}
+            return true;
+        }
 
     }
 

@@ -604,7 +604,8 @@ class CLevel {
                     var pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
 
                     //pos += new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0);
-                    pos.add(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
+                    //pos.add(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
+                    pos.plusEquals(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
 
                     switch (id) {
                         case TileId.ID_PICKUP:
@@ -826,7 +827,8 @@ class CLevel {
                                         var r: CRusher = new CRusher();
                                         console.log("REVERSE_RUSHER");
                                         scene.addActor(r);
-                                        //r.setPosition(pos + new Vector2(0.0f,(float) screen.getSize().getY() + m_image.getTileSize().Y));
+                                        //r.setPosition(pos + new gsCVector(0.0, (this.screen.getSize().y + m_image.getTileSize().Y));
+                                        r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
                                         r.setVelocity(new gsCVector(0.0, -4.0));
                                         r.activate();
                                     }
@@ -916,11 +918,13 @@ class CLevel {
                                         break;
                                     case 2:
                                         //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
+                                        //e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
+                                        e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
                                         break;
                                     case 3:
                                         //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
+                                        //e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
+                                        e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
                                         break;
                                 }
                                 e.setVelocity(new gsCVector(0.0, 0.0));

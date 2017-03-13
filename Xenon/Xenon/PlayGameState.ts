@@ -13,8 +13,16 @@ import gsCImage = require("Image");
 import gsCRectangle = require("Rectangle");
 import gsCScreen = require("Screen");
 import gsCScoreTable = require("ScoreTable");
+import CMainMenuState = require("MainMenuState");
+import CBoss = require("Boss");
+import CBossControl = require("BossControl");
+import Options = require("Options");
+import gsCControls = require("Controls");
 
-enum m_mode {
+import CViewScoresState = require("ViewScoresState");
+import CScoreEntryState = require("ScoreEntryState");
+
+enum m_gameMode {  //m_mode
     CREATEPLAYER,
     PLAYERACTIVE,
     PLAYERDEAD,
@@ -45,73 +53,86 @@ class CPlayGameState extends CGameState {
     private m_paused: boolean = false;
     private m_yscroll: number = 1;
 
-
     //private m_even: number = 0;
     private even: boolean = true;		//TEMP
 
+    private m_mainMenuState: CMainMenuState;
+    private m_boss: CBoss;
+    private m_bossControl: CBossControl;
+    //private m_options: Options;
 
-    constructor(ship: CShip, scene: CScene, starfield: CStarfield, m_font8x8: HTMLImageElement, m_font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+    private m_mode: m_gameMode;
+
+    constructor(scene: CScene, starfield: CStarfield, m_font8x8: HTMLImageElement, m_font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) { //, mainMenuState: CMainMenuState, options: Options) {
         super(m_font8x8, m_font16x16, ctx);
 
-        //this.m_level = new CLevel();
-
-        //this.m_ship = ship;
         this.m_scene = scene;
+        this.m_starfield = starfield;
+        //this.m_mainMenuState = mainMenuState;
+        //this.m_options = options;
+
+        this.m_stateName = "PlayGameState";
+
         this.m_level = this.m_scene.GetLevel();
 
         // temp!
         this.m_screen = new gsCScreen();
         //this.m_score_table = new gsCScoreTable();
-        this.create();
-        this.createPlayer();
-    }
 
+        this.m_game_start_timer = new gsCTimer();
+        this.m_game_end_timer = new gsCTimer();
+
+        this.m_boss = null;
+        this.m_bossControl = null;
+
+
+        this.create();
+        //this.createPlayer();
+    }
 
     //-------------------------------------------------------------
 
     public create(): boolean {
-        //if (m_screen.getBytesPerPixel() == 1) {
-        //    if (!m_level.load(m_level_filename, DIRECTORY_GRAPHICS8)) {
-        //        gsREPORT("load level failed");
-        //        return false;
-        //    }
-        //}
-        //else {
-        //    if (!m_level.load(m_level_filename, DIRECTORY_GRAPHICS24)) {
-        //        gsREPORT("load level failed");
-        //        return false;
-        //    }
-        //}
 
-        //this.m_scene.setMap(this.m_level.m_front_layer);
-        //this.m_scene.setCollisionListSize(this.m_screen.getSize(), gsCPoint(8, 6));
+        this.m_scene.setMap(this.m_level.m_front_layer);
+        this.m_scene.setCollisionListSize(this.m_screen.getSize(), new gsCPoint(8, 6));
 
-        //this.m_ship = null;
+        this.m_ship = null;
 
-        //this.m_game_end_timer.reset();
-
-        //gsCPoint map_size = m_level.m_front_layer.getSizeInPixels();
-        //gsCVector start_position = gsCVector((float) map_size.getX() / 2.f,
-        //    (float)(map_size.getY() - PLAYER_START_OFFSET));
+        this.m_game_end_timer.reset();
+        var map_size: gsCPoint = this.m_level.m_front_layer.getSizeInPixels();
+        var start_position: gsCVector = new gsCVector(map_size.X / 2.0, (map_size.Y - this.PLAYER_START_OFFSET));
 
         for (var i = 0; i < this.m_number_of_players; i++) {
             var player: CPlayer = new CPlayer();
-            //player.setCheckpoint(start_position);
-            //m_player_list.addItem(player);
+            player.setCheckpoint(start_position);
             this.m_player_list.push(player);
         }
 
         //m_active_player = null;
 
-        //m_mode = CREATEPLAYER;
+        this.m_mode = m_gameMode.CREATEPLAYER;
 
         //if (m_demo_mode == DEMO_RECORD)
         //    m_demo_recorder.setLevel(m_level_filename);
 
-        //this.m_fast_forward = false;
+        this.m_fast_forward = false;
+
+        this.m_state = this;
 
         return true;
     }
+
+    //-------------------------------------------------------------
+
+    public instance(): CGameState {
+        //if (!this.m_instance)
+        //    this.m_instance = new CIntroState();
+
+        //return this;//.m_instance;
+        return this.m_state;//. m_instance;
+    }
+
 
     //-------------------------------------------------------------
 
@@ -130,19 +151,18 @@ class CPlayGameState extends CGameState {
 
     public createPlayer() {
 
-        var temp = new gsCTimer();
-        ////    m_scene.killAllActors();
-        //// m_scene.setCollisionListSize(m_screen.getSize(), new Point(8, 6));
-        //this.m_scene.setCollisionListSize(new Point(640, 480), new Point(8, 6));
-        this.m_scene.setCollisionListSize(new gsCVector(640, 480), new gsCVector(8, 6));
-        this.m_ship = new CShip(this.m_scene, temp);
+        this.m_scene.killAllActors();
+
+        this.m_ship = new CShip(this.m_scene, this);//temp);
         this.m_scene.addActor(this.m_ship);
         this.m_ship.activateShip();
 
-        var start_position: gsCVector = new gsCVector(300, 100);// getPlayer().getCheckpoint();
+        var start_position: gsCVector = this.getPlayer().getCheckpoint();
+        //var start_position: gsCVector = new gsCVector(300, 100);
         this.m_ship.setPosition(start_position);
-        ////    m_scene.clearCheckpoint();
-        this.setLayerPositions(32704);//start_position.getY());
+        this.m_scene.clearCheckpoint();
+        //this.setLayerPositions(32704);
+        this.setLayerPositions(start_position.Y);
         this.m_level.reset();
         this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
 
@@ -157,83 +177,83 @@ class CPlayGameState extends CGameState {
         ////    m_ship->addWeapon(LASER_WEAPON);
         ////    m_ship->addWeapon(LASER_WEAPON);
         ////#endif
+
         ////    playSample(SAMPLE_PLAYER_CREATED,m_ship->getPosition().getX());
         ////    getPlayer()->loseLife();
-        ////    m_reached_boss = false;        
+        this.m_reached_boss = false;
     }
 
     //-------------------------------------------------------------
 
-    public update(ctx: CanvasRenderingContext2D): boolean {
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
 
-        /*
-	if (!CGameState::update())
-		return false;
+        if (!super.update(ctx, controls)) {
+            return false;
+        }
 
-	gsKeyCode key = m_keyboard.getKey();
 
-	if (m_paused) {
-		if (key == gsKEY_P) {
-			m_paused = false;
-			gsCApplication::setPaused(false);
-			}
-		else
-			return true;
-		}
-	else {
-		if (key == gsKEY_P) {
-			m_paused = true;
-			gsCApplication::setPaused(true);
-			return true;
-			}
-		}
+        //gsKeyCode key = m_keyboard.getKey();
 
-	if (m_mode == CREATEPLAYER) {
-		playMusic(MUSIC_GAME);
-		createPlayer();
-		m_game_start_timer.start();
-		m_mode = PLAYERACTIVE;
-		}
+        //if (m_paused) {
+        //	if (key == gsKEY_P) {
+        //		m_paused = false;
+        //		gsCApplication::setPaused(false);
+        //		}
+        //	else
+        //		return true;
+        //	}
+        //else {
+        //	if (key == gsKEY_P) {
+        //		m_paused = true;
+        //		gsCApplication::setPaused(true);
+        //		return true;
+        //		}
+        //	}
 
-	Controls controls;
+        if (this.m_mode == m_gameMode.CREATEPLAYER) {
+            this.playMusic(enums.GameMusicType.MUSIC_GAME);
+            this.createPlayer();
+            this.m_game_start_timer.start();
+            this.m_mode = m_gameMode.PLAYERACTIVE;
+        }
 
-	getControl(controls,m_active_player);
+        //Controls controls;
 
-	if (m_ship) {
-		if (controls.divePressed) {
-			if (getPlayer()->hasDive()) {
-				m_ship->dive(3.f);
-				getPlayer()->useDive();
-				}
-			}
+        //getControl(controls,m_active_player);
 
-		if (controls.reversePressed)
-			m_ship->reverseWeapon();
+        //if (m_ship) {
+        //	if (controls.divePressed) {
+        //		if (getPlayer()->hasDive()) {
+        //			m_ship->dive(3.f);
+        //			getPlayer()->useDive();
+        //			}
+        //		}
 
-		// disable firing when diving
+        //	if (controls.reversePressed)
+        //		m_ship->reverseWeapon();
 
-		if (m_ship->getDiveLevel() > 0) {
-			controls.fire = false;
-			controls.firePressed = false;
-			}
-		}
+        //	// disable firing when diving
 
-	switch (m_demo_mode) {
-		case DEMO_RECORD:
-			m_demo_recorder.addEvent(controls);
-			break;
-		case DEMO_PLAYBACK:
-			if (!m_demo_recorder.getEvent(controls))
-				return changeState(CMainMenuState::instance());
-			break;
-		}
+        //	if (m_ship->getDiveLevel() > 0) {
+        //		controls.fire = false;
+        //		controls.firePressed = false;
+        //		}
+        //	}
 
-	if (Options.getOption(OPTION_BACKDROP))
-		m_backdrop.draw(gsCPoint(0,0));
-	else
-		m_screen.clear(gsCColour(gsBLACK));
-        */
+        //switch (m_demo_mode) {
+        //	case DEMO_RECORD:
+        //		m_demo_recorder.addEvent(controls);
+        //		break;
+        //	case DEMO_PLAYBACK:
+        //		if (!m_demo_recorder.getEvent(controls))
+        //			return changeState(CMainMenuState::instance());
+        //		break;
+        //	}
 
+
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+        }
 
         var loop: number = 1;
 
@@ -243,14 +263,13 @@ class CPlayGameState extends CGameState {
 
         while (loop-- > 0) {
 
-            //            m_starfield.move(4);
-            //            m_starfield.draw();
+            this.m_starfield.Update(4);
+            this.m_starfield.Draw(ctx);
 
-            if (m_mode.PLAYERACTIVE == 1) {
+            if (this.m_mode == m_gameMode.PLAYERACTIVE) {
                 this.m_level.scanForNewActors(this.m_scene);
             }
 
-            //		static bool even = true;		//TEMP
             this.even = !this.even;
 
             if (this.even && !this.m_reached_boss) {
@@ -261,19 +280,27 @@ class CPlayGameState extends CGameState {
                 this.m_level.m_back_layer.setPosition(new gsCVector(0, 0));
             }
 
+            //------------------------------------------------------------- Added 03/03/2017 -------------------------------------------------------------
             if (!this.m_reached_boss) {
-                //if (CBossControl::isStarted()) {
-                // this.m_reached_boss = true;
-                //playMusic(MUSIC_BOSS);
-                //}
+                if (this.m_bossControl != null) {
+                    if (this.m_bossControl.isStarted()) {
+                        this.m_reached_boss = true;
+                        this.playMusic(enums.GameMusicType.MUSIC_BOSS);
+                    }
+                }
             }
 
-            //if (CBossControl::isStarted())
-            //m_yscroll = CBossControl::getYScroll();
-            //		else
-            //m_yscroll = 1;
+            if (this.m_bossControl != null) {
+                if (this.m_bossControl.isStarted()) {
+                    this.m_yscroll = this.m_bossControl.getYScroll();
+                }
+                else {
+                    this.m_yscroll = 1;
+                }
+            }
 
-            //// Helps to activate sprite animation!!
+            //------------------------------------------------------------- Added 03/03/2017 -------------------------------------------------------------
+
             this.m_level.m_front_layer.move(new gsCPoint(0, this.m_yscroll));
 
             if (this.m_level.m_front_layer.getPosition().Y > 0) {
@@ -287,25 +314,23 @@ class CPlayGameState extends CGameState {
             ////	controls.firePressed = controls.fire = true;
             ////#endif
 
-            //this.m_scene.updateAllActors(controls);
+            this.m_scene.updateAllActors(controls, null);
             this.m_level.m_back_layer.drawMap(ctx);
             this.m_scene.drawAllActors(ctx, this.m_level.m_front_layer);
             this.m_scene.checkActorCollisions();
-            this.m_scene.checkMapCollisions(this.m_level.m_front_layer);
+            //this.m_scene.checkMapCollisions(this.m_level.m_front_layer);           // Turned off for now 2/3/17 ! 
             this.m_scene.removeDeadActors();
         }
 
-        //testDebugKeys(key);
-
-        //if (key == gsKEY_ESCAPE || (key != gsKEY_NONE && m_demo_mode == DEMO_PLAYBACK)) {
-        //    setDemoMode(DEMO_OFF);
-
-        //    #ifdef _PROFILING
-        //    return false;
-        //    #else
-        //    return changeState(CMainMenuState::instance());
-        //    #endif
-        //}
+        ////testDebugKeys(key);
+        ////if (key == gsKEY_ESCAPE || (key != gsKEY_NONE && m_demo_mode == DEMO_PLAYBACK)) {
+        ////    setDemoMode(DEMO_OFF);
+        ////    #ifdef _PROFILING
+        ////    return false;
+        ////    #else
+        ////    return changeState(CMainMenuState::instance());
+        ////    #endif
+        ////}
 
         this.displayScores(ctx);
         this.displayLives(ctx);
@@ -315,132 +340,137 @@ class CPlayGameState extends CGameState {
             this.displayBossEnergyBar(ctx);
         }
 
-        //printDebugInfo();
+        ////printDebugInfo();
+        ////if (m_demo_mode == DEMO_PLAYBACK) {
+        ////    m_medium_font.setTextCursor(gsCPoint(0, 100));
+        ////    m_medium_font.justifyString("DEMONSTRATION");
+        ////}
 
-        //if (m_demo_mode == DEMO_PLAYBACK) {
-        //    m_medium_font.setTextCursor(gsCPoint(0, 100));
-        //    m_medium_font.justifyString("DEMONSTRATION");
-        //}
+        this.m_game_start_timer.update(false);
+        this.m_game_end_timer.update(false);
 
-        //switch (m_mode) {
-        if (m_mode.PLAYERACTIVE == 1) {
-            //case m_mode.PLAYERACTIVE:
-            //    if (m_game_start_timer.getState() == gsTIMER_ACTIVE) {
-            //        if (m_game_start_timer.getTime() < 1.0) {
-            //            m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //            if (m_number_of_players == 1)
-            //                m_medium_font.justifyString("Get Ready");
-            //            else {
-            //                if (m_active_player == 0)
-            //                    m_medium_font.justifyString("Player One");
-            //                else
-            //                    m_medium_font.justifyString("Player Two");
-            //            }
-            //        }
-        				//else
-            //        m_game_start_timer.reset();
-            //    }
+        switch (this.m_mode) {
+            case m_gameMode.PLAYERACTIVE:
+                if (this.m_game_start_timer.getState() == enums.gsTimerState.gsTIMER_ACTIVE) {
+                    if (this.m_game_start_timer.getTime() < 1.0) {
+                        this.m_medium_font.setTextCursor(new gsCPoint(0, 232));
+                        if (this.m_number_of_players == 1)
+                            this.m_medium_font.justifyString("Get Ready");
+                        else {
+                            if (this.m_active_player == 0)
+                                this.m_medium_font.justifyString("Player One");
+                            else
+                                this.m_medium_font.justifyString("Player Two");
+                        }
+                    }
+                    else
+                        this.m_game_start_timer.reset();
+                }
 
-            if (this.m_ship.getShield() == 0) {
-                this.m_game_end_timer.start();
-                this.playSample(enums.GameSampleType.SAMPLE_PLAYER_DESTROYED, this.m_ship.getPosition().X);
-                this.m_ship.explode();
-                this.m_ship.kill();
-                this.m_scene.removeDeadActors();
-                this.m_ship = null;
-                //m_mode = m_mode.PLAYERDEAD;
-                m_mode.PLAYERDEAD;
-                //break;
-            }
+                //-------------------------------------------------------------------------- 09/03/17
+                if (this.m_ship.getShield() == 0 && this.getPlayer().getLives() > 0) {
+                    //this.m_game_end_timer.start();
+                    this.playSample(enums.GameSampleType.SAMPLE_PLAYER_DESTROYED, this.m_ship.getPosition().X);
+                    this.m_ship.explode();
+                    //this.m_ship.kill();
+                    this.m_scene.removeDeadActors();
+                    //this.m_ship = null;
+                    //this.m_mode = m_gameMode.PLAYERDEAD;
+                    this.m_ship.setShield(100);
+                    this.getPlayer().loseLife();
+                    break;
+                }
 
-            //if (m_reached_boss && CBoss::getShield() == 0) {
-            //    playMusic(MUSIC_OUTRO);
-            //    m_game_end_timer.start();
-            //    m_mode = GAMEWON;
-            //    break;
-            //}
 
-            //if (m_scene.hasCheckpoint()) {
-            //    if (m_ship ->getPosition().getY() <= m_scene.getCheckpoint().getY()) {
-            //        if (getPlayer() ->getCheckpoint() != m_scene.getCheckpoint()) {
-            //            getPlayer() ->setCheckpoint(m_scene.getCheckpoint());
-            //            m_scene.createLabel(m_scene.getCheckpoint(), "CHECKPOINT REACHED");
-            //            playSample(SAMPLE_CHECKPOINT);
-            //        }
-            //        m_scene.clearCheckpoint();
-            //    }
-            //}
+                if (this.m_ship.getShield() == 0 && this.getPlayer().getLives() == 0) {
+                    this.m_game_end_timer.start();
+                    this.playSample(enums.GameSampleType.SAMPLE_PLAYER_DESTROYED, this.m_ship.getPosition().X);
+                    this.m_ship.explode();
+                    this.m_ship.kill();
+                    this.m_scene.removeDeadActors();
+                    this.m_ship = null;
+                    this.m_mode = m_gameMode.PLAYERDEAD;
+                    break;
+                }
 
-            //break;
+                if (this.m_reached_boss && this.m_boss.getShield() == 0) {
+                    this.playMusic(enums.GameMusicType.MUSIC_OUTRO);
+                    this.m_game_end_timer.start();
+                    this.m_mode = m_gameMode.GAMEWON;
+                    break;
+                }
+
+                if (this.m_scene.hasCheckpoint()) {
+                    if (this.m_ship.getPosition().Y <= this.m_scene.getCheckpoint().Y) {
+                        if (this.getPlayer().getCheckpoint() != this.m_scene.getCheckpoint()) {
+                            this.getPlayer().setCheckpoint(this.m_scene.getCheckpoint());
+                            this.m_scene.createLabel(this.m_scene.getCheckpoint(), "CHECKPOINT REACHED");
+                            //this.playSample(enums.GameSampleType.SAMPLE_CHECKPOINT);
+                        }
+                        this.m_scene.clearCheckpoint();
+                    }
+                }
+                break;
+
+            case m_gameMode.PLAYERDEAD:
+                this.stopMusic();
+                this.m_fast_forward = false;
+                if (this.m_game_end_timer.getTime() >= 0) { // 1.0) { TEMP !!
+                    if (this.m_demo_mode != enums.DemoMode.DEMO_OFF) {
+                        this.setDemoMode(enums.DemoMode.DEMO_OFF);
+                        return this.changeState(this.m_mainMenuState);//.instance());// CMainMenuState::instance());this.m_mainMenuState
+                    }
+                    this.swapPlayer();
+                    if (this.getPlayer().getLives() > 0)
+                        this.m_mode = m_gameMode.CREATEPLAYER;
+                    else
+                        this.m_mode = m_gameMode.GAMEOVER;
+                }
+                break;
+
+            case m_gameMode.GAMEOVER:
+                this.m_medium_font.setTextCursor(new gsCPoint(0, 232));
+                this.m_medium_font.justifyString("Game Over");
+                if (this.m_game_end_timer.getTime() >= 3.0) {
+                    this.stopSamples();
+
+                    //        #ifdef _PROFILING
+                    //        return false;
+                    //        #endif
+
+                    if (this.addNewScore(this.getPlayer().getScore())) {
+                        //return this.changeState(CScoreEntryState::instance());
+                    }
+                    else {
+                        //return changeState(CViewScoresState::instance());
+                    }
+                }
+                break;
+
+            case m_gameMode.GAMEWON:
+                if (this.m_game_end_timer.getTime() >= 3.0) {
+                    this.m_medium_font.setTextCursor(new gsCPoint(0, 232));
+                    this.m_medium_font.justifyString("Congratulations");
+                }
+
+                if (this.m_game_end_timer.getTime() >= 6.0) {
+                    this.stopSamples();
+                    if (this.addNewScore(this.getPlayer().getScore())) {
+                        // return changeState(CScoreEntryState::instance());
+                    }
+                    else {
+                        //   return changeState(CViewScoresState::instance());
+                    }
+                }
+                break;
         }
-        if (m_mode.PLAYERDEAD == 1) {
-            //case PLAYERDEAD:
 
-            //    stopMusic();
-
-            //    m_fast_forward = false;
-
-            //    if (m_game_end_timer.getTime() >= 1.f) {
-            //        if (m_demo_mode != DEMO_OFF) {
-            //            setDemoMode(DEMO_OFF);
-            //            return changeState(CMainMenuState::instance());
-            //        }
-
-            //        swapPlayer();
-            //        if (getPlayer() ->getLives() > 0)
-            //            m_mode = CREATEPLAYER;
-            //        else
-            //            m_mode = GAMEOVER;
-            //      }
-            //    break;
+        if (/*this.m_sound_system.isMusicFinished() &&*/ this.m_mode != m_gameMode.GAMEWON) {
+            if (this.m_reached_boss)
+                this.playMusic(enums.GameMusicType.MUSIC_BOSS);
+            else
+                this.playMusic(enums.GameMusicType.MUSIC_GAME);
         }
-
-        if (m_mode.GAMEOVER == 1) {
-            //case GAMEOVER:
-            //    m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //    m_medium_font.justifyString("Game Over");
-            //    if (m_game_end_timer.getTime() >= 3.f) {
-            //        stopSamples();
-
-            //        #ifdef _PROFILING
-            //        return false;
-            //        #endif
-
-            //        if (addNewScore(getPlayer() ->getScore()))
-            //            return changeState(CScoreEntryState::instance());
-            //        else
-            //            return changeState(CViewScoresState::instance());
-            //}
-            //    break;
-        }
-
-        if (m_mode.GAMEWON == 1) {
-            //case GAMEWON:
-
-            //    if (m_game_end_timer.getTime() >= 3.f) {
-            //        m_medium_font.setTextCursor(gsCPoint(0, 232));
-            //        m_medium_font.justifyString("Congratulations");
-            //    }
-
-            //    if (m_game_end_timer.getTime() >= 6.f) {
-            //        stopSamples();
-
-            //        if (addNewScore(getPlayer() ->getScore()))
-            //            return changeState(CScoreEntryState::instance());
-            //        else
-            //            return changeState(CViewScoresState::instance());
-            //    }
-            //    break;
-        }
-
-        //m_screen.flip();
-
-        //if (m_sound_system.isMusicFinished() && m_mode != GAMEWON) {
-        //    if (m_reached_boss)
-        //        playMusic(MUSIC_BOSS);
-        //    else
-        //        playMusic(MUSIC_GAME);
-        //}
 
         return true;
     }
@@ -448,17 +478,16 @@ class CPlayGameState extends CGameState {
     //-------------------------------------------------------------
 
     public swapPlayer(): void {
-        //// skip if one player game
-        //if (this.m_number_of_players == 1)
-        //    return;
+        // skip if one player game
+        if (this.m_number_of_players == 1)
+            return;
 
-        //// only swap to other player if it has lives left
+        // only swap to other player if it has lives left
+        var other_player: number = 1 - this.m_active_player;
 
-        //var other_player:number = 1 - this.m_active_player;
-
-        //if (this.m_player_list[other_player].getLives() > 0) {
-        //    this.m_active_player = other_player;
-        //}
+        if (this.m_player_list[other_player].getLives() > 0) {
+            this.m_active_player = other_player;
+        }
     }
 
     //-------------------------------------------------------------
@@ -469,7 +498,6 @@ class CPlayGameState extends CGameState {
 
         //for (var i = 0; i < m_player_list.getSize(); i++)
         //delete m_player_list[i];
-
         //m_player_list.clear();
 
         return true;
@@ -489,7 +517,7 @@ class CPlayGameState extends CGameState {
             this.m_small_font.printString("Player One");
 
             this.m_medium_font.setTextCursor(new gsCPoint(10, 20));
-            this.m_medium_font.printString(String("00000" + + this.m_player_list[0].getScore()).slice(-10));
+            this.m_medium_font.printString(String("00000" + this.m_player_list[0].getScore()).slice(-10));
         }
         else {
             this.m_small_font.setTextCursor(new gsCPoint(10, 10));
@@ -522,10 +550,10 @@ class CPlayGameState extends CGameState {
             life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
         }
 
-        //if (this.getPlayer().hasDive()) {
-        //    var dive_symbol: gsCImage = this.m_scene.getImage("PUDive");
-        //    dive_symbol.drawImage(new gsCPoint(10, 480 - 104),ctx, dive_symbol.Image);
-        //}
+        if (this.getPlayer().hasDive()) {
+            var dive_symbol: gsCImage = this.m_scene.getImage("PUDive");
+            dive_symbol.drawImage(new gsCPoint(10, 480 - 104), ctx, dive_symbol.Image);
+        }
     }
 
     //-------------------------------------------------------------
@@ -534,7 +562,7 @@ class CPlayGameState extends CGameState {
         var x: number = 10;
         var y: number = 480 - 20;
 
-        this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + this.ENERGYBAR_WIDTH, y + this.ENERGYBAR_HEIGHT), "white", ctx);//, gsCColour(gsWHITE));
+        this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, this.ENERGYBAR_WIDTH, this.ENERGYBAR_HEIGHT), "white", ctx);
 
         var shield: number = 0;
 
@@ -549,24 +577,24 @@ class CPlayGameState extends CGameState {
             shield = this.ENERGYBAR_WIDTH;
         }
 
-        var shield_colour: string = "orange"; //; gsCColour 
+        var shield_colour: string;
 
         if (this.m_ship && this.m_ship.isCloaked()) {
-            shield_colour = "blue"; //gsCColour(gsBLUE);
+            shield_colour = "blue";
         }
         else {
             if (shield < this.ENERGYBAR_WIDTH / 3) {
-                shield_colour = "red";//gsCColour(gsRED);
+                shield_colour = "red";
             }
             else if (shield < this.ENERGYBAR_WIDTH * 2 / 3) {
-                shield_colour = "yellow";//gsCColour(gsYELLOW);
+                shield_colour = "yellow";
             }
             else {
-                shield_colour = "green";//gsCColour(gsGREEN);
+                shield_colour = "green";
             }
         }
 
-        this.m_screen.drawSolidRect(new gsCRectangle(x, y, x + shield, y + 9), shield_colour, ctx);
+        this.m_screen.drawSolidRect(new gsCRectangle(x, y, shield, 9), shield_colour, ctx);
 
         for (var i = this.ENERGYBAR_STEP; i < this.ENERGYBAR_WIDTH; i += this.ENERGYBAR_STEP) {
             if (i <= shield) {
@@ -586,7 +614,7 @@ class CPlayGameState extends CGameState {
 
         this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + 100, y + 9), "white", ctx);
 
-        var shield: number = 0; //CBoss::getShield();
+        var shield: number = this.m_boss.getShield();
 
         if (shield < 0)
             shield = 0;
@@ -704,6 +732,20 @@ class CPlayGameState extends CGameState {
     }
 
     //-------------------------------------------------------------
+
+    public set boss(value: CBoss) {
+        this.m_boss = value;
+    }
+
+    //-------------------------------------------------------------
+
+    public set bossControl(value: CBossControl) {
+        this.m_bossControl = value;
+    }
+
+    public set mainMenuState(value: CMainMenuState) {
+        this.m_mainMenuState = value;
+    }
 
 }
 

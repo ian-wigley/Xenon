@@ -15,6 +15,7 @@ class CSpore extends CBullet {
 
     constructor() {
         super();
+        this.m_name = "SPORE";
     }
 
     //-------------------------------------------------------------
@@ -32,7 +33,7 @@ class CSpore extends CBullet {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         this.gameTime = gameTime;
         if (this.m_shield == 0) {
-            super.explode();
+            //super.explode();
             super.kill();
             return true;
         }

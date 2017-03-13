@@ -36,7 +36,7 @@ class CBossMouth extends CBoss {
 
     public update(controls: gsCControls): boolean {
         if (this.m_shield == 0) {
-            this.explode();
+            //this.explode();
             this.kill();
             return true;
         }
@@ -120,7 +120,6 @@ class CBossMouth extends CBoss {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSMOUTH);
     }
-
 }
 
 export = CBossMouth;

@@ -1,6 +1,8 @@
 ﻿import gsCPoint = require("Point");
 import gsCFont = require("Font");
 import gsCMenuItem = require("MenuItem");
+import gsCMenuOptionList = require("MenuOptionList");
+import gsCScreen = require("Screen");
 
 enum gsMenuItemType {
     gsMENU_OPTION_LIST,
@@ -10,7 +12,7 @@ enum gsMenuItemType {
 
 class gsCMenu {
 
-    private m_item_list: gsCMenuItem;// gsCList<gsCMenuItem *> m_item_list;
+    private m_item_list: Array<gsCMenuItem>;// gsCList<gsCMenuItem *> m_item_list;
     private m_position: gsCPoint;
     private m_spacing: gsCPoint;
     private m_font: gsCFont;
@@ -24,6 +26,7 @@ class gsCMenu {
         this.m_spacing = new gsCPoint(0, 0);
         this.m_font = null;
         this.m_current_item = 0;
+        this.m_item_list = [];
     }
 
     //-------------------------------------------------------------
@@ -75,7 +78,7 @@ class gsCMenu {
 
     public addOptionList(name: string, option: number): void {
 
-        //        gsCMenuOptionList *item = new gsCMenuOptionList(name);
+        var item: gsCMenuOptionList = new gsCMenuOptionList(name);
 
         //va_list arglist;
         //const char *op = option;
@@ -89,25 +92,25 @@ class gsCMenu {
 
         //va_end(arglist);
 
-        //m_item_list.addItem(item);
+        this.m_item_list.push(item);//.addItem(item);
     }
 
     //-------------------------------------------------------------
 
     public addSlider(name: string, size: number, min: number, max: number): void {
-        //        m_item_list.addItem(new gsCMenuSlider(name, size, min, max));
+        //        this.m_item_list.push(new gsCMenuSlider(name, size, min, max));
     }
 
     //-------------------------------------------------------------
 
     public addSeperator(name: string): void {
-        //        m_item_list.addItem(new gsCMenuSeperator(name));
+        //        this.m_item_list.push(new gsCMenuSeperator(name));
     }
 
     //-------------------------------------------------------------
 
     public getNumItems(): number {
-        return this.m_item_list.getSize();
+        return this.m_item_list.length;//.getSize();
     }
 
     //-------------------------------------------------------------
@@ -117,7 +120,7 @@ class gsCMenu {
         //gsASSERT(item < m_item_list.getSize());
         //gsASSERT(m_item_list[item] ->getType() != gsMENU_SEPERATOR);
 
-        //m_current_item = item;
+        this.m_current_item = item;
     }
 
     //-------------------------------------------------------------
@@ -134,15 +137,15 @@ class gsCMenu {
 
             if (this.m_wrap) {
                 if (this.m_current_item < 0)
-                    this.m_current_item = this.m_item_list.getSize() - 1;
-                if (this.m_current_item >= this.m_item_list.getSize())
+                    this.m_current_item = this.m_item_list.length - 1; //.getSize() - 1;
+                if (this.m_current_item >= this.m_item_list.length - 1) //.getSize())
                     this.m_current_item = 0;
             }
             else {
                 if (this.m_current_item < 0)
                     this.m_current_item = 0;
-                if (this.m_current_item >= this.m_item_list.getSize())
-                    this.m_current_item = this.m_item_list.getSize() - 1;
+                if (this.m_current_item >= this.m_item_list.length)//.getSize())
+                    this.m_current_item = this.m_item_list.length - 1; //getSize() - 1;
             }
         }
         while (this.m_item_list[this.m_current_item].getType() == gsMenuItemType.gsMENU_SEPERATOR);
@@ -162,11 +165,12 @@ class gsCMenu {
     //-------------------------------------------------------------
 
     public getValue(item: number): number {
+        //if (item < 0 || 
         //    gsASSERT(item >= 0);
         //    gsASSERT(item < m_item_list.getSize());
 
         //    return m_item_list[item] ->getValue();
-        return 0;
+        return this.m_item_list[item].getValue();
     }
 
     //-------------------------------------------------------------
@@ -177,28 +181,29 @@ class gsCMenu {
         //    gsASSERT(item < m_item_list.getSize());
 
         //    return m_item_list[item] ->getName();
-        return "";
+        return this.m_item_list[item].getName();
     }
 
     //-------------------------------------------------------------
 
-    public draw(): boolean {
+    public draw(ctx: CanvasRenderingContext2D): boolean {
         if (!this.m_font) {
             return false;
         }
 
         //gsCScreen * screen = gsCApplication::getScreen();
+        var screen: gsCScreen = new gsCScreen();
 
-        //if (!screen)
-        //    return false;
+        if (!screen)
+            return false;
 
 
-        for (var i = 0; i < this.m_item_list.getSize(); i++) {
+        for (var i = 0; i < this.m_item_list.length; i++) {
 
             var y: number = this.m_position.Y + this.m_spacing.Y * i;
-            var highlight: Boolean = (i == this.m_current_item);
+            var highlight: boolean = (i == this.m_current_item);
 
-            this.m_item_list[i].draw(screen, this.m_font, y, highlight);
+            this.m_item_list[i].draw(screen, this.m_font, y, highlight, ctx);
         }
 
         return true;

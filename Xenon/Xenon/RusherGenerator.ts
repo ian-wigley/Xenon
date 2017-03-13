@@ -17,6 +17,9 @@ class CRusherGenerator extends CActor {
     constructor() {
         super();
         this.m_rushers_created = 0;
+        //this.m_timer = new gsCTimer();
+        this.m_delay_timer = new gsCTimer();
+        this.m_name = "RusherGenerator";
     }
 
     public getActorInfo()
@@ -28,20 +31,20 @@ class CRusherGenerator extends CActor {
 
     public activate(): boolean {
         if (!this.isActive()) {
-            //m_timer.start();
-            //m_delay_timer.start();
+            this.m_timer.start();
+            this.m_delay_timer.start();
         }
 
         return super.activate();
     }
 
-    update(controls: gsCControls, gameTime: gsCTimer) {
+    public update(controls: gsCControls, gameTime: gsCTimer) {
         this.gameTime = gameTime;
-        //if (m_delay_timer.getTime() < RUSHER_DELAY)
-        //{
-        //    return true;
-        //}
-        //m_delay_timer.start();
+        if (this.m_delay_timer.getTime() < this.RUSHER_DELAY)
+        {
+            return true;
+        }
+        this.m_delay_timer.start();
 
         var r: CRusher = new CRusher();
         this.m_scene.addActor(r);

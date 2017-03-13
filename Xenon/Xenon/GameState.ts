@@ -2,35 +2,37 @@
 import gsCFont = require("Font");
 import gsCPoint = require("Point");
 import gsCScoreTable = require("ScoreTable");
-
-
-//-------------------------------------------------------------
-
-enum GameMusicType {
-    MUSIC_TITLE,
-    MUSIC_INTRO,
-    MUSIC_GAME,
-    MUSIC_HISCORE,
-    MUSIC_BOSS,
-    MUSIC_OUTRO,
-}
+import gsCControls = require("Controls");
+import enums = require("Enums");
+import COptions = require("Options");
 
 //-------------------------------------------------------------
 
-enum DemoMode {
-    DEMO_OFF,
-    DEMO_RECORD,
-    DEMO_PLAYBACK
-}
+//enum GameMusicType {
+//    MUSIC_TITLE,
+//    MUSIC_INTRO,
+//    MUSIC_GAME,
+//    MUSIC_HISCORE,
+//    MUSIC_BOSS,
+//    MUSIC_OUTRO,
+//}
 
-//-------------------------------------------------------------
+////-------------------------------------------------------------
 
-enum ControllerType {
-    KEYBOARD_LAYOUT_1,
-    KEYBOARD_LAYOUT_2,
-    JOYSTICK_1,
-    JOYSTICK_2,
-}
+//enum DemoMode {
+//    DEMO_OFF,
+//    DEMO_RECORD,
+//    DEMO_PLAYBACK
+//}
+
+////-------------------------------------------------------------
+
+//enum ControllerType {
+//    KEYBOARD_LAYOUT_1,
+//    KEYBOARD_LAYOUT_2,
+//    JOYSTICK_1,
+//    JOYSTICK_2,
+//}
 
 class CGameState {
     //gsCScreen		m_screen;
@@ -55,9 +57,18 @@ class CGameState {
     //CXenon *		m_xenon = 0;
 
     m_number_of_players: number = 1;
+    protected m_state: CGameState;
 
     //CDemoRecorder	m_demo_recorder;
     //DemoMode		m_demo_mode = DEMO_OFF;
+    protected m_demo_mode: enums.DemoMode;
+    protected m_options: COptions;
+    protected introTexture: HTMLImageElement;
+    protected bbTexture: HTMLImageElement;
+    protected backgroundTexture: HTMLImageElement;
+    protected m_stateName: string = "";
+
+    //-------------------------------------------------------------
 
     MAX_FILENAME_SIZE: number = 100;
 
@@ -67,10 +78,12 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    constructor(font8x8: HTMLImageElement, font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+    constructor(font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, ctx?: CanvasRenderingContext2D) {
         this.m_font8x8 = font8x8;
         this.m_font16x16 = font16x16;
         this.m_ctx = ctx;
+
+        this.m_options = new COptions();
         this.initialize(null);
     }
 
@@ -80,7 +93,6 @@ class CGameState {
         //    m_xenon = xenon;
 
         //    gsCFile::setDirectory(DIRECTORY_ROOT);
-
         //    Options.load(OPTIONS_FILENAME);
 
         //    if (!ActorInfoList.load(ACTORINFO_FILENAME))
@@ -150,6 +162,8 @@ class CGameState {
         this.m_score_table = new gsCScoreTable();
         this.loadScoreTable();
 
+        this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
+
         //    #ifdef _PROFILING
         //    strcpy(m_level_filename, "test.fmp");
         //    m_xenon ->changeState(CPlayGameState::instance());
@@ -190,8 +204,8 @@ class CGameState {
     public changeState(new_game_state/*CGameState * */): boolean {
         //if (m_xenon)
         //    return m_xenon ->changeState(new_game_state);
-
-        return false;
+        return this.m_state = new_game_state;
+        //return false;
     }
 
     //-------------------------------------------------------------
@@ -202,9 +216,9 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    //public update(): boolean {
-    //    return true;
-    //}
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
+        return true;
+    }
 
     //-------------------------------------------------------------
 
@@ -297,11 +311,14 @@ class CGameState {
     public addNewScore(score: number): boolean {
         //int pos = m_score_table.insertScore(score, "A");
 
-        //if (pos == -1)
-        //    return false;
+        var pos = this.m_score_table.insertScore(score, "A");
 
-        //m_score_table.setCurrentItem(pos);
-        //m_score_table.setCurrentLetter(0);
+        if (pos == -1) {
+            return false;
+        }
+
+        this.m_score_table.setCurrentItem(pos);
+        this.m_score_table.setCurrentLetter(0);
 
         return true;
     }
@@ -334,7 +351,7 @@ class CGameState {
     public playMusic(music/*: GameMusicType*/): void {
         //if (Options.getOption(OPTION_MUSIC))
         //    m_sound_system.playMusic((int) music);
-    };
+    }
 
     //-------------------------------------------------------------
 

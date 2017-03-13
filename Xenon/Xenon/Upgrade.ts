@@ -25,6 +25,7 @@ class CUpgrade extends CActor {
         this.m_offset = new gsCVector(0.0, 0.0);
         this.m_weapon = null;
         this.m_weapon_type = enums.WeaponType.NO_WEAPON;
+        this.m_name = "Upgrade";
     }
 
     //-------------------------------------------------------------

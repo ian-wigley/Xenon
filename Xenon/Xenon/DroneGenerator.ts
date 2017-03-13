@@ -24,6 +24,7 @@ class CDroneGenerator extends CActor {
         this.m_drones_created = 0;
         this.m_drones_active = 0;
         this.m_drones_killed = 0;
+        this.m_name = "DroneGenerator";
     }
 
     public getActorInfo() {

@@ -1,59 +1,43 @@
 ﻿import gsCPoint = require("Point");
 import CGameState = require("GameState");
+import CIntroState = require("IntroState");
+import CViewScoresState = require("ViewScoresState");
+import COptionsMenuState = require("OptionsMenuState");
+import CCreditsState = require("CreditsState");
 import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import gsCMenu = require("Menu");
 import gsCImage = require("Image");
 import COptions = require("Options");
-
-enum MainMenuItem {
-    MM_ONEPLAYER,
-    MM_TWOPLAYER,
-    MM_SCORES,
-    MM_OPTIONS,
-    MM_CREDITS,
-    MM_QUIT
-};
-
-enum OptionType {
-    OPTION_DIFFICULTY,
-    OPTION_HIRES,
-    OPTION_WINDOWED,
-    OPTION_COLOURDEPTH,
-    OPTION_JOYSTICK,
-    OPTION_MUSIC,
-    OPTION_SOUNDFX,
-    OPTION_PARTICLEFX,
-    OPTION_BACKDROP,
-    OPTION_DEBUGINFO,
-    OPTION_CHEATS,
-    OPTION_CONTROL1,
-    OPTION_CONTROL2,
-
-    TOTAL_OPTIONS
-};
-
+import gsCControls = require("Controls");
+import enums = require("Enums");
 
 class CMainMenuState extends CGameState {
 
     //-------------------------------------------------------------
-
+    m_introState: CIntroState;
+    m_viewScoresState: CViewScoresState;
+    m_optionsMenuState: COptionsMenuState;
+    m_creditsState: CCreditsState;
     //CMainMenuState *CMainMenuState::m_instance = 0;
-
     m_bblogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_pcflogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_title: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_starfield: CStarfield;//
     m_menu: gsCMenu;
-
+    //m_instance;
     //-------------------------------------------------------------
 
-    constructor(scene: CScene, starfield: CStarfield, m_font8x8: HTMLImageElement, m_font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) {
+    constructor(scene?: CScene, starfield?: CStarfield, m_font8x8?: HTMLImageElement, m_font16x16?: HTMLImageElement, ctx?: CanvasRenderingContext2D) {
         super(m_font8x8, m_font16x16, ctx);
 
-        this.m_starfield = starfield;
+        this.m_starfield = starfield
         //m_menu.clear();
 
+        this.m_introState = new CIntroState(scene, starfield, m_font8x8, m_font16x16, ctx);
+        this.m_introState.mainMenuState = this;
+
+        this.m_menu = new gsCMenu();
         this.m_menu.addSelection("Start One Player Game");
         this.m_menu.addSelection("Start Two Player Game");
         this.m_menu.addSelection("View High Scores");
@@ -63,24 +47,27 @@ class CMainMenuState extends CGameState {
         this.m_menu.setWrap(true);
         this.m_menu.setPosition(new gsCPoint(0, 275));
         this.m_menu.setSpacing(new gsCPoint(0, 30));
-        this.m_menu.setCurrentItem(MainMenuItem.MM_ONEPLAYER);
+        this.m_menu.setCurrentItem(enums.MainMenuItem.MM_ONEPLAYER);
         this.m_menu.setFont(this.m_medium_font);
+
+        this.m_stateName = "MainMenuState";
+
+        this.create(); //TEMP! 
     }
 
     //-------------------------------------------------------------
 
-    //CGameState *CMainMenuState::instance()
-    //{
-    //	if (!m_instance)
-    //		m_instance = new CMainMenuState;
+    public instance(): CGameState {
+        //if (!this.m_instance)
+        //    this.m_instance = new CMainMenuState();
 
-    //	return m_instance;
-    //}
+        return this.m_state;//. m_instance;
+    }
 
     //-------------------------------------------------------------
 
     public create(): boolean {
-        //playMusic(MUSIC_TITLE);
+        //this.playMusic(enums.GameMusicType.MUSIC_TITLE);
 
         //if (m_screen.getBytesPerPixel() == 1)
         //	gsCFile::setDirectory(DIRECTORY_GRAPHICS8);
@@ -90,6 +77,7 @@ class CMainMenuState extends CGameState {
         //if (!m_bblogo.load("bblogo.bmp"))
         //	return false;
         //m_bblogo.enableColourKey(gsCColour(gsMAGENTA));
+        this.bbTexture = <HTMLImageElement>document.getElementById("bblogo");
 
         //if (!m_pcflogo.load("pcflogo.bmp"))
         //	return false;
@@ -98,9 +86,10 @@ class CMainMenuState extends CGameState {
         //if (!m_title.load("xlogo.bmp"))
         //	return false;
         //m_title.enableColourKey(gsCColour(gsMAGENTA));
+        this.introTexture = <HTMLImageElement>document.getElementById("Xlogo");
 
         //m_attract_mode = UNKNOWN;
-
+        this.m_state = this;
         return true;
     }
 
@@ -116,7 +105,7 @@ class CMainMenuState extends CGameState {
 
     //-------------------------------------------------------------
 
-    public update(ctx): boolean {
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
         //	if (!CGameState::update())
         //		return false;
 
@@ -139,8 +128,10 @@ class CMainMenuState extends CGameState {
         //		}
 
         //if (Options.getOption(OptionType.OPTION_BACKDROP)) {
-        //    this.m_backdrop.draw(new gsCPoint(0, 0));
-        //}
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+            //this.m_backdrop.draw(new gsCPoint(0, 0));
+        }
         //	else
         //		m_screen.clear(gsCColour(gsBLACK));
 
@@ -150,72 +141,93 @@ class CMainMenuState extends CGameState {
         this.m_starfield.Draw(ctx);
 
 
+        this.m_menu.draw(ctx);//TEMP!
+
         ////var life_symbol: gsCImage = this.m_scene.getImage("PULife");
         ////life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
 
-        //this.m_title.drawImage(new gsCPoint(64, 10), ctx, title);
-        //this.m_bblogo.drawImage(new gsCPoint(10, 360),ctx, bblogo);
-        //this.m_pcflogo.drawImage(new gsCPoint(480, 400),ctx, pcflogo);
+
+        //this.m_title.drawImage(new gsCPoint(64, 10), ctx, this.introTexture);//title);
+        ctx.drawImage(this.introTexture, 64, 10);
+        //this.m_bblogo.drawImage(new gsCPoint(10, 360), ctx, this.bbTexture);//bblogo);
+        ctx.drawImage(this.bbTexture, 10, 360);
+        //this.m_pcflogo.drawImage(new gsCPoint(480, 400), ctx, pcflogo);
 
         ////	m_medium_font.setTextCursor(gsCPoint(0,50));
         ////	m_medium_font.justifyString("Xenon Demo");
 
-        this.m_small_font.setTextCursor(new gsCPoint(0, 470));
+        this.m_small_font.setTextCursor(new gsCPoint(0, 460));
         this.m_small_font.justifyString("Copyright 2000 The Bitmap Brothers");
+
+
+        this.m_small_font.setTextCursor(new gsCPoint(0, 470));
+        this.m_small_font.justifyString("Typescript conversion by Ian Wigley 2017");
 
         this.m_small_font.setTextCursor(new gsCPoint(2, 2));
         //this.m_small_font.printString("%s %s", __TIME__, __DATE__);
 
-        this.m_menu.draw();
+        this.m_menu.draw(ctx);
 
         //	m_screen.flip();
 
-        //	item: MainMenuItem = (MainMenuItem) m_menu.getCurrentItem();
+        var item: enums.MainMenuItem = <enums.MainMenuItem>this.m_menu.getCurrentItem();
 
         //	gsKeyCode key = getKey();
 
         //	if (key != gsKEY_NONE)
         //		m_attract_mode = OFF;
 
+        //switch (controls) {
         //	switch (key) {
         //		case gsKEY_RETURN:
         //		case gsKEY_ENTER:
         //		case gsKEY_LCONTROL:
-        //			switch (item) {
-        //				case MM_ONEPLAYER:
-        //					m_number_of_players = 1;
-        //					playSample(SAMPLE_MENU_CLICK);
-        //					setDemoMode(DEMO_OFF);
-        //					return changeState(CIntroState::instance());
-        //				case MM_TWOPLAYER:
-        //					m_number_of_players = 2;
-        //					playSample(SAMPLE_MENU_CLICK);
-        //					setDemoMode(DEMO_OFF);
-        //					return changeState(CIntroState::instance());
-        //				case MM_SCORES:
-        //					playSample(SAMPLE_MENU_CLICK);
-        //					return changeState(CViewScoresState::instance());
-        //				case MM_OPTIONS:
-        //					playSample(SAMPLE_MENU_CLICK);
-        //					return changeState(COptionsMenuState::instance());
-        //				case MM_CREDITS:
-        //					playSample(SAMPLE_MENU_CLICK);
-        //					return changeState(CCreditsState::instance());
-        //				case MM_QUIT:
-        //					CMessageBoxState::setup("Sure you want to quit ?",
-        //											"Yes",0,
-        //											"No",CMainMenuState::instance());
-        //					return changeState(CMessageBoxState::instance());
-        //				}
-        //			break;
-        //		case gsKEY_UP:
-        //			m_menu.scroll(-1);
-        //			playSample(SAMPLE_MENU_SELECTION);
-        //			break;
-        //		case gsKEY_DOWN:
-        //			m_menu.scroll(1);
-        //			playSample(SAMPLE_MENU_SELECTION);
-        //			break;
+        if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            switch (item) {
+                case enums.MainMenuItem.MM_ONEPLAYER:
+                    this.m_number_of_players = 1;
+                    //this.playSample(SAMPLE_MENU_CLICK);
+                    //this.setDemoMode(DEMO_OFF);
+                    return this.changeState(this.m_introState.instance());//.CIntroState.instance());
+                //break;
+                //				case MM_TWOPLAYER:
+                //					m_number_of_players = 2;
+                //					playSample(SAMPLE_MENU_CLICK);
+                //					setDemoMode(DEMO_OFF);
+                //					return changeState(CIntroState::instance());
+                //				case MM_SCORES:
+                //					playSample(SAMPLE_MENU_CLICK);
+                //					return changeState(CViewScoresState::instance());
+                //				case MM_OPTIONS:
+                //					playSample(SAMPLE_MENU_CLICK);
+                //					return changeState(COptionsMenuState::instance());
+                //				case MM_CREDITS:
+                //					playSample(SAMPLE_MENU_CLICK);
+                //					return changeState(CCreditsState::instance());
+                //				case MM_QUIT:
+                //					CMessageBoxState::setup("Sure you want to quit ?",
+                //											"Yes",0,
+                //											"No",CMainMenuState::instance());
+                //					return changeState(CMessageBoxState::instance());
+            }
+            //			break;
+        }
+
+        //case gsKEY_UP:
+        //case controls.up:
+        if (controls.up) {
+            this.m_menu.scroll(-1);
+            //playSample(SAMPLE_MENU_SELECTION);
+            //break;
+        }
+        //case gsKEY_DOWN:
+        //case controls.down:
+        if (controls.down) {
+            this.m_menu.scroll(1);
+            //playSample(SAMPLE_MENU_SELECTION);
+            //break;
+        }
+
 
         //		case gsKEY_F1:
         //			ActorInfoList.save(ACTORINFO_FILENAME);
@@ -241,10 +253,10 @@ class CMainMenuState extends CGameState {
         //		case gsKEY_S:
         //			m_demo_recorder.save();
         //			break;
-        //		}
+        //}
 
         //	if (m_sound_system.isMusicFinished())
-        //		m_sound_system.playMusic((int) MUSIC_TITLE);
+        //		m_sound_system.playMusic(enums.GameMusicType.MUSIC_TITLE);
 
         return true;
     }
@@ -254,234 +266,3 @@ class CMainMenuState extends CGameState {
 }
 export = CMainMenuState;
 
-
-//class CMainMenuState {
-
-
-///*
-//    #include "game.h"
-
-////-------------------------------------------------------------
-
-//CMainMenuState *CMainMenuState::m_instance = 0;
-
-//gsCImage	CMainMenuState::m_bblogo;
-//gsCImage	CMainMenuState::m_pcflogo;
-//gsCImage	CMainMenuState::m_title;
-
-////-------------------------------------------------------------
-
-//CMainMenuState::CMainMenuState()
-//{
-//	m_menu.clear();
-
-//	m_menu.addSelection("Start One Player Game");
-//	m_menu.addSelection("Start Two Player Game");
-//	m_menu.addSelection("View High Scores");
-//	m_menu.addSelection("Options");
-//	m_menu.addSelection("Credits");
-//	m_menu.addSelection("Quit");
-//	m_menu.setWrap(true);
-//	m_menu.setPosition(gsCPoint(0,275));
-//	m_menu.setSpacing(gsCPoint(0,30));
-//	m_menu.setCurrentItem(MM_ONEPLAYER);
-//	m_menu.setFont(&m_medium_font);
-//}
-
-////-------------------------------------------------------------
-
-//CMainMenuState::~CMainMenuState()
-//{
-//}
-
-////-------------------------------------------------------------
-
-//CGameState *CMainMenuState::instance()
-//{
-//	if (!m_instance)
-//		m_instance = new CMainMenuState;
-
-//	return m_instance;
-//}
-
-////-------------------------------------------------------------
-
-//bool CMainMenuState::create()
-//{
-//	playMusic(MUSIC_TITLE);
-
-//	if (m_screen.getBytesPerPixel() == 1)
-//		gsCFile::setDirectory(DIRECTORY_GRAPHICS8);
-//	else
-//		gsCFile::setDirectory(DIRECTORY_GRAPHICS24);
-
-//	if (!m_bblogo.load("bblogo.bmp"))
-//		return false;
-//	m_bblogo.enableColourKey(gsCColour(gsMAGENTA));
-
-//	if (!m_pcflogo.load("pcflogo.bmp"))
-//		return false;
-//	m_pcflogo.enableColourKey(gsCColour(gsMAGENTA));
-
-//	if (!m_title.load("xlogo.bmp"))
-//		return false;
-//	m_title.enableColourKey(gsCColour(gsMAGENTA));
-
-//	m_attract_mode = UNKNOWN;
-
-//	return true;
-//}
-
-////-------------------------------------------------------------
-
-//bool CMainMenuState::destroy()
-//{
-//	m_bblogo.destroy();
-//	m_pcflogo.destroy();
-//	m_title.destroy();
-
-//	return true;
-//}
-
-////-------------------------------------------------------------
-
-//bool CMainMenuState::update()
-//{
-//	if (!CGameState::update())
-//		return false;
-
-//	if (m_attract_mode == UNKNOWN) {
-//		m_attract_mode = ON;
-//		m_attract_mode_timer.start();
-//		}
-
-//	if (m_attract_mode == ON &&
-//		m_attract_mode_timer.getTime() > 100.f) { //10.f
-//		m_demo_recorder.load(DEMO_FILENAME);
-//		const char *level = m_demo_recorder.getLevel();
-//		if (level != 0) {
-//			strcpy(m_level_filename,level);
-//			setDemoMode(DEMO_PLAYBACK);
-//			return changeState(CPlayGameState::instance());
-//			}
-//		else
-//			m_attract_mode = OFF;
-//		}
-
-//	if (Options.getOption(OPTION_BACKDROP))
-//		m_backdrop.draw(gsCPoint(0,0));
-//	else
-//		m_screen.clear(gsCColour(gsBLACK));
-
-////	m_screen.clear(gsCColour(gsBLACK));
-
-//	m_starfield.move(4);
-//	m_starfield.draw();
-
-//	m_title.draw(gsCPoint(64,10));
-//	m_bblogo.draw(gsCPoint(10,360));
-//	m_pcflogo.draw(gsCPoint(480,400));
-
-////	m_medium_font.setTextCursor(gsCPoint(0,50));
-////	m_medium_font.justifyString("Xenon Demo");
-
-//	m_small_font.setTextCursor(gsCPoint(0,470));
-//	m_small_font.justifyString("Copyright 2000 The Bitmap Brothers");
-
-//	m_small_font.setTextCursor(gsCPoint(2,2));
-//	m_small_font.printString("%s %s",__TIME__,__DATE__);
-
-//	m_menu.draw();
-
-//	m_screen.flip();
-
-//	MainMenuItem item = (MainMenuItem) m_menu.getCurrentItem();
-
-//	gsKeyCode key = getKey();
-
-//	if (key != gsKEY_NONE)
-//		m_attract_mode = OFF;
-
-//	// Temp to allow game to start !! <-- Added by Ian
-//	//return changeState(CIntroState::instance());
-
-
-//	switch (key) {
-//		case gsKEY_RETURN:
-//		case gsKEY_ENTER:
-//		case gsKEY_LCONTROL:
-//			switch (item) {
-//				case MM_ONEPLAYER:
-//					m_number_of_players = 1;
-//					playSample(SAMPLE_MENU_CLICK);
-//					setDemoMode(DEMO_OFF);
-//					return changeState(CIntroState::instance());
-//				case MM_TWOPLAYER:
-//					m_number_of_players = 2;
-//					playSample(SAMPLE_MENU_CLICK);
-//					setDemoMode(DEMO_OFF);
-//					return changeState(CIntroState::instance());
-//				case MM_SCORES:
-//					playSample(SAMPLE_MENU_CLICK);
-//					return changeState(CViewScoresState::instance());
-//				case MM_OPTIONS:
-//					playSample(SAMPLE_MENU_CLICK);
-//					return changeState(COptionsMenuState::instance());
-//				case MM_CREDITS:
-//					playSample(SAMPLE_MENU_CLICK);
-//					return changeState(CCreditsState::instance());
-//				case MM_QUIT:
-//					CMessageBoxState::setup("Sure you want to quit ?",
-//											"Yes",0,
-//											"No",CMainMenuState::instance());
-//					return changeState(CMessageBoxState::instance());
-//				}
-//			break;
-//		case gsKEY_UP:
-//			m_menu.scroll(-1);
-//			playSample(SAMPLE_MENU_SELECTION);
-//			break;
-//		case gsKEY_DOWN:
-//			m_menu.scroll(1);
-//			playSample(SAMPLE_MENU_SELECTION);
-//			break;
-
-//		case gsKEY_F1:
-//			ActorInfoList.save(ACTORINFO_FILENAME);
-//			break;
-
-//		case gsKEY_R:
-//			setDemoMode(DEMO_RECORD);
-//			return changeState(CIntroState::instance());
-
-//		case gsKEY_L:
-//			m_demo_recorder.load(DEMO_FILENAME);
-//		case gsKEY_P:
-//			{
-//				const char *level = m_demo_recorder.getLevel();
-//				if (level != 0) {
-//					strcpy(m_level_filename,level);
-//					setDemoMode(DEMO_PLAYBACK);
-//					return changeState(CPlayGameState::instance());
-//					}
-//			}
-//			break;
-
-//		case gsKEY_S:
-//			m_demo_recorder.save();
-//			break;
-//		}
-
-//	if (m_sound_system.isMusicFinished())
-//		m_sound_system.playMusic((int) MUSIC_TITLE);
-
-//	return true;
-//}
-
-////-------------------------------------------------------------
-//*/
-
-
-
-//}
-//export = CMainMenuState;

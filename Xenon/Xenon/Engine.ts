@@ -31,14 +31,16 @@ class CEngine extends CActor {
         this.m_min_extent = new gsCVector(0.0, 0.0);
         this.m_max_extent = new gsCVector(0.0, 0.0);
         this.m_thrust_rate = 0;
+        this.m_thrust_timer = new gsCTimer();
+        this.m_name = "engine";
     }
 
     //-------------------------------------------------------------
 
     public activateEngine(): boolean {
         if (!this.isActive()) {
-            //        m_timer.start();
-            //        m_thrust_timer.start();
+            this.m_timer.start();
+            this.m_thrust_timer.start();
         }
 
         return super.activate();
@@ -47,22 +49,24 @@ class CEngine extends CActor {
     //-------------------------------------------------------------
 
     public applyThrust(thrust: number): void {
-        //    if (m_thrust_timer.getTime() > m_thrust_rate) {
-        //        m_thrust_timer.start();
+        //if (this.m_thrust_timer.getTime() > this.m_thrust_rate) {
+        //    this.m_thrust_timer.start();
 
-        if (thrust > 0) {
-            this.m_thrust++;
-            if (this.m_thrust > this.ENGINE_MAX_THRUST) {
-                this.m_thrust = this.ENGINE_MAX_THRUST;
+        // Get time not working correctly !!!!!!
+
+            if (thrust > 0) {
+                this.m_thrust++;
+                if (this.m_thrust > this.ENGINE_MAX_THRUST) {
+                    this.m_thrust = this.ENGINE_MAX_THRUST;
+                }
             }
-        }
-        else {
-            this.m_thrust--;
-            if (this.m_thrust < 0) {
-                this.m_thrust = 0;
+            else {
+                this.m_thrust--;
+                if (this.m_thrust < 0) {
+                    this.m_thrust = 0;
+                }
             }
-        }
-        //        }
+      //  }
     }
 
     //-------------------------------------------------------------
@@ -74,6 +78,8 @@ class CEngine extends CActor {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer) {
+        this.m_thrust_timer.update(false);
+
         var p: number = this.m_thrust / this.ENGINE_MAX_THRUST;
         var extent: gsCVector = new gsCVector(this.m_min_extent.x + (this.m_max_extent.x - this.m_min_extent.x) * p, this.m_min_extent.y + (this.m_max_extent.y - this.m_min_extent.y) * p);
         this.m_position.x = this.getOwner().getPosition().x + this.m_offset.x + extent.x;
@@ -90,10 +96,6 @@ class CEngine extends CActor {
     }
 
     //-------------------------------------------------------------
-
-    //public draw(ctx: CanvasRenderingContext2D) {
-    //    return super.Draw(ctx);
-    //}
 }
 
 export = CEngine;

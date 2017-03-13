@@ -2,17 +2,22 @@
 import CActor = require("Actor");
 import gsCVector = require("Vector");
 import gsCTimer = require("Timer");
+import gsCControls = require("Controls");
+import CDustEffect = require("DustEffect");
+import Point = require("Point");
 
 class CParticleEffect extends CActor {
 
     m_offset: gsCVector;
     //gsCList<Particle *> m_particle_list;
+    m_particle_list: Array<Particle>;
     m_point_force: boolean;
     m_force_position: gsCVector;
     m_force_direction: gsCVector;		// ignored if point force
     m_force_strength: number;				// ignored if directional force
     m_life_timer: gsCTimer;
     m_lifetime: number;
+    m_parent: CDustEffect;//Object;
 
     INFINITE_LIFETIME: number = 99999.0;
 
@@ -23,29 +28,27 @@ class CParticleEffect extends CActor {
         this.m_force_direction = new gsCVector(0.0, 0.0);
         this.m_force_strength = 1.0;
         this.m_lifetime = this.INFINITE_LIFETIME;
+        this.m_particle_list = [];
     }
-
 
     //-------------------------------------------------------------
 
     public destroy(): void {
         //for (var i = 0; i < m_particle_list.getSize(); i++)
         //delete m_particle_list[i];
-
         //m_particle_list.clear();
     }
 
     //-------------------------------------------------------------
 
-    //bool CParticleEffect::activate()
-    //{
-    //    if (!isActive()) {
-    //        m_timer.start();
-    //        m_life_timer.start();
-    //    }
+    public activate(): boolean {
+        if (!this.isActive()) {
+            this.m_timer.start();
+            this.m_life_timer.start();
+        }
 
-    //    return CActor::activate();
-    //}
+        return super.activate();
+    }
 
     //-------------------------------------------------------------
 
@@ -63,91 +66,82 @@ class CParticleEffect extends CActor {
 
     //-------------------------------------------------------------
 
-    //bool CParticleEffect::update(Controls * controls)
-    //{
-    //    // update effect global position
+    public update(controls: gsCControls, gameTime: gsCTimer): boolean {
+        // update effect global position
+        if (this.getOwner())
+            this.m_position = this.getOwner().getPosition().plus1(this.m_offset);
+        else
+            this.m_position.plusEquals(this.m_velocity);
 
-    //    if (getOwner())
-    //        m_position = getOwner() ->getPosition() + m_offset;
-    //    else
-    //        m_position += m_velocity;
+        // create new particle
+        if (this.m_lifetime == this.INFINITE_LIFETIME ||
+            this.m_life_timer.getTime() < this.m_lifetime) {
+            var p: Particle = this.m_parent.createParticle();
+            if (p)
+                this.m_particle_list.push(p);
+        }
+        else {
+            if (this.m_particle_list.length == 0) {//.isEmpty()) {
+                this.kill();
+                return true;
+            }
+        }
 
-    //    // create new particle
+        // update all
+        var delta_time: number = this.m_timer.getDeltaTime();
 
-    //    if (m_lifetime == INFINITE_LIFETIME ||
-    //        m_life_timer.getTime() < m_lifetime) {
-    //        Particle * p = createParticle();
-    //        if (p)
-    //            m_particle_list.addItem(p);
-    //    }
-    //    else {
-    //        if (m_particle_list.isEmpty()) {
-    //            kill();
-    //            return true;
-    //        }
-    //    }
+        for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
+            var p: Particle = this.m_particle_list[i];
+            p.m_age += delta_time;
+            if (p.m_age >= p.m_lifetime) {
 
-    //    // update all
+                // kill particle
+                //delete m_particle_list[i];
+                this.m_particle_list[i] = null;//..removeIndex(i);
+            }
+            else {
+                p.m_position.plusEquals(p.m_velocity);
 
-    //    float delta_time = gsCTimer::getDeltaTime();
+                if (this.m_point_force) {
+                    //NYI
+                }
+                else {
+                    //NYI
+                }
+            }
+        }
 
-    //    for (int i = m_particle_list.getSize() - 1; i >= 0 ; i--) {
-    //        Particle * p = m_particle_list[i];
-
-    //        p ->m_age += delta_time;
-
-    //        if (p ->m_age >= p ->m_lifetime) {
-
-    //            // kill particle
-
-    //            delete m_particle_list[i];
-    //            m_particle_list.removeIndex(i);
-    //        }
-    //        else {
-    //            p ->m_position += p ->m_velocity;
-
-    //            if (m_point_force) {
-    //                //NYI
-    //            }
-    //            else {
-    //                //NYI
-    //            }
-    //        }
-    //    }
-
-    //    return true;
-    //}
+        return true;
+    }
 
     //-------------------------------------------------------------
 
-    //bool CParticleEffect::draw()
-    //{
-    //    gsCRect screen_rect = gsCApplication::getScreen() ->getRect();
+    public draw(ctx: CanvasRenderingContext2D): boolean {
+        //    gsCRect screen_rect = gsCApplication::getScreen() ->getRect();
 
-    //    if (!screen_rect.contains(m_position + m_scene ->getMap() ->getPosition())) {
-    //        onLeavingScreen();
-    //        return true;
-    //    }
+        //    if (!screen_rect.contains(m_position + m_scene ->getMap() ->getPosition())) {
+        //        onLeavingScreen();
+        //        return true;
+        //    }
 
-    //    for (int i = m_particle_list.getSize() - 1; i >= 0 ; i--) {
-    //        Particle * p = m_particle_list[i];
+        for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
+            var p: Particle = this.m_particle_list[i];
 
-    //        int frame = (int)(m_image ->getNumTiles() * p ->m_age / p ->m_lifetime);
+            var frame: number = (this.m_image.getNumTiles() * p.m_age / p.m_lifetime);
 
-    //        if (!m_image ->draw(frame, p ->m_position + m_scene ->getMap() ->getPosition())) {
+            //if (!this.m_image.draw(frame, new gsCVector(p.m_position.plus1(this.m_scene.getMap().getPosition()))),ctx) {
+            // var rar = p.m_position.plus1(this.m_scene.getMap().getPosition());
+            if (!this.m_image.draw(frame, p.m_position.plus1(this.m_scene.getMap().getPosition()), ctx)) {
 
-    //            // kill particle
+                // kill particle
 
-    //            delete m_particle_list[i];
-    //            m_particle_list.removeIndex(i);
-    //        }
-    //    }
+                //delete m_particle_list[i];
+                this.m_particle_list[i] = null;//.removeIndex(i);
+            }
+        }
 
-    //    return true;
-    //}
-
-    //-------------------------------------------------------------
-
+        return true;
+    }
 
     //-------------------------------------------------------------
 
@@ -163,7 +157,9 @@ class CParticleEffect extends CActor {
 
     //-------------------------------------------------------------
 
-
+    public set Parent(value: CDustEffect) {
+        this.m_parent = value;
+    }
 
 }
 

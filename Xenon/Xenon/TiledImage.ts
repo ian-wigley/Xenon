@@ -146,6 +146,7 @@ class gsCTiledImage extends gsCImage {
 
     public drawTinted(tile: number, position: Point, tint_colour: string/*gsCColour&*/, ctx: CanvasRenderingContext2D): boolean {
         if (tile >= this.m_num_tiles) {
+            console.log("Tile number greater than the number of tiles");
             return false;
         }
 

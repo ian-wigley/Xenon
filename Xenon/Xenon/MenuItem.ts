@@ -38,12 +38,8 @@ class gsCMenuItem {
         if (this.m_name) {
             if (highlight) {
                 var size: gsCPoint = font.getStringSize(this.m_name);
-                screen.drawSolidRect(new gsCRect(640 - size.X/*(screen. ->getSize().getX() - size.getX())*/ / 2 - 1,
-                    y - 1,
-                    640 + size.X/* screen.->getSize().getX() + size.getX()*/ / 2 + 1,
-                    y + size.Y + 1), //.getY() + 1),
-                    "red", //gsCColour(128, 128, 128),
-                    ctx);
+
+                screen.drawSolidRect(new gsCRect((screen.m_rect.Right - size.X) / 2 - 1,  y - 1, size.X + 2, size.Y + 2), "gray", ctx);
             }
 
             font.setTextCursor(new gsCPoint(0, y));
@@ -51,9 +47,18 @@ class gsCMenuItem {
         }
     }
 
+    //-------------------------------------------------------------
+
     public getSize(): number {
         return 0;//m_count;
     }
+
+    //-------------------------------------------------------------
+
+    public getType() {
+        return null;
+    }
+
 }
 
 export = gsCMenuItem;
