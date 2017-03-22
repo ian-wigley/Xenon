@@ -27,7 +27,14 @@ class CLaser extends CBullet {
         super();
         this.m_hit_map = null;
         this.m_name = "laser";
+        this.m_actor_collider_list = [];
+        this.m_map_collider_list = [];
+
+        this.m_grade = 2; //TEMP!
+
     }
+
+    //-------------------------------------------------------------
 
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -42,7 +49,7 @@ class CLaser extends CBullet {
             this.m_dying = false;
         }
 
-        return this.activate();
+        return super.activate();
     }
 
     //-------------------------------------------------------------
@@ -134,8 +141,8 @@ class CLaser extends CBullet {
             this.m_length = map_d;
         }
 
-        this.m_actor_collider_list = [];//.clear();
-        this.m_map_collider_list = [];//.clear();
+        this.m_actor_collider_list = [];
+        this.m_map_collider_list = [];
         this.m_hit_map = null;
 
         this.m_dying = true;
@@ -145,7 +152,7 @@ class CLaser extends CBullet {
 
     public update(controls: gsCControls, gametime: gsCTimer): boolean {
         this.m_position.plusEquals(this.m_velocity);
-        if (this.m_dying) {
+        if (!this.m_dying) { //TEMP - Ian 21/03/2017
             this.m_length += this.m_velocity.Y;
             if (this.m_length <= 0) {
                 this.kill();
@@ -159,7 +166,8 @@ class CLaser extends CBullet {
 
     //-------------------------------------------------------------
 
-    public draw(ctx: CanvasRenderingContext2D): boolean {
+    //public draw(ctx: CanvasRenderingContext2D): boolean {
+    public Draw(ctx: CanvasRenderingContext2D): boolean {
         var screen: gsCScreen = new gsCScreen(); //gsCApplication::getScreen();
 
         if (!screen)
@@ -168,7 +176,7 @@ class CLaser extends CBullet {
         var colour: string; //gsCColour 
 
         //	int flash = m_random.getInt(256);
-
+        this.m_grade = 2
         switch (this.m_grade) {
             case enums.BulletGrade.BULLET_STANDARD:
                 colour = "red";//gsCColour(0,flash,255);
@@ -201,7 +209,7 @@ class CLaser extends CBullet {
     public getCollisionRect(): gsCRectangle {
 
         var pos: gsCPoint = this.getPosition().plus1(this.m_scene.getMap().getPosition());
-    	return new gsCRectangle(pos.X, pos.Y - this.m_length, /*pos.getX() +*/ 2, /*pos.getY() +*/ 1);
+        return new gsCRectangle(pos.X, pos.Y - 300, 3, this.m_length);
     }
 
     //-------------------------------------------------------------

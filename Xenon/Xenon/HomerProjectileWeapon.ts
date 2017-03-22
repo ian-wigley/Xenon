@@ -12,6 +12,7 @@ class CHomerProjectileWeapon extends CWeapon {
     constructor() {
         super();
         this.m_trigger = false;
+        this.m_name = "HomerProjectileWeapon";
     }
 
     //-------------------------------------------------------------
@@ -56,12 +57,15 @@ class CHomerProjectileWeapon extends CWeapon {
             this.m_scene.addActor(hp);
             hp.activate();
             //hp.setGrade(<enums.BulletGrade>this.m_grade);
+            var grade: number = this.m_grade;
+            hp.setGrade(grade);
             hp.setPosition(this.getPosition());
 
             var d: gsCVector = direction[i];
             d.normalize();
 
             //hp.setVelocity(d * hp.getActorInfo().m_speed[this.m_grade]);
+            hp.setVelocity(d.multVec(hp.getActorInfo().m_speed[this.m_grade]));
         }
 
         // now kill ourself
@@ -77,7 +81,6 @@ class CHomerProjectileWeapon extends CWeapon {
     }
 
     //-------------------------------------------------------------
-
 
 }
 

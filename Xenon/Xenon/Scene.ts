@@ -17,6 +17,7 @@ import gsCPoint = require("Point");
 import CSmallExplosion = require("SmallExplosion");
 import gsCCollisionList = require("CollisionList");
 import CLabel = require("Label");
+import CApplication = require("Application");
 
 class CScene {
 
@@ -40,20 +41,23 @@ class CScene {
 
     //temp!
     private m_font: HTMLImageElement;
+    private m_application: CApplication;
 
     private COLLIDE_WITH_SHIP: number = 1;
     private COLLIDE_WITH_BULLETS: number = 2;
 
-    constructor(image: HTMLImageElement, textures: Array<HTMLImageElement>, listOfActors: CActorInfoList) {
+    constructor(image: HTMLImageElement, textures: Array<HTMLImageElement>, listOfActors: CActorInfoList, application: CApplication) {
         this.m_textures = textures;
         this.m_listOfActors = listOfActors;
+        this.m_application = application;
+
         this.m_frame_count = 0;
         this.m_checkpoint_active = false;
         this.m_is_warping = false;
         this.m_actor_list = [];
         this.m_collision_list = new gsCCollisionList();
         //m_screen = new gsCScreen();
-        this.lev = new CLevel(image);//, font);
+        this.lev = new CLevel(image);
     }
 
     //-------------------------------------------------------------
@@ -103,7 +107,7 @@ class CScene {
     public addToCollisionList(actor: CActor, rect: gsCRectangle): void {
         switch (actor.getActorInfo().m_type) {
             case enums.ActorType.ACTOR_TYPE_SHIP:
-                if (!this.m_ship_is_cloaked) //<!--  added by Ian 4/3/7 -> cloaking still enabled ....
+                if (this.m_ship_is_cloaked) //<!--  added by Ian 4/3/7 -> cloaking still enabled ....
                     break;
                 this.m_collision_list.addObject(actor,
                     rect,
@@ -158,7 +162,8 @@ class CScene {
             var obj = this.m_actor_list[j];
             if (obj.isActive() && obj.getActorInfo().m_type == type) {
 
-                if (obj.name == "clone") {
+                //if (obj.name == "MissileWeapon") {// "HomingMissileWeapon") {
+                if (obj.name == "HomingMissileWeapon") {
                     var breakhere = true;
 
                 }
@@ -180,6 +185,9 @@ class CScene {
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, controls, gameTime);
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, controls, gameTime);
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, controls, gameTime);
+
+        controls.fire = false;
+
     }
 
     //-------------------------------------------------------------
@@ -229,12 +237,13 @@ class CScene {
         for (var j = 0; j < this.m_actor_list.length; j++) {
             var act = this.m_actor_list[j];
             if (act.isActive() && act.getActorInfo().m_type == type) {
-                //if (type == 2) {
-                //    var breakHere = true;
-                //}
-                if (act.name != "MissileWeapon" && act.name != "DroneGenerator" && act.name != "SpinnerWeapon") {
-                    //act.draw(ctx);
-                        act.Draw(ctx);
+
+                if (act.name == "HomingMissile") {
+                    var breakHere = true;
+                }
+
+                if (act.name != "MissileWeapon" && act.name != "DroneGenerator" && act.name != "SpinnerWeapon" && act.name != "HomingMissileWeapon" && act.name != "Weapon") {
+                    act.Draw(ctx);
                 }
             }
         }
@@ -250,6 +259,10 @@ class CScene {
         if (!actor1.isActive() ||
             !actor2.isActive())
             return;
+
+        //if (actor1.name == "bullet") {
+        //    var breakHere = true;
+        //}
 
         actor1.onCollisionWithActor(actor2);
     }
@@ -319,9 +332,8 @@ class CScene {
     //-------------------------------------------------------------
 
     public killAllActors(): void {
-        var i;
 
-        for (i = 0; i < this.m_actor_list.length; i++) {
+        for (var i = 0; i < this.m_actor_list.length; i++) {
             this.m_actor_list[i].kill();
         }
 
@@ -335,7 +347,9 @@ class CScene {
     //-------------------------------------------------------------
 
     public destroyAll() {
-        var i;
+
+        this.m_actor_list = [];
+        //this.m_image_list = [];
 
         //for (i = 0; i < m_actor_list.getSize(); i++)
         //    delete m_actor_list[i];
@@ -368,23 +382,12 @@ class CScene {
         this.addActor(label);
 
         label.activate();
+        label.setFont(this.m_application.smallFont);
         label.setText(text);
         label.setPosition(position);
         label.setVelocity(new gsCVector(0.0, -1.25));
         label.setTime(0.5);
     }
-
-    //-------------------------------------------------------------
-
-    //public createLabel(position: gsCVector, num: number): void {
-    //    //    var label:CLabel = new CLabel;
-    //    //    addActor(label);
-    //    //    label->activate();
-    //    //    label->setText("%i",num);
-    //    //    label->setPosition(position);
-    //    //    label->setVelocity(gsCVector(0.f,-1.25f));
-    //    //    label->setTime(0.5);
-    //}
 
     //-------------------------------------------------------------
 
@@ -424,9 +427,9 @@ class CScene {
                     if (dir > 0 && sy > ay)
                         continue;
                 }
-                var d: number = 0;//(actor.getPosition() - position).length();
-                if (nearest_actor == null ||
-                    d < nearest_distance) {
+
+                var d: number = actor.getPosition().minus(position).length;
+                if (nearest_actor == null || d < nearest_distance) {
                     nearest_actor = actor;
                     nearest_distance = d;
                 }
@@ -526,7 +529,11 @@ class CScene {
 
     //-------------------------------------------------------------
 
-    //bool isWarping() { return m_is_warping; };
+    public isWarping(): boolean {
+        return this.m_is_warping;
+    }
+
+    //-------------------------------------------------------------
 
     public GetLevel() {
         return this.lev;
@@ -543,7 +550,12 @@ class CScene {
     public LevelLoaded() {
         return this.lev.LoadingComplete;
     }
+
     //-------------------------------------------------------------
+
+    public get App(): CApplication {
+        return this.m_application;
+    }
 
 }
 

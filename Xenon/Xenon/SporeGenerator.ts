@@ -61,6 +61,13 @@ class CSporeGenerator extends CActor {
 
     //-------------------------------------------------------------
 
+    public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPORE_GENERATOR);
+    }
+
+    //-------------------------------------------------------------
+
     public sporeKilled(by_player: boolean): boolean {
         this.m_spores_alive--;
 
@@ -81,7 +88,7 @@ class CSporeGenerator extends CActor {
 
     //-------------------------------------------------------------
 
-    onLeavingScreen(): void {
+    public onLeavingScreen(): void {
     }
 
     //-------------------------------------------------------------

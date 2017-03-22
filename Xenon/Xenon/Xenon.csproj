@@ -29,6 +29,7 @@
     <TypeScriptCompile Include="ActorInfo.ts" />
     <TypeScriptCompile Include="ActorInfoList.ts" />
     <TypeScriptCompile Include="Alien.ts" />
+    <TypeScriptCompile Include="Application.ts" />
     <TypeScriptCompile Include="Asteroid.ts" />
     <TypeScriptCompile Include="AudioMenuState.ts" />
     <TypeScriptCompile Include="BigExplosion.ts" />

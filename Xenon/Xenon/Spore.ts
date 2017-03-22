@@ -16,6 +16,7 @@ class CSpore extends CBullet {
     constructor() {
         super();
         this.m_name = "SPORE";
+        this.m_delay_timer = new gsCTimer();
     }
 
     //-------------------------------------------------------------
@@ -26,6 +27,13 @@ class CSpore extends CBullet {
             this.m_delay_timer.start();
         }
         return super.activate();
+    }
+
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPORE);
     }
 
     //-------------------------------------------------------------
@@ -43,9 +51,11 @@ class CSpore extends CBullet {
             //this.m_delay_timer.reset();
             var ship: CShip = this.m_scene.findShip();
             if (ship != null) {
-                //var rel_pos: gsCVector = ship.getPosition(). - this.m_position;
-                //rel_pos.Normalize();
-                //this.m_velocity = rel_pos * this.getActorInfo().m_speed[this.m_grade];
+                var rel_pos: gsCVector = ship.getPosition().minus(this.m_position);
+                rel_pos.normalize();
+                //var rel = this.getActorInfo().m_speed;//[this.m_grade];
+                //this.m_velocity = rel_pos.multVec(this.getActorInfo().m_speed[this.m_grade]);
+                this.m_velocity = rel_pos.multVec(this.getActorInfo().m_speed);
             }
         }
 

@@ -29,6 +29,7 @@ class CParticleEffect extends CActor {
         this.m_force_strength = 1.0;
         this.m_lifetime = this.INFINITE_LIFETIME;
         this.m_particle_list = [];
+        this.m_life_timer = new gsCTimer();
     }
 
     //-------------------------------------------------------------
@@ -116,7 +117,8 @@ class CParticleEffect extends CActor {
 
     //-------------------------------------------------------------
 
-    public draw(ctx: CanvasRenderingContext2D): boolean {
+    //public draw(ctx: CanvasRenderingContext2D): boolean {
+    public Draw(ctx: CanvasRenderingContext2D): boolean {
         //    gsCRect screen_rect = gsCApplication::getScreen() ->getRect();
 
         //    if (!screen_rect.contains(m_position + m_scene ->getMap() ->getPosition())) {

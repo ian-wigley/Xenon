@@ -70,17 +70,47 @@ class gsCTiledImage extends gsCImage {
 
     // Main tile Drawing method !! <gsCTiledImage>
     public draw(tile: number, position: Point, ctx: CanvasRenderingContext2D): boolean {
+
+        if (tile != 6.208 && tile != 0.208 && tile != 19.200000000000003 && tile != 20.208  ) {
+
+            if (tile >= this.m_source_rects.length) {
+                console.log("Tile number greater than the number of tiles - Draw()");
+                return false;
+            }
+
+            var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
+            if (this.m_screen.contains(dest)) {
+                ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
+                return true;
+            }
+            else {
+                ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
+                return true;
+            }
+
+        }
+        else {
+            var hmmm = 0;
+            return false;
+
+        }
+
+    }
+
+    //-------------------------------------------------------------
+
+    public drawSolid(tile: number, position: Point, tfill_colour: string, ctx: CanvasRenderingContext2D): boolean {
         if (tile >= this.m_source_rects.length) {
+            console.log("Tile number greater than the number of tiles - DrawSolid()");
             return false;
         }
-
+        //Add fill colour
         var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
         if (this.m_screen.contains(dest)) {
             ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             return true;
         }
         else {
-            //var source: gsCRectangle = this.m_source_rects[tile];
             ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
             return true;
         }
@@ -88,119 +118,19 @@ class gsCTiledImage extends gsCImage {
 
     //-------------------------------------------------------------
 
-    public drawSolid(tile: number, position: Point, ctx: CanvasRenderingContext2D, tfill_colour/*gsCColour&*/): boolean {
-        //    if (tile >= m_num_tiles)
-        //        return false;
-
-        //    if (!m_direct_draw) {
-        //        gsREPORT("gsCTiledImage::draw called with no direct draw device");
-        //        return false;
-        //    }
-
-        //    gsCScreen * screen = gsCApplication::getScreen();
-
-        //    if (!screen) {
-        //        gsREPORT("gsCTiledImage::draw called with no active screen");
-        //        return false;
-        //    }
-
-        //    gsCRect dest(position, position + m_tile_size);
-
-        //    if (screen ->getRect().contains(dest)) {
-
-        //        bool ok = false;
-
-        //        if (lock()) {
-        //            ok = screen ->bltSolid(dest, m_ddsd, m_source_rects[tile], fill_colour);
-        //            unlock();
-        //        }
-        //        if (!ok) {
-        //            gsREPORT("gsCTiledImage::drawSolid blit failed");
-        //            return false;
-        //        }
-        //    }
-        //    else {
-        //        if (!screen ->getRect().overlaps(dest))
-        //            return false;
-
-        //        gsCRect source = m_source_rects[tile];
-
-        //        screen ->getRect().clip(source, dest);
-
-        //        bool ok = false;
-
-        //        if (lock()) {
-        //            ok = screen ->bltSolid(dest, m_ddsd, source, fill_colour);
-        //            unlock();
-        //        }
-        //        if (!ok) {
-        //            gsREPORT("gsCTiledImage::drawSolid blit failed");
-        //            return false;
-        //        }
-        //    }
-
-        return true;
-    }
-
-    //-------------------------------------------------------------
-
-    public drawTinted(tile: number, position: Point, tint_colour: string/*gsCColour&*/, ctx: CanvasRenderingContext2D): boolean {
+    public drawTinted(tile: number, position: Point, tint_colour: string, ctx: CanvasRenderingContext2D): boolean {
         if (tile >= this.m_num_tiles) {
-            console.log("Tile number greater than the number of tiles");
+            console.log("Tile number greater than the number of tiles - DrawTinted()");
             return false;
         }
-
-        //if (!m_direct_draw) {
-        //    gsREPORT("gsCTiledImage::draw called with no direct draw device");
-        //    return false;
-        //}
-
-        //gsCScreen * screen = gsCApplication::getScreen();
-
-        //if (!screen) {
-        //    gsREPORT("gsCTiledImage::draw called with no active screen");
-        //    return false;
-        //}
-
-        //gsCRect dest(position, position + m_tile_size);
+        //Add tint colour
         var dest: gsCRectangle = new gsCRectangle(position.X, position.Y, position.X + this.m_tile_size.X, position.Y + this.m_tile_size.Y);
-
         if (this.m_screen.contains(dest)) {
-            //if (screen ->getRect().contains(dest)) {
-
-            var ok: boolean = false;
-
             ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
-            //if (lock()) {
-            //    ok = screen->bltTinted(dest, m_ddsd, m_source_rects[tile], tint_colour);
-            //    unlock();
-            //}
-            //if (!ok) {
-            //    gsREPORT("gsCTiledImage::drawTinted blit failed");
-            //    return false;
-            //}
         }
         else {
-            //if (!screen ->getRect().overlaps(dest))
-            //    return false;
-
-            //gsCRect source = m_source_rects[tile];
-
-            //screen ->getRect().clip(source, dest);
-
-            //bool ok = false;
-
-            //if (lock()) {
-            //    ok = screen ->bltTinted(dest, m_ddsd, source, tint_colour);
             ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
-            //    unlock();
-            //}
-            //if (!ok) {
-            //    gsREPORT("gsCTiledImage::drawTinted blit failed");
-            //    return false;
-            //}
         }
-
         return true;
     }
 

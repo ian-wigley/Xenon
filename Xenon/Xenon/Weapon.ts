@@ -20,6 +20,9 @@ class CWeapon extends CActor {
 
     protected m_playGameState: CPlayGameState;
 
+    protected do_fire: boolean = false;
+
+
     constructor(scene?: CScene) {
         super(scene);
         this.m_grade = enums.WeaponGrade.WEAPON_STANDARD;
@@ -28,6 +31,7 @@ class CWeapon extends CActor {
         this.m_direction = enums.WeaponDirection.WEAPON_FORWARD;
         this.m_position = new gsCVector(0, 0);
         this.WEAPON_ONSCREEN_RADIUS = 8;
+        this.m_name = "Weapon";
     }
 
     //-------------------------------------------------------------
@@ -46,6 +50,11 @@ class CWeapon extends CActor {
         //if (controls || !getOwner())
         //    return false;
 
+
+        //if (this.m_name == "HomingMissileWeapon") {
+        //    controls.fire = true;
+        //}
+
         //this.m_position = this.getOwner().getPosition() + this.m_offset;
         this.m_position.x = this.getOwner().getPosition().x + this.m_offset.x;
         this.m_position.y = this.getOwner().getPosition().y + this.m_offset.y;
@@ -58,13 +67,14 @@ class CWeapon extends CActor {
             case enums.ActorType.ACTOR_TYPE_SHIP:
             case enums.ActorType.ACTOR_TYPE_UPGRADE:
                 {
-                    var do_fire: boolean = false;
+                    //var do_fire: boolean = false;
+                    this.do_fire = false;
 
                     if (this.m_autofire) {
                         if (controls.fire) {
                             //if (m_autofire_timer.getTime() >= getActorInfo().m_autofire_delay)
                             {
-                                do_fire = true;
+                                this.do_fire = true;
                                 //m_autofire_timer.start();
                             }
                         }
@@ -82,7 +92,7 @@ class CWeapon extends CActor {
                             }
                         }
                         if (!this.m_delay_fire) {
-                            do_fire = true;
+                            this.do_fire = true;
                             this.m_delay_fire = true;
                             //m_fire_timer.start();
                             if (this.getActorInfo().m_autofire_delay == 0.0) {
@@ -95,10 +105,12 @@ class CWeapon extends CActor {
                         }
                     }
 
-                    if (do_fire) {
-                        this.fire();
-                        controls.fire = false;
-                    }
+                    //if (do_fire) {
+                    //    //var obj = this.getOwner();
+                    //    //this.getOwner();
+                    //    this.fire();                      
+                    //    controls.fire = false;
+                    //}
                 }
                 break;
 
@@ -190,10 +202,6 @@ class CWeapon extends CActor {
     }
 
     //-------------------------------------------------------------
-
-    //public setPlayGameState(state: CPlayGameState) {
-    //    this.m_playGameState = state;
-    //}
 
 }
 export = CWeapon;

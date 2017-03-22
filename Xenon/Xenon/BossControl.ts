@@ -1,4 +1,13 @@
-﻿enum BossState {
+﻿import CBoss = require("Boss")
+import gsCControls = require("Controls");
+import gsCVector = require("Vector");
+import gsCPoint = require("Point");
+import gsCTimer = require("Timer");
+import enums = require("Enums");
+import gsCMapTile = require("MapTile");
+import CBigExplosion = require("BigExplosion");
+
+enum BossState {
     BOSS_MOVE_DOWN,
     BOSS_STATIC,
     BOSS_MOVE_UP,
@@ -13,26 +22,6 @@
     BOSS_SHUT_EYES,
 }
 
-//-------------------------------------------------------------
-
-class BossScriptItem {
-    public m_state: BossState;
-    public m_param: number;
-
-    constructor(state: BossState, param: number) {
-        this.m_state = state;
-        this.m_param = param;
-    }
-}
-
-import CBoss = require("Boss")
-import gsCControls = require("Controls");
-import gsCVector = require("Vector");
-import gsCPoint = require("Point");
-import gsCTimer = require("Timer");
-import enums = require("Enums");
-import gsCMapTile = require("MapTile");
-import CBigExplosion = require("BigExplosion");
 
 class CBossControl extends CBoss {
 
@@ -124,7 +113,8 @@ class CBossControl extends CBoss {
 
     //-------------------------------------------------------------
 
-    public update(controls: gsCControls): boolean {
+    public update(controls: gsCControls, gameTime: gsCTimer): boolean {
+    //public update(controls: gsCControls): boolean {
         if (this.m_state == BossState.BOSS_DEAD)
             return true;
 
@@ -286,3 +276,14 @@ class CBossControl extends CBoss {
 }
 
 export = CBossControl;
+
+
+class BossScriptItem {
+    public m_state: BossState;
+    public m_param: number;
+
+    constructor(state: BossState, param: number) {
+        this.m_state = state;
+        this.m_param = param;
+    }
+}

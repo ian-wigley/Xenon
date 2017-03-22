@@ -7,10 +7,14 @@ class CBigExplosion extends CExplosion {
         super();
     }
 
+    //-------------------------------------------------------------
+
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_EXPLOSION);
     }
+
+    //-------------------------------------------------------------
 
     public activate() {
         //CGameState::playSample(SAMPLE_BIG_EXPLOSION,getPosition().getX());

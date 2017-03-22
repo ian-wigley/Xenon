@@ -16,6 +16,8 @@ class CBoss extends CActor {
         super();
     }
 
+    //-------------------------------------------------------------
+
     public getShield(): number {
         return 100 * this.m_active_eyes / this.BOSS_EYES_TOTAL;
     }

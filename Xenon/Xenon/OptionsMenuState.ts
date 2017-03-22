@@ -1,33 +1,42 @@
 ﻿import CGameState = require("GameState");
 import gsCMenu = require("Menu");
 import gsCPoint = require("Point");
-import Options = require("Options")
+import Options = require("Options");
 import enums = require("Enums");
 import CControlMenuState = require("ControlMenuState");
 import CVideoMenuState = require("VideoMenuState");
 import CAudioMenuState = require("AudioMenuState");
 import CMainMenuState = require("MainMenuState");
+import CApplication = require("Application");
+import CScene = require("Scene");
+import CStarfield = require("Starfield");
+import gsCControls = require("Controls");
 
 class COptionsMenuState extends CGameState {
 
-    m_instance = null;
-    m_menu: gsCMenu;
     m_options: Options;
     m_controlMenuState: CControlMenuState;
     m_videoMenuState: CVideoMenuState;
     m_audioMenuState: CAudioMenuState;
-    m_mainMenuState: CMainMenuState;
 
-    constructor() {
-        super();
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menuState?, menu?) {
+        super(font8x8, font16x16, app, ctx);
+
+        this.m_starfield = starfield;
+        this.m_mainMenuState = menuState;
+        this.m_menu = menu;
+
+        this.m_controlMenuState = new CControlMenuState(scene, starfield, font8x8, font16x16, app, ctx, menuState, menu, this);
+        this.m_videoMenuState = new CVideoMenuState(scene, starfield, font8x8, font16x16, app, ctx, menuState, menu, this);
+        this.m_audioMenuState = new CAudioMenuState(scene, starfield, font8x8, font16x16, app, ctx, menuState, menu, this);
+
+        this.m_stateName = "OptionsMenuState";
     }
 
     //-------------------------------------------------------------
 
     public instance(): CGameState {
-        if (!this.m_instance)
-            this.m_instance = new COptionsMenuState();
-        return this.m_instance;
+        return this.m_app.instance = this;
     }
 
     //-------------------------------------------------------------
@@ -38,13 +47,12 @@ class COptionsMenuState extends CGameState {
         this.m_menu.addSelection("Control Options");
         this.m_menu.addSelection("Video Options");
         this.m_menu.addSelection("Audio Options");
-
         //this.m_menu.addSeperator();
         this.m_menu.addSelection("Back To Main Menu");
         this.m_menu.setWrap(true);
         this.m_menu.setPosition(new gsCPoint(0, 150));
         this.m_menu.setSpacing(new gsCPoint(0, 30));
-        //this.m_menu.setCurrentItem(OM_BACK);
+        // this.m_menu.setCurrentItem(enums.OptionsMenuItem.OM_BACK);
         this.m_menu.setFont(this.m_medium_font);
 
         return true;
@@ -52,58 +60,58 @@ class COptionsMenuState extends CGameState {
 
     //-------------------------------------------------------------
 
-    public update(): boolean {
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
 
         //if (!CGameState::update())
         //return false;
 
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
-            //m_backdrop.draw(new gsCPoint(0, 0)); 
-        }
-        else {
-            //m_screen.clear(gsCColour(gsBLACK));
+            ctx.drawImage(this.backgroundTexture, 0, 0);
         }
 
-        //m_starfield.move(4);
-        //m_starfield.draw();
-
+        this.m_starfield.Update(4);
+        this.m_starfield.Draw(ctx);
         this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
         this.m_medium_font.justifyString("Options Menu");
-
-        //this.m_menu.draw(ctx);
-        //this.m_screen.flip();
+        this.m_menu.draw(ctx);
 
         var item: enums.OptionsMenuItem = <enums.OptionsMenuItem>this.m_menu.getCurrentItem();
 
-        //switch (getKey()) {
-        //case gsKEY_RETURN:
-        //case gsKEY_ENTER:
-        //case gsKEY_LCONTROL:
-        switch (item) {
-            case enums.OptionsMenuItem.OM_CONTROL:
-                //CGameState::playSample(SAMPLE_MENU_SELECTION);
-                return this.changeState(this.m_controlMenuState.instance());
-            case enums.OptionsMenuItem.OM_VIDEO:
-                //CGameState::playSample(SAMPLE_MENU_SELECTION);
-                return this.changeState(this.m_videoMenuState.instance());
-            case enums.OptionsMenuItem.OM_AUDIO:
-                //CGameState::playSample(SAMPLE_MENU_SELECTION);
-                return this.changeState(this.m_audioMenuState.instance());
-            case enums.OptionsMenuItem.OM_BACK:
-                //CGameState::playSample(SAMPLE_MENU_BACK);
-                return this.changeState(this.m_mainMenuState.instance());
+        if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            controls.returnPressed = false;
+            controls.enterPressed = false;
+            controls.lcontrolPressed = false;
+            switch (item) {
+                case enums.OptionsMenuItem.OM_CONTROL:
+                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.m_controlMenuState.create();
+                    return this.changeState(this.m_app.instance = this.m_controlMenuState);
+                case enums.OptionsMenuItem.OM_VIDEO:
+                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.m_videoMenuState.create();
+                    return this.changeState(this.m_app.instance = this.m_videoMenuState);
+                case enums.OptionsMenuItem.OM_AUDIO:
+                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.m_audioMenuState.create();
+                    return this.changeState(this.m_app.instance = this.m_audioMenuState);
+                case enums.OptionsMenuItem.OM_BACK:
+                    //CGameState::playSample(SAMPLE_MENU_BACK);
+                    //return this.changeState(this.m_mainMenuState.instance());
+                    this.m_mainMenuState.create();
+                    return this.changeState(this.m_app.instance = this.m_mainMenuState);
+            }
         }
-        //break;
-        //case gsKEY_UP:
-        //CGameState::playSample(SAMPLE_MENU_SELECTION);
-        //this.m_menu.scroll(-1);
-        //break;
-        //        case gsKEY_DOWN:
-        //CGameState::playSample(SAMPLE_MENU_SELECTION);
-        //this.m_menu.scroll(1);
-        //break;
-        //}
+        if (controls.up) {
+            controls.up = false;
+            this.m_menu.scroll(-1);
+            //playSample(SAMPLE_MENU_SELECTION);
+        }
 
+        if (controls.down) {
+            controls.down = false;
+            this.m_menu.scroll(1);
+            //playSample(SAMPLE_MENU_SELECTION);
+        }
         return true;
     }
 

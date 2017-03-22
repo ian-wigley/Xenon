@@ -5,68 +5,42 @@ import gsCScoreTable = require("ScoreTable");
 import gsCControls = require("Controls");
 import enums = require("Enums");
 import COptions = require("Options");
-
-//-------------------------------------------------------------
-
-//enum GameMusicType {
-//    MUSIC_TITLE,
-//    MUSIC_INTRO,
-//    MUSIC_GAME,
-//    MUSIC_HISCORE,
-//    MUSIC_BOSS,
-//    MUSIC_OUTRO,
-//}
-
-////-------------------------------------------------------------
-
-//enum DemoMode {
-//    DEMO_OFF,
-//    DEMO_RECORD,
-//    DEMO_PLAYBACK
-//}
-
-////-------------------------------------------------------------
-
-//enum ControllerType {
-//    KEYBOARD_LAYOUT_1,
-//    KEYBOARD_LAYOUT_2,
-//    JOYSTICK_1,
-//    JOYSTICK_2,
-//}
+import CApplication = require("Application");
+import CStarfield = require("Starfield");
+import CMainMenuState = require("MainMenuState");
+import gsCMenu = require("Menu");
 
 class CGameState {
-    //gsCScreen		m_screen;
-    //gsCKeyboard		m_keyboard;
-    //gsCJoystick		m_joystick;
-    //gsCSoundSystem	m_sound_system;
-
-    m_small_font: gsCFont;
-    m_medium_font: gsCFont;
-
-    m_font8x8: HTMLImageElement;
-    m_font16x16: HTMLImageElement
-    m_ctx: CanvasRenderingContext2D;
-
-    //gsCStarfield	m_starfield;
-    m_score_table: gsCScoreTable;
-    //gsCImage		m_backdrop;
-    //char			m_level_filename[MAX_FILENAME_SIZE];
-
-    //CLevel			m_level;
-    m_scene: CScene;
-    //CXenon *		m_xenon = 0;
-
-    m_number_of_players: number = 1;
+    protected m_small_font: gsCFont;
+    protected m_medium_font: gsCFont;
+    protected m_font8x8: HTMLImageElement;
+    protected m_font16x16: HTMLImageElement
+    protected m_ctx: CanvasRenderingContext2D;
+    protected m_starfield: CStarfield;
+    protected m_mainMenuState: CMainMenuState;
+    protected m_menu: gsCMenu;
+    protected m_score_table: gsCScoreTable;
+    protected m_scene: CScene;
+    protected m_number_of_players: number = 1;
     protected m_state: CGameState;
-
-    //CDemoRecorder	m_demo_recorder;
-    //DemoMode		m_demo_mode = DEMO_OFF;
     protected m_demo_mode: enums.DemoMode;
     protected m_options: COptions;
     protected introTexture: HTMLImageElement;
     protected bbTexture: HTMLImageElement;
     protected backgroundTexture: HTMLImageElement;
     protected m_stateName: string = "";
+    protected m_app: CApplication;
+
+    //gsCScreen		m_screen;
+    //gsCKeyboard		m_keyboard;
+    //gsCJoystick		m_joystick;
+    //gsCSoundSystem	m_sound_system;
+    //gsCImage		m_backdrop;
+    //char			m_level_filename[MAX_FILENAME_SIZE];
+    //CLevel			m_level;
+    //CXenon *		m_xenon = 0;
+    //CDemoRecorder	m_demo_recorder;
+    //DemoMode		m_demo_mode = DEMO_OFF;
 
     //-------------------------------------------------------------
 
@@ -78,9 +52,10 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    constructor(font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, ctx?: CanvasRenderingContext2D) {
+    constructor(font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?:CApplication, ctx?: CanvasRenderingContext2D) {
         this.m_font8x8 = font8x8;
         this.m_font16x16 = font16x16;
+        this.m_app = app;
         this.m_ctx = ctx;
 
         this.m_options = new COptions();
@@ -178,22 +153,15 @@ class CGameState {
 
     public shutdown(): boolean {
         //saveScoreTable();
-
         //m_level.m_image.destroy();
-
         ////	m_backdrop_tiles.destroy();
         //m_backdrop.destroy();
-
         //m_medium_font.destroy();
         //m_small_font.destroy();
-
         //m_scene.destroyAll();
-
         //m_screen.destroy();
-
         //m_joystick.destroy();
         //m_keyboard.destroy();
-
         //m_sound_system.destroy();
 
         return true;
@@ -202,10 +170,7 @@ class CGameState {
     //-------------------------------------------------------------
 
     public changeState(new_game_state/*CGameState * */): boolean {
-        //if (m_xenon)
-        //    return m_xenon ->changeState(new_game_state);
         return this.m_state = new_game_state;
-        //return false;
     }
 
     //-------------------------------------------------------------
@@ -233,24 +198,12 @@ class CGameState {
         //    return false;
 
         this.m_small_font = new gsCFont(this.m_font8x8, this.m_ctx);
-
-        //if (!this.m_small_font.load("font8x8.bmp"))
-        //    return false;
-
         this.m_small_font.setTileSize(new gsCPoint(8, 8));
         //this.m_small_font.enableColourKey(gsCColour(gsMAGENTA));
 
         this.m_medium_font = new gsCFont(this.m_font16x16, this.m_ctx);
-        //if (!m_medium_font.load("font16x16.bmp"))
-        //    return false;
-
         this.m_medium_font.setTileSize(new gsCPoint(16, 16));
         //this.m_medium_font.enableColourKey(gsCColour(gsMAGENTA));
-
-        //CLabel::setFont(&m_small_font);
-
-        //if (!m_backdrop.load("galaxy2.bmp"))
-        //    return false;
 
         return true;
     }
@@ -264,7 +217,6 @@ class CGameState {
         //m_sound_system.addMusic("hiscore.mp3");
         //m_sound_system.addMusic("boss.mp3");
         //m_sound_system.addMusic("outro.mp3");
-
         return true;
     }
 
@@ -309,17 +261,13 @@ class CGameState {
     //-------------------------------------------------------------
 
     public addNewScore(score: number): boolean {
-        //int pos = m_score_table.insertScore(score, "A");
-
         var pos = this.m_score_table.insertScore(score, "A");
 
         if (pos == -1) {
             return false;
         }
-
         this.m_score_table.setCurrentItem(pos);
         this.m_score_table.setCurrentLetter(0);
-
         return true;
     }
 
@@ -332,18 +280,18 @@ class CGameState {
     //-------------------------------------------------------------
 
     //public playSample(sample/*GameSampleType */): void {
-    //    //if (Options.getOption(OPTION_SOUNDFX))
-    //    //    m_sound_system.playSample((int) sample);
+    //    if (Options.getOption(OPTION_SOUNDFX)) {
+    //        m_sound_system.playSample((int) sample); }
     //}
 
     //-------------------------------------------------------------
     // play sample with stereo position based on screen x coordinate
 
     public playSample(sample /*GameSampleType*/, x:number): void{
-    //    //if (Options.getOption(OPTION_SOUNDFX)) {
-    //    //    int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
-    //    //    m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
-    //    //}
+    //    if (Options.getOption(OPTION_SOUNDFX)) {
+    //        int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
+    //        m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
+    //    }
     }
 
     //-------------------------------------------------------------
@@ -498,7 +446,6 @@ class CGameState {
         //       gsCIniFile file;
 
         //       file.open(HISCORE_FILENAME);
-
         //       for (int i = 0; i < NUMBER_OF_SCORE_ENTRIES; i++) {
         //           char buf[10];
         //           sprintf(buf, "Entry%i", i);
@@ -506,7 +453,6 @@ class CGameState {
         //           const char *name = file.readString(buf, "Name", "JMP");
         //           m_score_table.insertScore(score, name);
         //       }
-
         //       file.close();
         //   }
     }
@@ -515,12 +461,9 @@ class CGameState {
 
     public saveScoreTable(): boolean {
         //gsCFile::setDirectory(DIRECTORY_ROOT);
-
         //gsCIniFile file;
-
         //if (!file.open(HISCORE_FILENAME))
         //    return false;
-
         //for (int i = 0; i < NUMBER_OF_SCORE_ENTRIES; i++) {
         //    char buf[10];
         //    sprintf(buf, "Entry%i", i);
@@ -530,9 +473,7 @@ class CGameState {
         //    name[gsSCORE_NAME_SIZE] = 0;
         //    file.writeString(buf, "Name", name);
         //}
-
         //file.close();
-
         return true;
     }
 

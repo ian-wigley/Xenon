@@ -9,7 +9,7 @@ class gsCSprite {
     private m_hotspot: gsCVector;
     private m_active: boolean;
     private m_frame: number;
-    //private Color m_fill_colour;
+    private m_fill_colour: string;
     private m_use_fill_colour: boolean = false;
     private m_rect: gsCRectangle;
     private m_rect_valid: boolean;
@@ -33,7 +33,6 @@ class gsCSprite {
                 this.m_rect = new gsCRectangle(0, 0, 0, 0);
             }
             else {
-                //Point p = new Point(m_position.X - m_hotspot.X, m_position.Y - m_hotspot.Y);
                 var p: gsCVector = new gsCVector(this.m_position.x - this.m_hotspot.x, this.m_position.y - this.m_hotspot.y)
                 this.m_rect = new gsCRectangle(p.x, p.y, p.x + this.m_image.getTileSize().X, p.y + this.m_image.getTileSize().Y);
             }
@@ -93,16 +92,10 @@ class gsCSprite {
         return this.m_texture;
     }
 
-    //public gsCTiledImage getImage()
-    //{
-    //    return m_image;
-    //}
-
     //-------------------------------------------------------------
 
     public move(offset: gsCVector) {
-        //this.m_position += offset;
-        this.m_position = new gsCVector(this.m_position.x + offset.x, this.m_position.y + offset.y);
+        this.m_position.plusEquals(offset);        //this.m_position = new gsCVector(this.m_position.x + offset.x, this.m_position.y + offset.y);
         this.m_rect_valid = false;
     }
 
@@ -117,8 +110,7 @@ class gsCSprite {
             return this.m_image.draw(this.m_frame, new gsCVector(this.m_position.x - this.m_hotspot.x, this.m_position.y - this.m_hotspot.y), ctx);
         }
         else {
-            return false;
-            //return this.m_image.drawSolid(this.m_frame, this.m_position - this.m_hotspot, this.m_fill_colour);
+            return this.m_image.drawSolid(this.m_frame, new gsCVector(this.m_position.x - this.m_hotspot.x, this.m_position.y - this.m_hotspot.y), this.m_fill_colour, ctx);
         }
     }
 

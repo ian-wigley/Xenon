@@ -12,6 +12,9 @@ class gsCTimer {
     private m_system_time: number = 0;
     private m_fake_time: number = 0;
 
+    private m_ian_timer = 0;
+    private m_ian_inc = 0.026;
+
     constructor() {
         // var prev = Date.now();
         // deltaTime = Date.now() - prev;
@@ -94,7 +97,12 @@ class gsCTimer {
     getTime() {
         switch (this.m_state) {
             case enums.gsTimerState.gsTIMER_ACTIVE:
-                return this.m_system_time - this.m_base_time;
+                //return this.m_system_time - this.m_base_time;
+                //return this.m_ian_timer += this.m_ian_inc;
+                var time = this.m_system_time - this.m_base_time;
+                time = this.m_ian_timer += this.m_ian_inc;
+                return time;
+
             case enums.gsTimerState.gsTIMER_PAUSED:
                 return this.m_base_time;
             default:

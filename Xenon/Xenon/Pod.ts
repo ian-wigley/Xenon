@@ -6,6 +6,13 @@ import CSporeGenerator = require("SporeGenerator");
 import CShip = require("Ship");
 import gsCVector = require("Vector");
 
+
+import CExplosion = require("Explosion");
+import CSmallExplosion = require("SmallExplosion");
+import CMediumExplosion = require("MediumExplosion");
+import CBigExplosion = require("BigExplosion");
+import gsCPoint = require("Point");
+
 class CPod extends CAlien {
 
     //-------------------------------------------------------------
@@ -20,11 +27,14 @@ class CPod extends CAlien {
         this.m_name = "POD";
     }
 
+    //-------------------------------------------------------------
+
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_POD);
     }
 
+    //-------------------------------------------------------------
 
     public activate(): boolean {
         if (!this.isActive()) {
@@ -32,6 +42,8 @@ class CPod extends CAlien {
         }
         return super.activate();
     }
+
+    //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         this.gameTime = gameTime;
@@ -43,6 +55,7 @@ class CPod extends CAlien {
             gen.setPosition(this.getPosition());
 
             //super.explode();
+            this.explode();
             super.kill();
             return true;
         }
@@ -66,10 +79,33 @@ class CPod extends CAlien {
 
         //this.m_position += new gsCVector(dx, this.m_velocity.Y);
         this.m_position.plusEquals(new gsCVector(dx, this.m_velocity.Y));
-
         super.animate(enums.AnimationMode.ANIMATE_LOOP);
 
         return true;
     }
+
+    //-------------------------------------------------------------
+
+    public explode() {
+        var x: CExplosion = null;
+        if (this.m_image != null) {
+            var size: gsCPoint = this.m_image.getTileSize();
+            var area = size.X * size.Y;
+            if (area <= 32 * 32) {
+                x = new CSmallExplosion();
+            }
+            else if (area <= 64 * 64) {
+                x = new CMediumExplosion();
+            }
+            else {
+                x = new CBigExplosion();
+            }
+            this.m_scene.addActor(x);
+            x.setPosition(this.getPosition());
+            x.activate();
+        }
+    }
+
+    //-------------------------------------------------------------
 }
 export = CPod;

@@ -1,6 +1,8 @@
 ﻿import gsCControls = require("Controls");
 import CUpgrade = require("Upgrade");
 import enums = require("Enums");
+import CShip = require("Ship");
+import gsCTimer = require("Timer");
 
 class CWingtip extends CUpgrade {
 
@@ -13,62 +15,70 @@ class CWingtip extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    public CWingtip() {
-    }
+    SHIP_DIVE_FRAMES = 6;
 
+    //-------------------------------------------------------------
+
+    constructor() {
+        super();
+        this.m_name = "Wingtip";
+    }
 
     //-------------------------------------------------------------
 
     public getActorInfo() {
+        this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WINGTIP);
     }
 
     //-------------------------------------------------------------
 
-    activate() {
-        //if (!isActive()) {
-        //    m_timer.start();
-        //    }
-
-        //return CUpgrade::activate();
-        return true;
+    public activate() {
+        if (!this.isActive()) {
+            this.m_timer.start();
+        }
+        return super.activate();
     }
 
     //-------------------------------------------------------------
 
-    public update(controls: gsCControls) {
-        //CShip ship = (CShip) getOwner();
+    public update(controls: gsCControls, gametime: gsCTimer) {
+        var ship: CShip = <CShip>this.getOwner();
 
-        //if (!ship) {
-        //    kill();
-        //    return true;
-        //    }
+        if (!ship) {
+            this.kill();
+            return true;
+        }
 
-        //if (getShield() == 0) {
-        //    ship->detachWingtip(this);
-        //    setOwner(0);
-        //    explode();
-        //    kill();
-        //    return true;
-        //    }
+        if (this.getShield() == 0) {
+            ship.detachWingtip(this);
+            this.setOwner(null);
+            //this.explode();
+            this.kill();
+            return true;
+        }
 
-        //int d = ship->getDiveLevel();
+        var d: number = ship.getDiveLevel();
 
-        //if (d == 0) {
-        //    m_position = ship->getPosition() + m_offset;
-        //    if (ship->isCloaked()) {
-        //        if (!ship->isCloakFlashing())
-        //            m_sprite.setFrame(WINGTIP_CLOAK_FRAME);
-        //        else
-        //            m_sprite.setFrame(0);
-        //        }
-        //    else
-        //        animate(ANIMATE_LOOP,0,WINGTIP_FRAMES);
-        //    }
-        //else {
-        //    m_position = ship->getPosition() + m_offset * ship->getDiveScale();
-        //    m_sprite.setFrame(WINGTIP_DIVE_OFFSET + WINGTIP_DIVE_FRAMES * d / SHIP_DIVE_FRAMES);
-        //    }
+        if (d == 0) {
+            this.m_position = ship.getPosition().plus1(this.m_offset);
+            if (ship.isCloaked()) {
+                if (!ship.isCloakFlashing()) {
+                    this.m_sprite.setFrame(this.WINGTIP_CLOAK_FRAME);
+                }
+                else {
+                    this.m_sprite.setFrame(0);
+                }
+            }
+            else {
+                this.animations(enums.AnimationMode.ANIMATE_LOOP, 0, this.WINGTIP_FRAMES);
+            }
+
+        }
+        else {
+            this.m_position = ship.getPosition().plus1(this.m_offset).times1(ship.getDiveScale());
+            this.m_sprite.setFrame(this.WINGTIP_DIVE_OFFSET + this.WINGTIP_DIVE_FRAMES * d / this.SHIP_DIVE_FRAMES);
+        }
 
         return true;
     }

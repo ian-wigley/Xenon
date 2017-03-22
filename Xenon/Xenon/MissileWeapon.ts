@@ -3,6 +3,15 @@ import CScene = require("Scene");
 import CWeapon = require("Weapon");
 import CMissile = require("Missile");
 import enums = require("Enums");
+import gsCControls = require("Controls");
+import gsCTimer = require("Timer");
+
+//import CScene = require("Scene");
+//import CWeapon = require("Weapon");
+//import CHomingMissile = require("HomingMissile");
+//import CAlien = require("Alien");
+//import gsCVector = require("Vector");
+//import enums = require("Enums");
 
 class CMissileWeapon extends CWeapon {
 
@@ -11,10 +20,29 @@ class CMissileWeapon extends CWeapon {
         this.m_name = "MissileWeapon";
     }
 
+    //-------------------------------------------------------------
+
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE_WEAPON);
     }
+
+    //-------------------------------------------------------------
+
+    public update(controls: gsCControls, gameTime: gsCTimer) {
+        super.update(controls, gameTime);
+
+        if (this.do_fire) {
+            //var obj = this.getOwner();
+            //this.getOwner();
+            this.fire();
+            //controls.fire = false;
+        }
+
+        return true;
+    }
+
+    //-------------------------------------------------------------
 
     public fire() {
         if (!this.isValidFiringPosition()) {
@@ -23,9 +51,9 @@ class CMissileWeapon extends CWeapon {
 
         var m: CMissile = new CMissile(this.m_scene);
         this.m_scene.addActor(m);
-
         m.activate();
-        m.setGrade();//<BulletGrade>this.m_grade);
+        var grade: number = this.m_grade;
+        m.setGrade(grade);//<BulletGrade>this.m_grade);
 
         switch (this.m_direction) {
             case enums.WeaponDirection.WEAPON_FORWARD:

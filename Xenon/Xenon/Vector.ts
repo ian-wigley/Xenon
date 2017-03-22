@@ -41,9 +41,6 @@ class gsCVector extends Point {
     //-------------------------------------------------------------
 
     public plus1(a: gsCVector): gsCVector {
-        //this.m_x = this.m_x + a.m_x;
-        //this.m_y = this.m_y + a.m_y;
-        //return this;
         return new gsCVector(this.m_x + a.m_x, this.m_y + a.m_y);
     }
 
@@ -56,45 +53,30 @@ class gsCVector extends Point {
     //-------------------------------------------------------------
 
     public plusEquals(a: gsCVector): gsCVector {
-        //this.m_x += a.m_x;
-        //this.m_y += a.m_y;
-        //return this;
         return new gsCVector(this.m_x += a.m_x, this.m_y += a.m_y);
     }
 
     //-------------------------------------------------------------
 
     public minus(a: gsCVector): gsCVector {
-        //this.m_x - a.m_x;
-        //this.m_y - a.m_y;
-        //return this;
         return new gsCVector(this.m_x - a.m_x, this.m_y - a.m_y);
     }
 
     //-------------------------------------------------------------
 
     public minusEquals(a: gsCVector): gsCVector {
-        //this.m_x -= a.m_x;
-        //this.m_y -= a.m_y;
-        //return this;
         return new gsCVector(this.m_x -= a.m_x, this.m_y -= a.m_y);
     }
 
     //-------------------------------------------------------------
 
     public multVec(a: gsCVector): gsCVector {
-        //this.m_x *= a.m_x;
-        //this.m_y *= a.m_y;
-        //return this;
         return new gsCVector(this.m_x *= a.m_x, this.m_y *= a.m_y);
     }
 
     //-------------------------------------------------------------
 
     public times1(a: number): gsCVector {
-        //this.m_x *= a;
-        //this.m_y *= a;
-        //return this;
         return new gsCVector(this.m_x *= a, this.m_y *= a);
     }
 
@@ -136,7 +118,25 @@ class gsCVector extends Point {
     //-------------------------------------------------------------
 
     public polar(distance: number, angle: number) {
-        return new gsCVector(distance * Math.sin(angle), distance * -Math.cos(angle));
+        return new gsCVector(distance * this.gsSin(angle), distance * -this.gsCos(angle));
+    }
+
+    //-------------------------------------------------------------
+
+    private gsSin(angle: number) {
+        return Math.sin(this.gsDeg2Rad(angle));
+    }
+
+    //-------------------------------------------------------------
+
+    private gsCos(angle: number) {
+        return Math.cos(this.gsDeg2Rad(angle));
+    }
+
+    //-------------------------------------------------------------
+    // Degree to radian conversion
+    private gsDeg2Rad(angle: number) {
+        return angle * (this.gsPI / 180.0);
     }
 
     //-------------------------------------------------------------

@@ -13,7 +13,7 @@ class CLabel extends CActor {
 
     //-------------------------------------------------------------
 
-    private m_text: string;//[this.LABEL_MAX_SIZE];
+    private m_text: string;
     private m_time: number;
     private m_offset: gsCPoint;
     private m_font: gsCFont;
@@ -22,6 +22,7 @@ class CLabel extends CActor {
         super();
         this.m_text = "";
         this.m_time = 0.0;
+        this.m_name = "Label";
     }
 
     //-------------------------------------------------------------
@@ -49,16 +50,10 @@ class CLabel extends CActor {
     //-------------------------------------------------------------
 
     public setText(format: string): void {
-        //va_list arglist;
-
-        //va_start(arglist, format);
-        //vsprintf(m_text, format, arglist);
-        //va_end(arglist);
-
+        this.m_text = format;
         if (this.m_font) {
-            var stringLength = this.m_font.getStringSize(this.m_text);// / -2;
-            //this.m_offset = new gsCPoint(this.m_font.getStringSize(this.m_text) / -2, -2);// new gsCPoint(-2, -2);
-            this.m_offset = new gsCPoint((stringLength.X / -2), stringLength.X / -2);// new gsCPoint(-2, -2);
+            var stringLength = this.m_font.getStringSize(this.m_text);
+            this.m_offset = new gsCPoint((stringLength.X / -2), stringLength.X / -2);
         } else {
             this.m_offset = new gsCPoint(0, 0);
         }
@@ -83,25 +78,20 @@ class CLabel extends CActor {
             this.kill();
             return true;
         }
-
         this.m_position.plusEquals(this.m_velocity);
-
         return true;
     }
 
     //-------------------------------------------------------------
 
-    public draw(ctx: CanvasRenderingContext2D): boolean {
+    public Draw(ctx: CanvasRenderingContext2D): boolean {
         if (this.m_font) {
             this.m_font.setTextCursor(new gsCPoint(this.m_position.X, this.m_position.Y).add(this.m_offset).add(this.m_scene.getMap().getPosition()));
             this.m_font.printString(this.m_text);
         }
-
         return true;
     }
 
     //-------------------------------------------------------------
-
-
 }
 export = CLabel;

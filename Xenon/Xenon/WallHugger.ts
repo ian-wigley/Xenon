@@ -1,7 +1,14 @@
-﻿enum WallHuggerGrade {
+﻿import CAlien = require("Alien");
+import enums = require("Enums");
+import gsCVector = require("Vector");
+import gsCControls = require("Controls");
+import gsCTimer = require("Timer");
+import CSpinnerWeapon = require("SpinnerWeapon");
+
+enum WallHuggerGrade {
     WALLHUGGER_STATIC,
     WALLHUGGER_MOVING,
-};
+}
 
 //-------------------------------------------------------------
 
@@ -9,14 +16,7 @@ enum WallHuggerState {
     WALLHUGGER_STILL,
     WALLHUGGER_WALKING,
     WALLHUGGER_SHOOTING,
-};
-
-import CAlien = require("Alien");
-import enums = require("Enums");
-import gsCVector = require("Vector");
-import gsCControls = require("Controls");
-import gsCTimer = require("Timer");
-import CSpinnerWeapon = require("SpinnerWeapon");
+}
 
 class CWallHugger extends CAlien {
 
@@ -48,6 +48,7 @@ class CWallHugger extends CAlien {
         this.m_weapon = null;
         this.m_fired = false;
         this.m_timer = new gsCTimer();
+        this.m_name = "WallHugger";
     }
 
     //-------------------------------------------------------------
@@ -74,7 +75,7 @@ class CWallHugger extends CAlien {
 
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
-        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE);
+        return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WALL_HUGGER);
     }
 
     //-------------------------------------------------------------

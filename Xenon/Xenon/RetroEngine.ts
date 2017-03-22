@@ -36,7 +36,7 @@ class CRetroEngine extends CEngine {
                     this.animations(enums.AnimationMode.ANIMATE_LOOP, 6, 2);
                     break;
             }
-            //super.draw(ctx);
+
             super.Draw(ctx);
         }
 
@@ -49,9 +49,10 @@ class CRetroEngine extends CEngine {
         this.m_direction = direction;
     }
 
-    public getActorInfo() {
+    getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RETRO_ENGINE);
+
     }
 }
 export = CRetroEngine;

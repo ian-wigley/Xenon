@@ -99,13 +99,13 @@ class gsCScoreTable {
 
     //-------------------------------------------------------------
 
-    public draw(screen: gsCScreen, font: gsCFont, ctx: CanvasRenderingContext2D): boolean {
-   // public draw(): boolean {
+    public draw(font: gsCFont, ctx: CanvasRenderingContext2D): boolean {
 
         //    if (!m_font)
         //        return false;
 
         //    gsCScreen * screen = gsCApplication::getScreen();
+        var screen = new gsCScreen();
 
         //    if (!screen)
         //        return false;
@@ -122,17 +122,19 @@ class gsCScoreTable {
         for (var i = 0; i < this.m_score_list.length; i++) {
 
             var item: gsScoreItem = this.m_score_list[i];
-
+            buffer = item.m_score.toString();
             //        sprintf(buffer, "%8i  ", item ->m_score);
             //        int p = strlen(buffer);
+            var p = buffer.length;
 
             for (var c = 0; c < this.gsSCORE_NAME_SIZE; c++) {
                 if (i == this.m_current_item && c == this.m_current_letter && !flash) {
-                    //                buffer[p++] = ' ';
-                    //            else
-                    //                buffer[p++] = item ->m_name[c];
+                    buffer[p++] = ' ';
+                } else {
+                    buffer[p++] = item.m_name[c];
                 }
             }
+            //}
 
             //        buffer[p++] = 0;
 
@@ -174,29 +176,29 @@ class gsCScoreTable {
 
     //-------------------------------------------------------------
 
-    //void gsCScoreTable::cycleLetter(int dir)
-    //{
-    //    char & letter = m_score_list[m_current_item] ->m_name[m_current_letter];
+    public cycleLetter(dir: number): void {
+        var count: number = 0;
+        var letter = this.m_score_list[this.m_current_item].m_name[this.m_current_letter];
 
-    //    if (dir > 0) {
-    //        if (letter == '.')
-    //            letter = 'A';
-    //        else {
-    //            letter++;
-    //            if (letter > 'Z')
-    //                letter = '.';
-    //        }
-    //    }
-    //    if (dir < 0) {
-    //        if (letter == '.')
-    //            letter = 'Z';
-    //        else {
-    //            letter--;
-    //            if (letter < 'A')
-    //                letter = '.';
-    //        }
-    //    }
-    //}
+        if (dir > 0) {
+            if (letter == '.')
+                letter = 'A';
+            else {
+                count++;//letter++;
+                if (letter > 'Z')
+                    letter = '.';
+            }
+        }
+        if (dir < 0) {
+            if (letter == '.')
+                letter = 'Z';
+            else {
+                count--;//letter--;
+                if (letter < 'A')
+                    letter = '.';
+            }
+        }
+    }
 
     //-------------------------------------------------------------
 

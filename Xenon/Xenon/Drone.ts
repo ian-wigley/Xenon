@@ -6,6 +6,13 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CPlayGameState = require("PlayGameState");
 
+
+import CExplosion = require("Explosion");
+import CSmallExplosion = require("SmallExplosion");
+import CMediumExplosion = require("MediumExplosion");
+import CBigExplosion = require("BigExplosion");
+import gsCPoint = require("Point");
+
 class CDrone extends CAlien {
 
     private m_generator: CDroneGenerator;
@@ -58,21 +65,15 @@ class CDrone extends CAlien {
                 this.m_playGameState.getPlayer().scoreBonus(score);
             }
 
-            //super.explode();
+            this.explode();
             super.kill();
             return true;
         }
 
-        //m_timer += this.gameTime.ElapsedGameTime.Milliseconds / 1000;// 0.01f;
-        ////m_position.X = (m_generator.getPosition().X + 32.0f * Math.Sin((m_timer.getTime() + m_phase) * 180.0f));
-
-        var hmm = this.m_generator.getPosition().X;
 
         this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin((/*this.m_timer*/ 0 + this.m_phase) * 180.0);
+        //this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin(((this.m_timer.getTime()*10) + this.m_phase) * 180.0);
         this.m_position.Y = (this.m_position.Y + this.m_velocity.Y);
-        //console.log("Drone gen pos.x : " + this.m_generator.getPosition().X);
-        //console.log("Drone pos.x : " + this.m_position.X);
-        //console.log("Drone pos.y : " + this.m_position.Y);
 
         super.animate(enums.AnimationMode.ANIMATE_LOOP);
 
@@ -94,6 +95,26 @@ class CDrone extends CAlien {
 
     //-------------------------------------------------------------
 
+    public explode() {
+        var x: CExplosion = null;
+        if (this.m_image != null) {
+            var size: gsCPoint = this.m_image.getTileSize();
+            var area = size.X * size.Y;
+            if (area <= 32 * 32) {
+                x = new CSmallExplosion();
+            }
+            else if (area <= 64 * 64) {
+                x = new CMediumExplosion();
+            }
+            else {
+                x = new CBigExplosion();
+            }
+
+            this.m_scene.addActor(x);
+            x.setPosition(this.getPosition());
+            x.activate();
+        }
+    }
 }
 
 export = CDrone;

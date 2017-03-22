@@ -11,6 +11,7 @@ import gsCImage = require("Image");
 import COptions = require("Options");
 import gsCControls = require("Controls");
 import enums = require("Enums");
+import CApplication = require("Application");
 
 class CMainMenuState extends CGameState {
 
@@ -19,25 +20,44 @@ class CMainMenuState extends CGameState {
     m_viewScoresState: CViewScoresState;
     m_optionsMenuState: COptionsMenuState;
     m_creditsState: CCreditsState;
-    //CMainMenuState *CMainMenuState::m_instance = 0;
     m_bblogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_pcflogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_title: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_starfield: CStarfield;//
     m_menu: gsCMenu;
-    //m_instance;
+
+
     //-------------------------------------------------------------
 
-    constructor(scene?: CScene, starfield?: CStarfield, m_font8x8?: HTMLImageElement, m_font16x16?: HTMLImageElement, ctx?: CanvasRenderingContext2D) {
-        super(m_font8x8, m_font16x16, ctx);
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D) {
+        super(font8x8, font16x16, app, ctx);
 
         this.m_starfield = starfield
         //m_menu.clear();
 
-        this.m_introState = new CIntroState(scene, starfield, m_font8x8, m_font16x16, ctx);
-        this.m_introState.mainMenuState = this;
-
         this.m_menu = new gsCMenu();
+
+        this.m_introState = new CIntroState(scene, starfield, font8x8, font16x16, app, ctx, this);
+        this.m_viewScoresState = new CViewScoresState(scene, starfield, font8x8, font16x16, app, ctx, this);
+        this.m_optionsMenuState = new COptionsMenuState(scene, starfield, font8x8, font16x16, app, ctx, this, this.m_menu);
+        this.m_creditsState = new CCreditsState(scene, starfield, font8x8, font16x16, app, ctx, this);
+
+        this.m_stateName = "MainMenuState";
+
+        this.create(); //TEMP! 
+    }
+
+    //-------------------------------------------------------------
+
+    public instance(): CGameState {
+        return this.m_app.instance = this.m_introState;
+    }
+
+    //-------------------------------------------------------------
+
+    public create(): boolean {
+
+        this.m_menu.clear();
         this.m_menu.addSelection("Start One Player Game");
         this.m_menu.addSelection("Start Two Player Game");
         this.m_menu.addSelection("View High Scores");
@@ -50,23 +70,6 @@ class CMainMenuState extends CGameState {
         this.m_menu.setCurrentItem(enums.MainMenuItem.MM_ONEPLAYER);
         this.m_menu.setFont(this.m_medium_font);
 
-        this.m_stateName = "MainMenuState";
-
-        this.create(); //TEMP! 
-    }
-
-    //-------------------------------------------------------------
-
-    public instance(): CGameState {
-        //if (!this.m_instance)
-        //    this.m_instance = new CMainMenuState();
-
-        return this.m_state;//. m_instance;
-    }
-
-    //-------------------------------------------------------------
-
-    public create(): boolean {
         //this.playMusic(enums.GameMusicType.MUSIC_TITLE);
 
         //if (m_screen.getBytesPerPixel() == 1)
@@ -130,22 +133,12 @@ class CMainMenuState extends CGameState {
         //if (Options.getOption(OptionType.OPTION_BACKDROP)) {
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
             ctx.drawImage(this.backgroundTexture, 0, 0);
-            //this.m_backdrop.draw(new gsCPoint(0, 0));
         }
-        //	else
-        //		m_screen.clear(gsCColour(gsBLACK));
 
-        ////	m_screen.clear(gsCColour(gsBLACK));
-
-        this.m_starfield.Update(4);//.move(4);
+        this.m_starfield.Update(4);
         this.m_starfield.Draw(ctx);
 
-
         this.m_menu.draw(ctx);//TEMP!
-
-        ////var life_symbol: gsCImage = this.m_scene.getImage("PULife");
-        ////life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
-
 
         //this.m_title.drawImage(new gsCPoint(64, 10), ctx, this.introTexture);//title);
         ctx.drawImage(this.introTexture, 64, 10);
@@ -168,66 +161,58 @@ class CMainMenuState extends CGameState {
 
         this.m_menu.draw(ctx);
 
-        //	m_screen.flip();
-
         var item: enums.MainMenuItem = <enums.MainMenuItem>this.m_menu.getCurrentItem();
 
         //	gsKeyCode key = getKey();
-
         //	if (key != gsKEY_NONE)
         //		m_attract_mode = OFF;
 
-        //switch (controls) {
-        //	switch (key) {
-        //		case gsKEY_RETURN:
-        //		case gsKEY_ENTER:
-        //		case gsKEY_LCONTROL:
         if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            controls.returnPressed = false;
+            controls.enterPressed = false;
+            controls.lcontrolPressed = false;
+
             switch (item) {
                 case enums.MainMenuItem.MM_ONEPLAYER:
                     this.m_number_of_players = 1;
                     //this.playSample(SAMPLE_MENU_CLICK);
                     //this.setDemoMode(DEMO_OFF);
-                    return this.changeState(this.m_introState.instance());//.CIntroState.instance());
-                //break;
-                //				case MM_TWOPLAYER:
-                //					m_number_of_players = 2;
-                //					playSample(SAMPLE_MENU_CLICK);
-                //					setDemoMode(DEMO_OFF);
-                //					return changeState(CIntroState::instance());
-                //				case MM_SCORES:
-                //					playSample(SAMPLE_MENU_CLICK);
-                //					return changeState(CViewScoresState::instance());
-                //				case MM_OPTIONS:
-                //					playSample(SAMPLE_MENU_CLICK);
-                //					return changeState(COptionsMenuState::instance());
-                //				case MM_CREDITS:
-                //					playSample(SAMPLE_MENU_CLICK);
-                //					return changeState(CCreditsState::instance());
-                //				case MM_QUIT:
-                //					CMessageBoxState::setup("Sure you want to quit ?",
-                //											"Yes",0,
-                //											"No",CMainMenuState::instance());
-                //					return changeState(CMessageBoxState::instance());
+                    return this.changeState(this.m_introState.instance());
+                case enums.MainMenuItem.MM_TWOPLAYER:
+                    this.m_number_of_players = 2;
+                    //this.playSample(SAMPLE_MENU_CLICK);
+                    //this.setDemoMode(DEMO_OFF);
+                    return this.changeState(this.m_introState.instance());
+                case enums.MainMenuItem.MM_SCORES:
+                    //this.playSample(SAMPLE_MENU_CLICK);
+                    return this.changeState(this.m_viewScoresState.instance());
+                case enums.MainMenuItem.MM_OPTIONS:
+                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.m_optionsMenuState.create();
+                    return this.changeState(this.m_optionsMenuState.instance());
+                case enums.MainMenuItem.MM_CREDITS:
+                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.m_creditsState.create();
+                    return this.changeState(this.m_creditsState.instance());
+                case enums.MainMenuItem.MM_QUIT:
+                    //CMessageBoxState::setup("Sure you want to quit ?",
+                    //    "Yes", 0,
+                    //    "No", CMainMenuState::instance());
+                    return this.changeState(this.m_introState.instance());//changeState(CMessageBoxState::instance());
             }
-            //			break;
         }
 
-        //case gsKEY_UP:
-        //case controls.up:
         if (controls.up) {
+            controls.up = false;
             this.m_menu.scroll(-1);
             //playSample(SAMPLE_MENU_SELECTION);
-            //break;
-        }
-        //case gsKEY_DOWN:
-        //case controls.down:
-        if (controls.down) {
-            this.m_menu.scroll(1);
-            //playSample(SAMPLE_MENU_SELECTION);
-            //break;
         }
 
+        if (controls.down) {
+            controls.down = false;
+            this.m_menu.scroll(1);
+            //playSample(SAMPLE_MENU_SELECTION);
+        }
 
         //		case gsKEY_F1:
         //			ActorInfoList.save(ACTORINFO_FILENAME);

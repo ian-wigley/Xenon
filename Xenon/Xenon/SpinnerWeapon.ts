@@ -12,12 +12,14 @@ class CSpinnerWeapon extends CWeapon {
         this.m_name = "SpinnerWeapon";
     }
 
-    public getActorInfo()
-    {
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPINNER_WEAPON);
     }
 
+    //-------------------------------------------------------------
 
     public fire(): boolean {
         if (!this.isValidFiringPosition()) {
@@ -28,11 +30,12 @@ class CSpinnerWeapon extends CWeapon {
         this.m_scene.addActor(m);
 
         m.activate();
-        //m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
+        var grade: number = this.m_grade;
+        m.setGrade(grade);//m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
         m.setPosition(this.getPosition());
-
-        var p: gsCVector = this.m_directionS;
-        m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
+        var p: gsCVector = m.getActorInfo().m_speed[this.m_grade];
+        var t: gsCVector = p.multVec(this.m_directionS);
+        m.setVelocity(t); //m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
 
         return true;
     }

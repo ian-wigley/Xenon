@@ -7,6 +7,13 @@ import gsCTimer = require("Timer");
 import CShip = require("Ship");
 import enums = require("Enums");
 
+
+import CExplosion = require("Explosion");
+import CSmallExplosion = require("SmallExplosion");
+import CMediumExplosion = require("MediumExplosion");
+import CBigExplosion = require("BigExplosion");
+import gsCPoint = require("Point");
+
 class CClone extends CUpgrade {
 
     CLONE_FRAMES: number = 16;
@@ -74,8 +81,8 @@ class CClone extends CUpgrade {
 
         var ship: CShip = <CShip>this.getOwner();
 
-        if (!ship){// != null) {
-            //this.explode();
+        if (!ship){
+            this.explode();
             this.kill();
             return true;
         }
@@ -83,7 +90,7 @@ class CClone extends CUpgrade {
         if (this.getShield() == 0) {
             ship.detachClone(this);
             this.setOwner(null);
-            //this.explode();
+            this.explode();
             this.kill();
             return true;
         }
@@ -100,7 +107,7 @@ class CClone extends CUpgrade {
 
             var delta = this.m_required_angle - this.m_current_angle;
 
-            if (Math.abs(delta) < this.CLONE_ANGLE_STEP) {
+            if (this.gsAbs(delta) < this.CLONE_ANGLE_STEP) {
                 this.m_current_angle = this.m_required_angle;
             }
             else {
@@ -124,14 +131,23 @@ class CClone extends CUpgrade {
         //m_offset = new Vector2::polar(CLONE_RADIUS, m_current_angle);
         //this.m_offset = new gsCVector(0, 0);//this.CLONE_RADIUS, this.m_current_angle);
         //this.m_offset.polar(this.CLONE_RADIUS, this.m_current_angle);
-        this.m_offset = new gsCVector(this.CLONE_RADIUS, this.m_current_angle);
+
+
+        var temp: gsCVector = new gsCVector(0, 0);
+        this.m_offset = temp.polar(this.CLONE_RADIUS, this.m_current_angle);
+
+
+        //this.m_offset.polar(this.CLONE_RADIUS, this.m_current_angle);
+
+
+        //this.m_offset = new gsCVector(this.CLONE_RADIUS, this.m_current_angle);
 
         var d:number = ship.getDiveLevel();
 
         if (d == 0) {
-            this.m_position = ship.getPosition().plus1(this.m_offset);
-           // this.m_position.x = ship.getPosition().x + this.m_offset.x;
-           // this.m_position.y = ship.getPosition().y + this.m_offset.y;
+            //this.m_position = ship.getPosition().plus1(this.m_offset);
+            this.m_position.x = ship.getPosition().x + this.m_offset.x;
+            this.m_position.y = ship.getPosition().y + this.m_offset.y;
 
             if (ship.isCloaked()) {
                 if (!ship.isCloakFlashing()) {
@@ -173,5 +189,34 @@ class CClone extends CUpgrade {
     }
 
     //-------------------------------------------------------------
+
+    public explode() {
+        var x: CExplosion = null;
+        if (this.m_image != null) {
+            var size: gsCPoint = this.m_image.getTileSize();
+            var area = size.X * size.Y;
+            if (area <= 32 * 32) {
+                x = new CSmallExplosion();
+            }
+            else if (area <= 64 * 64) {
+                x = new CMediumExplosion();
+            }
+            else {
+                x = new CBigExplosion();
+            }
+            this.m_scene.addActor(x);
+            x.setPosition(this.getPosition());
+            x.activate();
+        }
+    }
+
+    //-------------------------------------------------------------
+
+    private gsAbs(v:number) :number{
+        return v >= 0.0 ? v : -v;
+    }
+
+    //-------------------------------------------------------------
+
 }
 export = CClone;

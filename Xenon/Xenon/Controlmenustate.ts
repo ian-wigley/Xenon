@@ -1,178 +1,193 @@
 ﻿import CGameState = require("GameState");
+import CApplication = require("Application");
+import CScene = require("Scene");
+import CStarfield = require("Starfield");
+import gsCControls = require("Controls");
+import enums = require("Enums");
+import Options = require("Options");
+import gsCPoint = require("Point");
+import gsCMenu = require("Menu");
+import COptionsMenuState = require("OptionsMenuState");
 
 class CControlmenustate extends CGameState {
 
-    m_instance = null;
+    m_optionState: COptionsMenuState;
 
-    constructor() {
-        super();
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menuState?, menu?, optionState?: COptionsMenuState) {
+        super(font8x8, font16x16, app, ctx);
+
+        this.m_starfield = starfield;
+        this.m_mainMenuState = menuState;
+        this.m_menu = menu;
+        this.m_optionState = optionState;
+
+        this.m_stateName = "Controlmenustate";
     }
 
     //-------------------------------------------------------------
 
     public instance(): CGameState {
-        if (!this.m_instance)
-            this.m_instance = new CControlmenustate();
-        return this.m_instance;
+        return this.m_app.instance = this;
     }
-
 
     //-------------------------------------------------------------
 
-    //void CControlMenuState::copyOptionsToMenu()
-    //{
-    //	m_menu.setValue(CM_CONTROL1	,Options.getOption(OPTION_CONTROL1));
-    //	m_menu.setValue(CM_CONTROL2	,Options.getOption(OPTION_CONTROL2));
-    //}
+    public copyOptionsToMenu(): void {
+        this.m_menu.setValue(enums.ControlMenuItem.CM_CONTROL1, this.m_options.getOption(enums.OptionType.OPTION_CONTROL1));
+        this.m_menu.setValue(enums.ControlMenuItem.CM_CONTROL2, this.m_options.getOption(enums.OptionType.OPTION_CONTROL2));
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-    //void CControlMenuState::copyMenuToOptions()
-    //{
-    //	Options.setOption(OPTION_CONTROL1	,m_menu.getValue(CM_CONTROL1));
-    //	Options.setOption(OPTION_CONTROL2	,m_menu.getValue(CM_CONTROL2));
-    //}
+    public copyMenuToOptions(): void {
+        this.m_options.setOption(enums.OptionType.OPTION_CONTROL1, this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL1));
+        this.m_options.setOption(enums.OptionType.OPTION_CONTROL2, this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL2));
+    }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public create(): boolean {
-    //	m_menu.clear();
+        this.m_menu.clear();
 
-    ////	m_menu.addOptionList("Player 1","Keyboard Layout A","Keyboard Layout B","Joystick 1","Joystick 2",0);
-    ////	m_menu.addOptionList("Player 2","Keyboard Layout A","Keyboard Layout B","Joystick 1","Joystick 2",0);
+        //	m_menu.addOptionList("Player 1","Keyboard Layout A","Keyboard Layout B","Joystick 1","Joystick 2",0);
+        //	m_menu.addOptionList("Player 2","Keyboard Layout A","Keyboard Layout B","Joystick 1","Joystick 2",0);
 
-    //	m_menu.addOptionList("Player 1","Keyboard Layout A","Keyboard Layout B",0);
-    //	m_menu.addOptionList("Player 2","Keyboard Layout A","Keyboard Layout B",0);
+        this.m_menu.addOptionList("Player 1" + "Keyboard Layout A" + "Keyboard Layout B", 0);
+        this.m_menu.addOptionList("Player 2" + "Keyboard Layout A" + "Keyboard Layout B", 0);
 
-    //	m_menu.addSeperator();
-    //	m_menu.addSelection("Apply");
-    //	m_menu.addSelection("Cancel");
+        //this.m_menu.addSeperator();
+        this.m_menu.addSelection("Apply");
+        this.m_menu.addSelection("Cancel");
 
-    //	m_menu.setWrap(true);
-    //	m_menu.setPosition(gsCPoint(0,100));
-    //	m_menu.setSpacing(gsCPoint(0,30));
-    //	m_menu.setCurrentItem(CM_CANCEL);
-    //	m_menu.setFont(&m_medium_font);
+        this.m_menu.setWrap(true);
+        this.m_menu.setPosition(new gsCPoint(0, 100));
+        this.m_menu.setSpacing(new gsCPoint(0, 30));
+        this.m_menu.setCurrentItem(enums.ControlMenuItem.CM_CANCEL);
+        this.m_menu.setFont(this.m_medium_font);
 
-    //	copyOptionsToMenu();
+        this.copyOptionsToMenu();
 
-    	return true;
+        return true;
     }
 
     //-------------------------------------------------------------
 
-    public update(): boolean {
-        //	const char *move_names[4] = { "Cursor Keys", "Cursor Keys","Joystick 1","Joystick 2" };
-        //	const char *fire_names[4] = { "Left Control","A","Button 0","Button 0" };
-        //	const char *rev_names[4]  = { "Left Alt",    "S","Button 1","Button 1" };
-        //	const char *dive_names[4] = { "Left Shift",  "D","Button 2","Button 2" };
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
+        var move_names = ["Cursor Keys", "Cursor Keys", "Joystick 1", "Joystick 2"];
+        var fire_names = ["Left Control", "A", "Button 0", "Button 0"];
+        var rev_names = ["Left Alt", "S", "Button 1", "Button 1"];
+        var dive_names = ["Left Shift", "D", "Button 2", "Button 2"];
 
         //	if (!CGameState::update())
         //		return false;
 
-        //	if (Options.getOption(OPTION_BACKDROP))
-        //		m_backdrop.draw(gsCPoint(0,0));
-        //	else
-        //		m_screen.clear(gsCColour(gsBLACK));
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+        }
 
-        //	m_starfield.move(4);
-        //	m_starfield.draw();
+        this.m_starfield.Update(4);
+        this.m_starfield.Draw(ctx);;
 
-        //	m_medium_font.setTextCursor(gsCPoint(0,50));
-        //	m_medium_font.justifyString("Control Options");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
+        this.m_medium_font.justifyString("Control Options");
 
-        //	m_menu.draw();
+        this.m_menu.draw(ctx);
 
-        //	m_small_font.setTextCursor(gsCPoint(200,300));
-        //	m_small_font.printString("Player 1");
-        //	m_small_font.setTextCursor(gsCPoint(400,300));
-        //	m_small_font.printString("Player 2");
+        this.m_small_font.setTextCursor(new gsCPoint(200, 300));
+        this.m_small_font.printString("Player 1");
+        this.m_small_font.setTextCursor(new gsCPoint(400, 300));
+        this.m_small_font.printString("Player 2");
 
-        //	m_small_font.setTextCursor(gsCPoint(50,330));
-        //	m_small_font.printString("Movement:");
-        //	m_small_font.setTextCursor(gsCPoint(50,350));
-        //	m_small_font.printString("Fire:");
-        //	m_small_font.setTextCursor(gsCPoint(50,370));
-        //	m_small_font.printString("Reverse:");
-        //	m_small_font.setTextCursor(gsCPoint(50,390));
-        //	m_small_font.printString("Dive:");
+        this.m_small_font.setTextCursor(new gsCPoint(50, 330));
+        this.m_small_font.printString("Movement:");
+        this.m_small_font.setTextCursor(new gsCPoint(50, 350));
+        this.m_small_font.printString("Fire:");
+        this.m_small_font.setTextCursor(new gsCPoint(50, 370));
+        this.m_small_font.printString("Reverse:");
+        this.m_small_font.setTextCursor(new gsCPoint(50, 390));
+        this.m_small_font.printString("Dive:");
 
-        //	int control1 = m_menu.getValue(CM_CONTROL1);
+        var control1 = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL1);
+        this.m_small_font.setTextCursor(new gsCPoint(200, 330));
+        this.m_small_font.printString(move_names[control1]);
+        this.m_small_font.setTextCursor(new gsCPoint(200, 350));
+        this.m_small_font.printString(fire_names[control1]);
+        this.m_small_font.setTextCursor(new gsCPoint(200, 370));
+        this.m_small_font.printString(rev_names[control1]);
+        this.m_small_font.setTextCursor(new gsCPoint(200, 390));
+        this.m_small_font.printString(dive_names[control1]);
 
-        //	m_small_font.setTextCursor(gsCPoint(200,330));
-        //	m_small_font.printString(move_names[control1]);
-        //	m_small_font.setTextCursor(gsCPoint(200,350));
-        //	m_small_font.printString(fire_names[control1]);
-        //	m_small_font.setTextCursor(gsCPoint(200,370));
-        //	m_small_font.printString(rev_names[control1]);
-        //	m_small_font.setTextCursor(gsCPoint(200,390));
-        //	m_small_font.printString(dive_names[control1]);
+        var control2: number = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL2);
+        this.m_small_font.setTextCursor(new gsCPoint(400, 330));
+        this.m_small_font.printString(move_names[control2]);
+        this.m_small_font.setTextCursor(new gsCPoint(400, 350));
+        this.m_small_font.printString(fire_names[control2]);
+        this.m_small_font.setTextCursor(new gsCPoint(400, 370));
+        this.m_small_font.printString(rev_names[control2]);
+        this.m_small_font.setTextCursor(new gsCPoint(400, 390));
+        this.m_small_font.printString(dive_names[control2]);
 
-        //	int control2 = m_menu.getValue(CM_CONTROL2);
+        var item: enums.ControlMenuItem = <enums.ControlMenuItem>this.m_menu.getCurrentItem();
 
-        //	m_small_font.setTextCursor(gsCPoint(400,330));
-        //	m_small_font.printString(move_names[control2]);
-        //	m_small_font.setTextCursor(gsCPoint(400,350));
-        //	m_small_font.printString(fire_names[control2]);
-        //	m_small_font.setTextCursor(gsCPoint(400,370));
-        //	m_small_font.printString(rev_names[control2]);
-        //	m_small_font.setTextCursor(gsCPoint(400,390));
-        //	m_small_font.printString(dive_names[control2]);
+        if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            controls.returnPressed = false;
+            controls.enterPressed = false;
+            controls.lcontrolPressed = false;
 
-        //	m_screen.flip();
+            if (item == enums.ControlMenuItem.CM_APPLY) {
+                //				CGameState::playSample(SAMPLE_MENU_SELECTION);
+                this.copyMenuToOptions();
+                if (this.m_options.areChanged()) {
+                    //					gsCFile::setDirectory(DIRECTORY_ROOT);
+                    //					Options.save(OPTIONS_FILENAME);
+                    //					updateVolume();
 
-        //	ControlMenuItem item = (ControlMenuItem) m_menu.getCurrentItem();
+                    if (this.m_options.requireReload()) {
+                        //						CMessageBoxState::setup("Restart to apply options ?",
+                        //												"Yes",0,
+                        //												"No",COptionsMenuState::instance(),
+                        //												true);
+                        //						return;// changeState(CMessageBoxState::instance());
+                    }
+                    else {
+                        return this.changeState(this.m_app.instance = this.m_optionState);
+                    }
+                }
+                else {
+                    return this.changeState(this.m_app.instance = this.m_optionState);
+                }
+            }
+            else if (item == enums.ControlMenuItem.CM_CANCEL) {
+                //CGameState::playSample(SAMPLE_MENU_BACK);
+                this.m_optionState.create();
+                return this.changeState(this.m_app.instance = this.m_optionState);
+            }
+        }
+        if (controls.up) {
+            controls.up = false;
+            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            this.m_menu.scroll(-1);
+        }
 
-        //	switch (getKey()) {
-        //		case gsKEY_RETURN:
-        //		case gsKEY_ENTER:
-        //		case gsKEY_LCONTROL:
-        //			if (item == CM_APPLY) {
-        //				CGameState::playSample(SAMPLE_MENU_SELECTION);
-        //				copyMenuToOptions();
-        //				if (Options.areChanged()) {
+        if (controls.down) {
+            controls.down = false;
+            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            this.m_menu.scroll(1);
+        }
 
-        //					gsCFile::setDirectory(DIRECTORY_ROOT);
+        if (controls.left) {
+            controls.left = false;
+            if (this.m_menu.setValue(item, this.m_menu.getValue(item) - 1)) {
+                //CGameState::playSample(SAMPLE_MENU_OPTION);
+            }
+        }
 
-        //					Options.save(OPTIONS_FILENAME);
-
-        //					updateVolume();
-
-        //					if (Options.requireReload()) {
-        //						CMessageBoxState::setup("Restart to apply options ?",
-        //												"Yes",0,
-        //												"No",COptionsMenuState::instance(),
-        //												true);
-        //						return changeState(CMessageBoxState::instance());
-        //						}
-        //					else
-        //						return changeState(COptionsMenuState::instance());
-        //					}
-        //				else
-        //					return changeState(COptionsMenuState::instance());
-        //				}
-        //			else if (item == CM_CANCEL) {
-        //				CGameState::playSample(SAMPLE_MENU_BACK);
-        //				return changeState(COptionsMenuState::instance());
-        //				}
-        //			break;
-        //		case gsKEY_UP:
-        //			CGameState::playSample(SAMPLE_MENU_SELECTION);
-        //			m_menu.scroll(-1);
-        //			break;
-        //		case gsKEY_DOWN:
-        //			CGameState::playSample(SAMPLE_MENU_SELECTION);
-        //			m_menu.scroll(1);
-        //			break;
-        //		case gsKEY_LEFT:
-        //			if (m_menu.setValue(item,m_menu.getValue(item) - 1))
-        //				CGameState::playSample(SAMPLE_MENU_OPTION);
-        //			break;
-        //		case gsKEY_RIGHT:
-        //			if (m_menu.setValue(item,m_menu.getValue(item) + 1))
-        //				CGameState::playSample(SAMPLE_MENU_OPTION);
-        //			break;
-        //		}
+        if (controls.right) {
+            controls.right = false;
+            if (this.m_menu.setValue(item, this.m_menu.getValue(item) + 1)) {
+                //CGameState::playSample(SAMPLE_MENU_OPTION);
+            }
+        }
 
         return true;
     }

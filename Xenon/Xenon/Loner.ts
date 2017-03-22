@@ -7,6 +7,13 @@ import CShip = require("Ship");
 import gsCVector = require("Vector");
 import CSpinnerWeapon = require("SpinnerWeapon");
 
+import CExplosion = require("Explosion");
+import CSmallExplosion = require("SmallExplosion");
+import CMediumExplosion = require("MediumExplosion");
+import CBigExplosion = require("BigExplosion");
+import gsCPoint = require("Point");
+
+
 export = Loner;
 module Loner {
 
@@ -16,6 +23,7 @@ module Loner {
 
         constructor() {
             super();
+            this.m_name = "Loner";
         }
 
         //-------------------------------------------------------------
@@ -49,6 +57,7 @@ module Loner {
             //this.gameTime = gametime;
             if (this.m_shield == 0) {
                 //super.explode();
+                this.explode();
                 super.kill();
                 return true;
             }
@@ -68,6 +77,28 @@ module Loner {
             return true;
         }
 
+        //-------------------------------------------------------------
+
+        public explode() {
+            var x: CExplosion = null;
+            if (this.m_image != null) {
+                var size: gsCPoint = this.m_image.getTileSize();
+                var area = size.X * size.Y;
+                if (area <= 32 * 32) {
+                    x = new CSmallExplosion();
+                }
+                else if (area <= 64 * 64) {
+                    x = new CMediumExplosion();
+                }
+                else {
+                    x = new CBigExplosion();
+                }
+
+                this.m_scene.addActor(x);
+                x.setPosition(this.getPosition());
+                x.activate();
+            }
+        }
     }
 
     //-------------------------------------------------------------

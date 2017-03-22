@@ -26,7 +26,6 @@ class CCloneEngine extends CEngine {
 
         if (this.m_thrust > 0) {
             this.animate(enums.AnimationMode.ANIMATE_LOOP);
-            //super.draw(ctx);
             super.Draw(ctx);
         }
         return true;

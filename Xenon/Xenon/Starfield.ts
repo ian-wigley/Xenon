@@ -37,20 +37,27 @@ class CStarfield {
             //    m_colour[x] = new Color(rand.Next(255),
             //        rand.Next(255),
             //        rand.Next(255));
-
+            //http://stackoverflow.com/questions/16228048/replace-a-specific-color-by-another-in-an-image-sprite
         }
     }
 
-    Update(offset: number) {
+    //-------------------------------------------------------------
+
+    public Update(offset: number) {
         this.m_position += offset;
     }
 
-    Draw(ctx: CanvasRenderingContext2D) {
+    //-------------------------------------------------------------
+
+    public Draw(ctx: CanvasRenderingContext2D) {
         var range = 1 << this.m_layers;
         for (var i = 0; i < this.m_point.length; i++) {
             this.m_point[i].y = (((this.m_offset[i] + this.m_position) >> this.m_layer[i]) % this.m_height);
             ctx.drawImage(this.m_star, this.m_point[i].x, this.m_point[i].y);
         }
     }
+
+    //-------------------------------------------------------------
+
 }
 export = CStarfield;

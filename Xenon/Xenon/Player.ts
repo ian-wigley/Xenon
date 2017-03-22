@@ -43,7 +43,6 @@ class CPlayer {
                 this.extraLife();
                 break;
             }
-            //score_level++;
             count++;
         }
     }

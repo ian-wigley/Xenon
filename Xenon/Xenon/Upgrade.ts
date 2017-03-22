@@ -20,7 +20,7 @@ class CUpgrade extends CActor {
     m_weapon: CWeapon;
     m_weapon_type: enums.WeaponType;
 
-    constructor(scene: CScene) {
+    constructor(scene?: CScene) {
         super(scene);
         this.m_offset = new gsCVector(0.0, 0.0);
         this.m_weapon = null;
@@ -47,7 +47,7 @@ class CUpgrade extends CActor {
         super.kill();
     }
 
-   //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public setOffset(offset: gsCVector) {
         this.m_offset = offset;
@@ -56,11 +56,11 @@ class CUpgrade extends CActor {
     //-------------------------------------------------------------
 
     public registerHit(energy: number, hitter: CActor) {
-        if (this.getOwner() &&
-            (<CShip>this.getOwner()).getDiveLevel() > 0) {
+        if (this.getOwner() && (<CShip>this.getOwner()).getDiveLevel() > 0) {
             return;
         }
-        this.registerHit(energy, hitter);
+        //this.registerHit(energy, hitter);
+        super.registerHit(energy, hitter);
     }
 
     //-------------------------------------------------------------
@@ -73,14 +73,15 @@ class CUpgrade extends CActor {
 
         switch (actor.getActorInfo().m_type) {
             case enums.ActorType.ACTOR_TYPE_PICKUP:
-                //(<Pickup.CPickup> actor).collect();
-        			actor.kill();
-                    break;
+                var act = <Pickup.CPickup>actor; //(<Pickup.CPickup> actor).collect();
+                act.collect();
+                actor.kill();
+                break;
             case enums.ActorType.ACTOR_TYPE_ALIEN:
-                    this.registerHit(1, this);
-        			actor.registerHit(1, this);
-                    break;
-            }
+                this.registerHit(1, this);
+                actor.registerHit(1, this);
+                break;
+        }
     }
 
     //-------------------------------------------------------------
@@ -88,14 +89,15 @@ class CUpgrade extends CActor {
     public onCollisionWithMap(map: gsCMap, hits: number) {
         if (this.getOwner() &&
             (<CShip>this.getOwner()).getDiveLevel() > 0) {
-                return;
+            return;
         }
         this.registerHit(this.UPGRADE_MAP_HIT, this);
     }
 
     //-------------------------------------------------------------
 
-    public setWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
+    //public setWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
+    public setWeapon(type: enums.WeaponType, grade?: enums.WeaponGrade) {
         if (this.m_weapon) {
             this.m_weapon.kill();
             this.m_weapon = null;

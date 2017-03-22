@@ -13,6 +13,7 @@ import ActorInfo = require("ActorInfo");
 //import CBigExplosion = require("BigExplosion");
 import enums = require("Enums");
 import Point = require("Point");
+import CApplication = require("Application");
 
 class CActor {
 
@@ -39,6 +40,7 @@ class CActor {
     protected timerTest: number = 0.0;
 
     protected m_name: string = "";
+    protected m_app: CApplication;
 
     private frame: number = 0;
 
@@ -54,6 +56,7 @@ class CActor {
         this.m_is_hit = false;
         this.m_score_multiplier = 1.0;
         this.m_timer = new gsCTimer();
+        this.m_hit_timer = new gsCTimer();
     }
 
     //-------------------------------------------------------------
@@ -100,11 +103,9 @@ class CActor {
 
     //-------------------------------------------------------------
     // Overridable
-
-    //		public gsCRect getCollisionRect()
-    //		{
-    //			return m_sprite.getRect();
-    //		}
+    //public getCollisionRect():gsCRect {
+    //  return m_sprite.getRect();
+    //}
 
     //-------------------------------------------------------------
     // Overridable
@@ -170,7 +171,6 @@ class CActor {
             var info: ActorInfo = this.getActorInfo();
             if (info.m_filename != "") {
                 this.m_image = this.m_scene.getImage(info.m_filename);
-                //m_image = m_scene.loadImages();//info.m_filename);
             }
             else {
                 this.m_image = null;
@@ -189,7 +189,7 @@ class CActor {
 
     //-------------------------------------------------------------
 
-    public kill() {
+    public kill(): void {
         this.m_is_active = false;
     }
 
@@ -211,7 +211,6 @@ class CActor {
     //        }
     //        else if (area <= 64 * 64) {
     //            x = new CMediumExplosion();
-    //            //x = inter.explodeMiddle();
     //        }
     //        else {
     //            x = new CBigExplosion();
@@ -225,7 +224,7 @@ class CActor {
 
     //-------------------------------------------------------------
 
-    public registerHit(energy: number, hitter: CActor) {
+    public registerHit(energy: number, hitter: CActor): void {
         if (this.m_shield != this.INFINITE_SHIELD) {
             if (this.m_shield > 0) {
                 this.m_shield -= energy;
@@ -236,51 +235,46 @@ class CActor {
             }
 
             this.m_is_hit = true;
-            //m_hit_timer.start();
+            this.m_hit_timer.start();
         }
     }
 
     //-------------------------------------------------------------
 
-    public onKilled() {
-        var bonus = this.getActorInfo().m_kill_bonus;// 0;//getActorInfo().m_kill_bonus; 
+    public onKilled(): void {
+        var bonus = this.getActorInfo().m_kill_bonus;
 
         if (bonus > 0) {
             var score = bonus * this.m_score_multiplier;
-
-            //CPlayGameState::getPlayer()->scoreBonus(score);
+            this.m_scene.App.playStateInstance.getPlayer().scoreBonus(score);  //TEMP!
             this.m_scene.createLabel(this.getPosition(), score.toString());
         }
     }
 
     //-------------------------------------------------------------
 
-    public update(controls: gsCControls, gameTime: gsCTimer) {
-        //this.timerTest += gameTime;//.time;//.ElapsedGameTime.Milliseconds;
+    public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         return true;
     }
 
-
-    public Draw(ctx: CanvasRenderingContext2D) {
+    public Draw(ctx: CanvasRenderingContext2D): boolean {
 
         if (this.isActive() && this.m_image != null) {
-            ////m_sprite.setPosition(new Point((int)m_position.X + m_scene.getMapFrontLayer().getPosition().X,
-            ////(int)m_position.Y + m_scene.getMapFrontLayer().getPosition().Y));
 
+            //m_sprite.setPosition(gsCPoint(m_position) + m_scene->getMap()->getPosition());
             this.m_sprite.setPosition(new gsCVector(0, 0).plus(this.m_position, this.m_scene.getMapFrontLayer().getPosition()));
-            //this.m_sprite.setPosition(this.m_position);
+
 
             if (this.m_is_hit) {
-                //if (m_hit_timer.getTime() > ACTOR_HIT_TIME)
-                //{
-                //    m_hit_timer.reset();
-                //    m_is_hit = false;
-                //}
+                if (this.m_hit_timer.getTime() > this.ACTOR_HIT_TIME) {
+                    this.m_hit_timer.reset();
+                    this.m_is_hit = false;
+                }
             }
 
             if (this.m_is_hit) {
-                //var level = 255.0 * (1.0 - m_hit_timer.getTime() / ACTOR_HIT_TIME);
-                //m_sprite.enableFillColour(Color(level, level, level));
+                var level = 255.0 * (1.0 - this.m_hit_timer.getTime() / this.ACTOR_HIT_TIME);
+                //this.m_sprite.enableFillColour(Color(level, level, level));
             }
             else {
                 this.m_sprite.disableFillColour();
@@ -316,10 +310,10 @@ class CActor {
             this.frame = 0;
         }
         else {
-            //frame = 0; ///*this.timerTest*/ 0.5 * this.getActorInfo().m_anim_rate;
+            //frame = (m_timer.getTime() * getActorInfo().m_anim_rate);
             switch (mode) {
                 case enums.AnimationMode.ANIMATE_LOOP:
-                    //frame = frame % (num_frames - 1);	// cycle repeatedly
+                    //this.frame = this.frame % (num_frames - 1);	// cycle repeatedly
                     this.frame = (this.frame + 1) % num_frames;
 
                     break;
@@ -328,6 +322,7 @@ class CActor {
                         this.frame = num_frames - 1;	// stay on last frame
                         finished = true;				// flag that we've finished
                     }
+                    this.frame++;
                     break;
             }
         }
@@ -358,7 +353,6 @@ class CActor {
 
     public getActorInfo() {
         return null;
-        //return this.m_scene.GetlistOfActors();
     }
 
     //-------------------------------------------------------------

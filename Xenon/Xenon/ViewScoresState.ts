@@ -1,59 +1,64 @@
 ﻿import CGameState = require("GameState");
+import CApplication = require("Application");
+import CScene = require("Scene");
+import CStarfield = require("Starfield");
+import Options = require("Options");
+import gsCControls = require("Controls");
+import enums = require("Enums");
+import gsCPoint = require("Point");
+import CMainMenuState = require("MainMenuState");
 
 class CViewScoresState extends CGameState {
 
-    m_instance: CViewScoresState = null;
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
+        super(font8x8, font16x16, app, ctx);
 
-    constructor() {
-        super();
+        this.m_starfield = starfield;
+        this.m_mainMenuState = menu;
+
+        this.m_stateName = "VViewScoresState";
     }
 
     //-------------------------------------------------------------
 
     public instance(): CGameState {
-        if (!this.m_instance)
-            this.m_instance = new CViewScoresState();
-        return this.m_instance;
+        return this.m_app.instance = this;
     }
 
     //-------------------------------------------------------------
 
     public create(): boolean {
-        //m_score_table.setCurrentItem(-1);
+        this.m_score_table.setCurrentItem(-1);
         return true;
     }
 
     //-------------------------------------------------------------
 
-    public update(): boolean {
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
         //if (!CGameState::update())
         //	return false;
 
-        //if (Options.getOption(OPTION_BACKDROP))
-        //	m_backdrop.draw(gsCPoint(0,0));
-        //else
-        //	m_screen.clear(gsCColour(gsBLACK));
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+        }
 
-        //m_starfield.move(4);
-        //m_starfield.draw();
+        this.m_starfield.Update(4);
+        this.m_starfield.Draw(ctx);
 
-        //m_medium_font.setTextCursor(gsCPoint(0,50));
-        //m_medium_font.justifyString("Xenon 2000 High Scores");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
+        this.m_medium_font.justifyString("Xenon 2000 High Scores");
+        this.m_score_table.draw(this.m_medium_font, ctx);
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 450));
+        this.m_medium_font.justifyString("Press Fire For Main Menu");
 
-        //m_score_table.draw();
+        if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            controls.returnPressed = false;
+            controls.enterPressed = false;
+            controls.lcontrolPressed = false;
 
-        //m_medium_font.setTextCursor(gsCPoint(0,450));
-        //m_medium_font.justifyString("Press Fire For Main Menu");
-
-        //m_screen.flip();
-
-        //switch (getKey()) {
-        //	case gsKEY_RETURN:
-        //	case gsKEY_ENTER:
-        //	case gsKEY_LCONTROL:
-        //		CGameState::playSample(SAMPLE_MENU_BACK);
-        //		return changeState(CMainMenuState::instance());
-        //	}
+            //CGameState::playSample(SAMPLE_MENU_BACK);
+            return this.changeState(this.m_app.instance = this.m_mainMenuState);
+        }
 
         return true;
     }

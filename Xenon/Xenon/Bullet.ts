@@ -9,11 +9,10 @@ class CBullet extends CActor {
 
     protected m_grade: enums.BulletGrade;
 
-
     constructor() {
         super();
-        this.m_grade = enums.BulletGrade.BULLET_STANDARD;
-        this.m_name = "Bullet";
+        this.m_grade = enums.BulletGrade.BULLET_BEST;//.BULLET_STANDARD;
+        this.m_name = "bullet";
     }
 
     //-------------------------------------------------------------
@@ -24,9 +23,9 @@ class CBullet extends CActor {
 
     //-------------------------------------------------------------
 
-    public draw(ctx: CanvasRenderingContext2D): boolean {
-        //if (!super.draw(ctx)) {
-            if (!super.Draw(ctx)) {
+    //public draw(ctx: CanvasRenderingContext2D): boolean {
+    public Draw(ctx: CanvasRenderingContext2D): boolean {
+        if (!super.Draw(ctx)) {
             return false;
         }
 
@@ -76,10 +75,10 @@ class CBullet extends CActor {
 
     //-------------------------------------------------------------
 
-    public setGrade(grade: enums.BulletGrade = enums.BulletGrade.BULLET_STANDARD) {
+    //    public setGrade(grade: enums.BulletGrade = enums.BulletGrade.BULLET_BEST) {//.BULLET_STANDARD) {
+    public setGrade(grade: enums.BulletGrade) {
         this.m_grade = grade;
     }
-
 }
 
 export = CBullet;

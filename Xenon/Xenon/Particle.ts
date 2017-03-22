@@ -7,8 +7,6 @@ class Particle {
     m_mass:number;
     m_age:number;
     m_lifetime:number;
-
-
 }
 
 export = Particle;

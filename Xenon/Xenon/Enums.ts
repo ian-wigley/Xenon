@@ -326,7 +326,7 @@ module enu {
         OM_COLOURDEPTH,
         OM_PARTICLEFX,
         OM_BACKDROP,
-        OM_SEPERATOR,
+        //OM_SEPERATOR,
         OM_APPLY,
         OM_CANCEL
     }
@@ -337,7 +337,7 @@ module enu {
         OM_CONTROL,
         OM_VIDEO,
         OM_AUDIO,
-        OM_SEPERATOR,
+        //OM_SEPERATOR,
         OM_BACK
     }
 
@@ -350,6 +350,21 @@ module enu {
         MM_OPTIONS,
         MM_CREDITS,
         MM_QUIT
-    };
+    }
 
+    export enum AudioMenuItem {
+        OM_MUSIC,
+        OM_SOUNDFX,
+       // OM_SEPERATOR,
+        OM_APPLY,
+        OM_CANCEL
+    }
+
+    export enum ControlMenuItem {
+        CM_CONTROL1,
+        CM_CONTROL2,
+        //CM_SEPERATOR,
+        CM_APPLY,
+        CM_CANCEL
+    } 
 } 

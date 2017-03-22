@@ -21,6 +21,7 @@ import gsCControls = require("Controls");
 
 import CViewScoresState = require("ViewScoresState");
 import CScoreEntryState = require("ScoreEntryState");
+import CApplication = require("Application");
 
 enum m_gameMode {  //m_mode
     CREATEPLAYER,
@@ -36,7 +37,7 @@ class CPlayGameState extends CGameState {
     private m_game_start_timer: gsCTimer;
     private m_game_end_timer: gsCTimer;
 
-    private m_starfield: CStarfield;
+    //private m_starfield: CStarfield;
     private m_level: CLevel;
     private m_screen: gsCScreen;
 
@@ -56,15 +57,14 @@ class CPlayGameState extends CGameState {
     //private m_even: number = 0;
     private even: boolean = true;		//TEMP
 
-    private m_mainMenuState: CMainMenuState;
     private m_boss: CBoss;
     private m_bossControl: CBossControl;
     //private m_options: Options;
 
     private m_mode: m_gameMode;
 
-    constructor(scene: CScene, starfield: CStarfield, m_font8x8: HTMLImageElement, m_font16x16: HTMLImageElement, ctx: CanvasRenderingContext2D) { //, mainMenuState: CMainMenuState, options: Options) {
-        super(m_font8x8, m_font16x16, ctx);
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
+        super(font8x8, font16x16, app, ctx);
 
         this.m_scene = scene;
         this.m_starfield = starfield;
@@ -72,6 +72,10 @@ class CPlayGameState extends CGameState {
         //this.m_options = options;
 
         this.m_stateName = "PlayGameState";
+
+
+        this.m_mainMenuState = menu;
+
 
         this.m_level = this.m_scene.GetLevel();
 
@@ -126,13 +130,8 @@ class CPlayGameState extends CGameState {
     //-------------------------------------------------------------
 
     public instance(): CGameState {
-        //if (!this.m_instance)
-        //    this.m_instance = new CIntroState();
-
-        //return this;//.m_instance;
-        return this.m_state;//. m_instance;
+        return this.m_app.instance = this.m_mainMenuState;
     }
-
 
     //-------------------------------------------------------------
 
@@ -166,20 +165,20 @@ class CPlayGameState extends CGameState {
         this.m_level.reset();
         this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
 
-        ////#ifdef _PROFILING
-        ////    m_ship->attachClone();
-        ////    m_ship->attachClone();
-        ////    m_ship->attachWingtip();
-        ////    m_ship->attachWingtip();
-        ////    m_ship->setWeapon(MISSILE_WEAPON,WEAPON_BEST);
-        ////    m_ship->addWeapon(HOMING_MISSILE_WEAPON);
-        ////    m_ship->addWeapon(HOMING_MISSILE_WEAPON);
-        ////    m_ship->addWeapon(LASER_WEAPON);
-        ////    m_ship->addWeapon(LASER_WEAPON);
-        ////#endif
+        //#ifdef _PROFILING
+        this.m_ship.attachClone(0);
+        this.m_ship.attachClone(1);
+        this.m_ship.attachWingtip(0);
+        this.m_ship.attachWingtip(1);
+        this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //#endif
 
         ////    playSample(SAMPLE_PLAYER_CREATED,m_ship->getPosition().getX());
-        ////    getPlayer()->loseLife();
+        this.getPlayer().loseLife();
         this.m_reached_boss = false;
     }
 
@@ -255,6 +254,8 @@ class CPlayGameState extends CGameState {
             ctx.drawImage(this.backgroundTexture, 0, 0);
         }
 
+
+
         var loop: number = 1;
 
         if (this.m_fast_forward) {
@@ -320,6 +321,8 @@ class CPlayGameState extends CGameState {
             this.m_scene.checkActorCollisions();
             //this.m_scene.checkMapCollisions(this.m_level.m_front_layer);           // Turned off for now 2/3/17 ! 
             this.m_scene.removeDeadActors();
+
+
         }
 
         ////testDebugKeys(key);
@@ -345,6 +348,8 @@ class CPlayGameState extends CGameState {
         ////    m_medium_font.setTextCursor(gsCPoint(0, 100));
         ////    m_medium_font.justifyString("DEMONSTRATION");
         ////}
+
+
 
         this.m_game_start_timer.update(false);
         this.m_game_end_timer.update(false);
@@ -418,7 +423,11 @@ class CPlayGameState extends CGameState {
                 if (this.m_game_end_timer.getTime() >= 0) { // 1.0) { TEMP !!
                     if (this.m_demo_mode != enums.DemoMode.DEMO_OFF) {
                         this.setDemoMode(enums.DemoMode.DEMO_OFF);
-                        return this.changeState(this.m_mainMenuState);//.instance());// CMainMenuState::instance());this.m_mainMenuState
+
+                        this.resetGame();
+
+                        //return this.changeState(this.m_mainMenuState);//.instance());// CMainMenuState::instance());this.m_mainMenuState
+                        return this.changeState(this.m_app.instance = this.m_mainMenuState);
                     }
                     this.swapPlayer();
                     if (this.getPlayer().getLives() > 0)
@@ -743,8 +752,12 @@ class CPlayGameState extends CGameState {
         this.m_bossControl = value;
     }
 
-    public set mainMenuState(value: CMainMenuState) {
-        this.m_mainMenuState = value;
+    //public set mainMenuState(value: CMainMenuState) {
+    //    this.m_mainMenuState = value;
+    //}
+
+    private resetGame(): void {
+        this.create();
     }
 
 }

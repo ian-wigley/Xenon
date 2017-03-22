@@ -571,7 +571,8 @@ class CShip extends CActor {
 
     //-------------------------------------------------------------
 
-    public addWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
+    //public addWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
+    public addWeapon(type: enums.WeaponType, grade?: enums.WeaponGrade) {
         switch (type) {
             case enums.WeaponType.MISSILE_WEAPON:
                 this.setWeapon(type, grade);
@@ -675,8 +676,8 @@ class CShip extends CActor {
     //-------------------------------------------------------------
 
     public attachWingtip(side: number): boolean {
-        if (side <= 0 && this.m_left_wingtip != null) {
-            this.m_left_wingtip = new CWingtip(this.m_scene);
+        if (side <= 0 && !this.m_left_wingtip) {
+            this.m_left_wingtip = new CWingtip();//this.m_scene);
             this.m_scene.addActor(this.m_left_wingtip);
             this.m_left_wingtip.activate();
             this.m_left_wingtip.setOwner(this);
@@ -689,8 +690,8 @@ class CShip extends CActor {
             }
             return true;
         }
-        else if (this.m_right_wingtip != null) {
-            this.m_right_wingtip = new CWingtip(this.m_scene);
+        else if (!this.m_right_wingtip) {
+            this.m_right_wingtip = new CWingtip();//this.m_scene);
             this.m_scene.addActor(this.m_right_wingtip);
             this.m_right_wingtip.activate();
             this.m_right_wingtip.setOwner(this);
@@ -845,6 +846,7 @@ class CShip extends CActor {
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SHIP);
     }
 
+    //-------------------------------------------------------------
 
     public explodeShip() {
 

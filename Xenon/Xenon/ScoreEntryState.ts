@@ -1,28 +1,22 @@
 ﻿import CGameState = require("GameState");
 import gsCControls = require("Controls");
 import gsCScreen = require("Screen");
+import CApplication = require("Application");
+import CScene = require("Scene");
+import CStarfield = require("Starfield");
+import enums = require("Enums");
+import Options = require("Options");
+import gsCPoint = require("Point");
 
 class CScoreEntryState extends CGameState {
 
     m_congratulation_messages: Array<string>;
-
-    //m_congratulation_messages: Array<string> = new Array {
-    //    "That's the best score today !",
-    //    "Almost the best score today !",
-    //    "You're in the top three !",
-    //    "An above average performance !",
-    //    "An average performance !",
-    //    "A below average performance !",
-    //    "A fairly good score !",
-    //    "At least you're not last !",
-    //    "You made the grade (just)",
-    //    "You'll have to try harder !!",
-    //};
-
     m_instance: CScoreEntryState = null;
 
-    constructor() {
-        super();
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menuState?) {
+        super(font8x8, font16x16, app, ctx);
+        this.m_starfield = starfield;
+        this.m_mainMenuState = menuState;
 
         this.m_congratulation_messages = [];
         this.m_congratulation_messages.push("That's the best score today !");
@@ -40,10 +34,7 @@ class CScoreEntryState extends CGameState {
     //-------------------------------------------------------------
 
     public instance(): CGameState {
-        if (!this.m_instance) {
-            this.m_instance = new CScoreEntryState();
-        }
-        return this.m_instance;
+        return this.m_app.instance = this;
     }
 
     //-------------------------------------------------------------
@@ -51,65 +42,70 @@ class CScoreEntryState extends CGameState {
     public create(): boolean {
         //stopSamples();
         //playMusic(MUSIC_HISCORE);
-
-        return true;
+       return true;
     }
 
     //-------------------------------------------------------------
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
-    //public update(): boolean {
         //if (!CGameState::update())
         //	return false;
 
         var screen: gsCScreen = new gsCScreen();
 
-        //if (Options.getOption(OPTION_BACKDROP))
-        //	m_backdrop.draw(gsCPoint(0,0));
-        //else
-        //	m_screen.clear(gsCColour(gsBLACK));
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+        }
 
-        //m_starfield.move(4);
-        //m_starfield.draw();
+        this.m_starfield.Update(4);
+        this.m_starfield.Draw(ctx);
 
         //char *m = m_congratulation_messages[m_score_table.getCurrentItem()];
+        var m = this.m_congratulation_messages[this.m_score_table.getCurrentItem()];
 
-        //m_medium_font.setTextCursor(gsCPoint(0,50));
-        //m_medium_font.justifyString(m);
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
+        this.m_medium_font.justifyString(m);
 
-        this.m_score_table.draw(screen, this.m_medium_font, ctx);
+        this.m_score_table.draw(this.m_medium_font, ctx);
         //(screen: gsCScreen, font: gsCFont, ctx: CanvasRenderingContext2D)
 
-        //m_medium_font.setTextCursor(gsCPoint(0,400));
-        //m_medium_font.justifyString("Use Movement Keys To Enter Your Name");
-        //m_medium_font.setTextCursor(gsCPoint(0,430));
-        //m_medium_font.justifyString("Press Fire To Exit To Main Menu");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 400));
+        this.m_medium_font.justifyString("Use Movement Keys To Enter Your Name");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 430));
+        this.m_medium_font.justifyString("Press Fire To Exit To Main Menu");
 
-        //m_screen.flip();
 
-        //switch (getKey()) {
-        //	case gsKEY_RETURN:
-        //	case gsKEY_ENTER:
-        //	case gsKEY_LCONTROL:
-        //		playSample(SAMPLE_MENU_BACK);
-        //		return changeState(CMainMenuState::instance());
-        //	case gsKEY_UP:
-        //		playSample(SAMPLE_MENU_OPTION);
-        //		m_score_table.cycleLetter(1);
-        //		break;
-        //	case gsKEY_DOWN:
-        //		playSample(SAMPLE_MENU_OPTION);
-        //		m_score_table.cycleLetter(-1);
-        //		break;
-        //	case gsKEY_LEFT:
-        //		playSample(SAMPLE_MENU_SELECTION);
-        //		m_score_table.scrollLetter(-1);
-        //		break;
-        //	case gsKEY_RIGHT:
-        //		playSample(SAMPLE_MENU_SELECTION);
-        //		m_score_table.scrollLetter(1);
-        //		break;
-        //	}
+        if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
+            controls.returnPressed = false;
+            controls.enterPressed = false;
+            controls.lcontrolPressed = false;
+            //playSample(SAMPLE_MENU_BACK);
+            return this.changeState(this.m_app.instance = this.m_mainMenuState);
+        }
+
+        if (controls.up) {
+            controls.up = false;
+            //		playSample(SAMPLE_MENU_OPTION);
+            this.m_score_table.cycleLetter(1);
+        }
+
+        if (controls.down) {
+            controls.down = false;
+            //		playSample(SAMPLE_MENU_OPTION);
+            this.m_score_table.cycleLetter(-1);
+        }
+
+        if (controls.left) {
+            controls.left = false;
+            //		playSample(SAMPLE_MENU_SELECTION);
+            this.m_score_table.scrollLetter(-1);
+        }
+
+        if (controls.right) {
+            controls.right = false;
+            //		playSample(SAMPLE_MENU_SELECTION);
+            this.m_score_table.scrollLetter(1);
+        }
 
         //if (m_sound_system.isMusicFinished())
         //	playMusic(MUSIC_HISCORE);

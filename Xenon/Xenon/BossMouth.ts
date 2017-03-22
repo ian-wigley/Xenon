@@ -34,7 +34,8 @@ class CBossMouth extends CBoss {
 
     //-------------------------------------------------------------
 
-    public update(controls: gsCControls): boolean {
+    public update(controls: gsCControls, gameTime: gsCTimer): boolean {
+    //public update(controls: gsCControls): boolean {
         if (this.m_shield == 0) {
             //this.explode();
             this.kill();

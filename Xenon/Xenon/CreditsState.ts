@@ -1,115 +1,107 @@
-﻿class CCreditsState {
+﻿import CApplication = require("Application");
+import CScene = require("Scene");
+import CStarfield = require("Starfield");
+import CGameState = require("GameState");
+import Options = require("Options");
+import gsCControls = require("Controls");
+import enums = require("Enums");
+import gsCPoint = require("Point");
 
-    /*
-    CCreditsState *CCreditsState::m_instance = 0;
+class CCreditsState extends CGameState {
 
-//-------------------------------------------------------------
+    private m_scroll_pos: number = 0;
 
-CCreditsState::CCreditsState()
-{
-}
+    //-------------------------------------------------------------
 
-//-------------------------------------------------------------
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
+        super(font8x8, font16x16, app, ctx);
+        this.m_starfield = starfield;
+        this.m_mainMenuState = menu;
+    }
 
-CCreditsState::~CCreditsState()
-{
-}
+    //-------------------------------------------------------------
 
-//-------------------------------------------------------------
+    public instance(): CGameState {
+        return this.m_app.instance = this;
+    }
 
-CGameState *CCreditsState::instance()
-{
-	if (!m_instance)
-		m_instance = new CCreditsState;
+    //-------------------------------------------------------------
 
-	return m_instance;
-}
+    public create(): boolean {
+        this.m_scroll_pos = 680;//480;
+        return true;
+    }
 
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-bool CCreditsState::create()
-{
-	m_scroll_pos = 480;
+    public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
 
-	return true;
-}
+        //	if (!CGameState::update())
+        //		return false;
 
-//-------------------------------------------------------------
+        if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
+            ctx.drawImage(this.backgroundTexture, 0, 0);
+        }
 
-bool CCreditsState::update()
-{
-	if (!CGameState::update())
-		return false;
+        this.m_starfield.Update(4);
+        this.m_starfield.Draw(ctx);
 
-	if (Options.getOption(OPTION_BACKDROP))
-		m_backdrop.draw(gsCPoint(0,0));
-	else
-		m_screen.clear(gsCColour(gsBLACK));
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 0 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Xenon 2000 : Project PCF");
 
-	m_starfield.move(4);
-	m_starfield.draw();
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 50 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("A Bitmap Brothers Production");
 
-	m_medium_font.setTextCursor(gsCPoint(0,0 + m_scroll_pos));
-	m_medium_font.justifyString("Xenon 2000 : Project PCF");
+        this.m_small_font.setTextCursor(new gsCPoint(0, 100 + this.m_scroll_pos));
+        this.m_small_font.justifyString("Programming and Implementation:");
 
-	m_medium_font.setTextCursor(gsCPoint(0,50 + m_scroll_pos));
-	m_medium_font.justifyString("A Bitmap Brothers Production");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 120 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("John M Phillips");
 
-	m_small_font.setTextCursor(gsCPoint(0,100 + m_scroll_pos));
-	m_small_font.justifyString("Programming and Implementation:");
+        this.m_small_font.setTextCursor(new gsCPoint(0, 170 + this.m_scroll_pos));
+        this.m_small_font.justifyString("Concept And Level Design:");
 
-	m_medium_font.setTextCursor(gsCPoint(0,120 + m_scroll_pos));
-	m_medium_font.justifyString("John M Phillips");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 190 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Ed Bartlett");
 
-	m_small_font.setTextCursor(gsCPoint(0,170 + m_scroll_pos));
-	m_small_font.justifyString("Concept And Level Design:");
+        this.m_small_font.setTextCursor(new gsCPoint(0, 240 + this.m_scroll_pos));
+        this.m_small_font.justifyString("Graphics Design:");
 
-	m_medium_font.setTextCursor(gsCPoint(0,190 + m_scroll_pos));
-	m_medium_font.justifyString("Ed Bartlett");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 260 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Mark Coleman");
 
-	m_small_font.setTextCursor(gsCPoint(0,240 + m_scroll_pos));
-	m_small_font.justifyString("Graphics Design:");
+        this.m_small_font.setTextCursor(new gsCPoint(0, 310 + this.m_scroll_pos));
+        this.m_small_font.justifyString("Music And Sound Effects:");
 
-	m_medium_font.setTextCursor(gsCPoint(0,260 + m_scroll_pos));
-	m_medium_font.justifyString("Mark Coleman");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 330 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Chris Maule");
 
-	m_small_font.setTextCursor(gsCPoint(0,310 + m_scroll_pos));
-	m_small_font.justifyString("Music And Sound Effects:");
+        this.m_small_font.setTextCursor(new gsCPoint(0, 380 + this.m_scroll_pos));
+        this.m_small_font.justifyString("A big thankyou to:");
 
-	m_medium_font.setTextCursor(gsCPoint(0,330 + m_scroll_pos));
-	m_medium_font.justifyString("Chris Maule");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 400 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Mike and all at Bitmap HQ");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 420 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Dan Hutchinson");
+        this.m_medium_font.setTextCursor(new gsCPoint(0, 440 + this.m_scroll_pos));
+        this.m_medium_font.justifyString("Alison Beasley");
 
-	m_small_font.setTextCursor(gsCPoint(0,380 + m_scroll_pos));
-	m_small_font.justifyString("A big thankyou to:");
+        this.m_scroll_pos--;
 
-	m_medium_font.setTextCursor(gsCPoint(0,400 + m_scroll_pos));
-	m_medium_font.justifyString("Mike and all at Bitmap HQ");
-	m_medium_font.setTextCursor(gsCPoint(0,420 + m_scroll_pos));
-	m_medium_font.justifyString("Dan Hutchinson");
-	m_medium_font.setTextCursor(gsCPoint(0,440 + m_scroll_pos));
-	m_medium_font.justifyString("Alison Beasley");
+        if (this.m_scroll_pos == -480) { // || getKey() != gsKEY_NONE)
+            return this.changeState(this.m_app.instance = this.m_mainMenuState);
+        }
+        return true;
+    }
 
-	m_scroll_pos--;
+    //-------------------------------------------------------------
 
-	m_screen.flip();
+    public destroy(): boolean
+    {
+    	return true;
+    }
 
-	if (m_scroll_pos == -480 ||
-		getKey() != gsKEY_NONE)
-		return changeState(CMainMenuState::instance());
-
-	return true;
-}
-
-//-------------------------------------------------------------
-
-bool CCreditsState::destroy()
-{
-	return true;
-}
-
-//-------------------------------------------------------------
-
-    */
+    //-------------------------------------------------------------
 
 }
 export = CCreditsState;

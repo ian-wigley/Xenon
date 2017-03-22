@@ -9,18 +9,19 @@ import gsCControls = require("Controls");
 import enums = require("Enums");
 import CPlayGameState = require("PlayGameState");
 import CMainMenuState = require("MainMenuState");
+import CApplication = require("Application");
 
 class CIntroState extends CGameState {
 
     //CIntroState *CIntroState::m_instance = 0;
     m_playGameState: CPlayGameState;
     m_originalState: CIntroState;
-    m_mainMenuState: CMainMenuState;
+    //m_mainMenuState: CMainMenuState;
 
-    constructor(scene?: CScene, starfield?: CStarfield, m_font8x8?: HTMLImageElement, m_font16x16?: HTMLImageElement, ctx?: CanvasRenderingContext2D) {
-        super(m_font8x8, m_font16x16, ctx);
+    constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
+        super(font8x8, font16x16, app, ctx);
 
-        this.m_playGameState = new CPlayGameState(scene, starfield, m_font8x8, m_font16x16, ctx);
+        this.m_playGameState = new CPlayGameState(scene, starfield, font8x8, font16x16, app, ctx, menu);
 
         this.m_stateName = "IntroState";
 
@@ -28,11 +29,7 @@ class CIntroState extends CGameState {
     }
 
     public instance(): CGameState {
-        //if (!this.m_instance)
-        //    this.m_instance = new CIntroState();
-
-        //return this;//.m_instance;
-        return this.m_state;//. m_instance;
+        return this.m_app.instance = this.m_playGameState;
     }
 
 
@@ -140,10 +137,10 @@ class CIntroState extends CGameState {
 
     //-------------------------------------------------------------
 
-    public set mainMenuState(value: CMainMenuState) {
-        this.m_mainMenuState = value;
-        this.m_playGameState.mainMenuState = value;//this.mainMenuState;
-    }
+    //public set mainMenuState(value: CMainMenuState) {
+    //    this.m_mainMenuState = value;
+    //    this.m_playGameState.mainMenuState = value;//this.mainMenuState;
+    //}
 
 }
 
