@@ -20,6 +20,7 @@ class CBossMouth extends CBoss {
         this.m_mode = -1;
         this.m_timer = new gsCTimer();
         this.m_firing_timer = new gsCTimer();
+		this.m_name = "Boss Mouth";
     }
 
     //-------------------------------------------------------------

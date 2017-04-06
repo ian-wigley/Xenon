@@ -19,6 +19,7 @@ module Asteroid {
 
         constructor() { /// Need the gamestate & Options ref's
             super();
+            this.m_name = "Asteroid";
         }
 
         public activate(): boolean {
@@ -74,6 +75,8 @@ module Asteroid {
 
     export class CSmallStandardAsteroid extends CAsteroid {
 
+        m_name = "SmallStandardAsteroid";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SMALL_STANDARD_ASTEROID);
@@ -90,18 +93,25 @@ module Asteroid {
 
     export class CSmallHighDensityAsteroid extends CAsteroid {
 
+        m_name = "SmallHighDensityAsteroid";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SMALL_HIGHDENSITY_ASTEROID);
         }
 
         public fragment(): void {
+            super.explode();
+            this.kill();
+            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
         }
     }
 
     //-------------------------------------------------------------
 
     export class CSmallIndestructibleAsteroid extends CAsteroid {
+
+        m_name = "CSmallIndestructibleAsteroid";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -115,6 +125,8 @@ module Asteroid {
     //-------------------------------------------------------------
 
     export class CMediumStandardAsteroid extends CAsteroid {
+
+        m_name = "MediumStandardAsteroid";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -155,6 +167,8 @@ module Asteroid {
 
     export class CMediumHighDensityAsteroid extends CAsteroid {
 
+        m_name = "MediumHighDensityAsteroid";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MEDIUM_HIGHDENSITY_ASTEROID);
@@ -193,6 +207,8 @@ module Asteroid {
     //-------------------------------------------------------------
 
     export class CMediumIndestructibleAsteroid extends CAsteroid {
+
+        m_name = "MediumIndestructibleAsteroid";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -253,6 +269,8 @@ module Asteroid {
 
     export class CBigHighDensityAsteroid extends CAsteroid {
 
+        m_name = "BigHighDensityAsteroid";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_HIGHDENSITY_ASTEROID);
@@ -298,6 +316,8 @@ module Asteroid {
     //-------------------------------------------------------------
 
     export class CBigIndestructibleAsteroid extends CAsteroid {
+
+        m_name = "BigIndestructibleAsteroid";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();

@@ -2,6 +2,8 @@
 import CSpinner = require("Spinner");
 import enums = require("Enums");
 import gsCVector = require("Vector");
+import gsCControls = require("Controls");
+import gsCTimer = require("Timer");
 
 class CSpinnerWeapon extends CWeapon {
     private m_directionS: gsCVector;
@@ -21,21 +23,32 @@ class CSpinnerWeapon extends CWeapon {
 
     //-------------------------------------------------------------
 
+    public update(controls: gsCControls, gameTime: gsCTimer) {
+        super.update(controls, gameTime);
+        if (this.do_fire) {
+            this.fire();
+            //controls.fire = false;
+        }
+        return true;
+    }
+
+    //-------------------------------------------------------------
+
     public fire(): boolean {
         if (!this.isValidFiringPosition()) {
             return false;
         }
 
-        var m: CSpinner = new CSpinner();
-        this.m_scene.addActor(m);
+        //var m: CSpinner = new CSpinner();
+        //this.m_scene.addActor(m);
 
-        m.activate();
-        var grade: number = this.m_grade;
-        m.setGrade(grade);//m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
-        m.setPosition(this.getPosition());
-        var p: gsCVector = m.getActorInfo().m_speed[this.m_grade];
-        var t: gsCVector = p.multVec(this.m_directionS);
-        m.setVelocity(t); //m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
+        //m.activate();
+        //var grade: number = this.m_grade;
+        //m.setGrade(grade);//m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
+        //m.setPosition(this.getPosition());
+        //var p: gsCVector = m.getActorInfo().m_speed;//[this.m_grade];
+        //var t: gsCVector = p.multVec(this.m_directionS);
+        //m.setVelocity(t); //m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
 
         return true;
     }

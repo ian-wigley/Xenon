@@ -1,5 +1,0 @@
-C:\Users\ianwi\Desktop\Xenon\Xenon\bin\Xenon.dll.config
-C:\Users\ianwi\Desktop\Xenon\Xenon\bin\Xenon.dll
-C:\Users\ianwi\Desktop\Xenon\Xenon\bin\Xenon.pdb
-C:\Users\ianwi\Desktop\Xenon\Xenon\obj\Debug\Xenon.dll
-C:\Users\ianwi\Desktop\Xenon\Xenon\obj\Debug\Xenon.pdb

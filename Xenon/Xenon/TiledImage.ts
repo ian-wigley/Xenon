@@ -20,6 +20,8 @@ class gsCTiledImage extends gsCImage {
         this.m_screen = new gsCScreen;
     }
 
+    //-------------------------------------------------------------
+
     public calculateSourceRects() {
         this.m_num_tiles = 0;
 
@@ -85,15 +87,16 @@ class gsCTiledImage extends gsCImage {
             }
             else {
                 ctx.drawImage(this.m_imageTiles, this.m_source_rects[tile].Left, this.m_source_rects[tile].Top, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height, position.X, position.Y, this.m_source_rects[tile].Width, this.m_source_rects[tile].Height);
-                return true;
+                //return true;
+                return false;
             }
 
         }
-        else {
-            var hmmm = 0;
-            return false;
+		//else {
+        //    var hmmm = 0;
+        //    return false;
 
-        }
+        //}
 
     }
 

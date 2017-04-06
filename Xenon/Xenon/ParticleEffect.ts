@@ -30,6 +30,7 @@ class CParticleEffect extends CActor {
         this.m_lifetime = this.INFINITE_LIFETIME;
         this.m_particle_list = [];
         this.m_life_timer = new gsCTimer();
+        this.m_name = "ParticleEffect";
     }
 
     //-------------------------------------------------------------
@@ -68,18 +69,23 @@ class CParticleEffect extends CActor {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
+
+        this.m_life_timer.update(false);
+
         // update effect global position
-        if (this.getOwner())
+        if (this.getOwner()) {
             this.m_position = this.getOwner().getPosition().plus1(this.m_offset);
-        else
+        }
+        else {
             this.m_position.plusEquals(this.m_velocity);
+        }
 
         // create new particle
-        if (this.m_lifetime == this.INFINITE_LIFETIME ||
-            this.m_life_timer.getTime() < this.m_lifetime) {
+        if (this.m_lifetime == this.INFINITE_LIFETIME || this.m_life_timer.getTime() < this.m_lifetime) {
             var p: Particle = this.m_parent.createParticle();
-            if (p)
+            if (p) {
                 this.m_particle_list.push(p);
+            }
         }
         else {
             if (this.m_particle_list.length == 0) {//.isEmpty()) {
@@ -91,25 +97,31 @@ class CParticleEffect extends CActor {
         // update all
         var delta_time: number = this.m_timer.getDeltaTime();
 
-        for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
-            var p: Particle = this.m_particle_list[i];
-            p.m_age += delta_time;
-            if (p.m_age >= p.m_lifetime) {
+        // *********************** This bit stops breaks the asteroid ************************* //
 
-                // kill particle
-                //delete m_particle_list[i];
-                this.m_particle_list[i] = null;//..removeIndex(i);
+        //        for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
+        for (var i = 0; i < this.m_particle_list.length; i++) {
+            var p: Particle = this.m_particle_list[i];
+            if (p) {
+                p.m_age += 0.01;//delta_time;
+                if (p.m_age >= p.m_lifetime) {
+                    // kill particle
+                    this.m_particle_list[i] = null;
+                }
             }
             else {
                 p.m_position.plusEquals(p.m_velocity);
-
-                if (this.m_point_force) {
-                    //NYI
-                }
-                else {
-                    //NYI
-                }
+                //            console.log("particle position x: " + p.m_position.X + " y:" + p.m_position.Y);
+                //            console.log("particle velocity x: " + p.m_velocity.X + " y:" + p.m_velocity.Y);
+                ////            //if (this.m_point_force) {
+                ////            //    //NYI
+                ////            //}
+                ////            //else {
+                ////            //    //NYI
+                ////            //}
+                //     }
             }
+            // *********************** This bit stops breaks the asteroid ************************* //
         }
 
         return true;
@@ -126,22 +138,29 @@ class CParticleEffect extends CActor {
         //        return true;
         //    }
 
+        var temp = [];
+
         for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
             var p: Particle = this.m_particle_list[i];
 
-            var frame: number = (this.m_image.getNumTiles() * p.m_age / p.m_lifetime);
+            if (p) {
+                var frame: number = Math.floor(this.m_image.getNumTiles() * p.m_age / p.m_lifetime);
 
-            //if (!this.m_image.draw(frame, new gsCVector(p.m_position.plus1(this.m_scene.getMap().getPosition()))),ctx) {
-            // var rar = p.m_position.plus1(this.m_scene.getMap().getPosition());
-            if (!this.m_image.draw(frame, p.m_position.plus1(this.m_scene.getMap().getPosition()), ctx)) {
+                //if (!this.m_image.draw(frame, new gsCVector(p.m_position.plus1(this.m_scene.getMap().getPosition()))),ctx) {
+                // var rar = p.m_position.plus1(this.m_scene.getMap().getPosition());
+                if (!this.m_image.draw(frame, p.m_position.plus1(this.m_scene.getMap().getPosition()), ctx)) {
 
-                // kill particle
-
-                //delete m_particle_list[i];
-                this.m_particle_list[i] = null;//.removeIndex(i);
+                    // kill particle
+                    //delete m_particle_list[i];
+                    // this.m_particle_list[i] = null;//.removeIndex(i);
+                }
+                else {
+                    temp.push(p);
+                }
             }
         }
-
+        this.m_particle_list = temp;
+        temp = [];
         return true;
     }
 

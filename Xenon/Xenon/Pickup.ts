@@ -39,6 +39,8 @@ module Pickups {
 
     export class CClonePickup extends CPickup {
 
+        m_name = "PICKUP_CLONE";
+
         CLONE_FRAMES: number = 16;
 
         public getActorInfo() {
@@ -72,6 +74,8 @@ module Pickups {
 
     export class CDivePickup extends CPickup {
 
+        m_name = "PICKUP_DIVE";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DIVE_PICKUP);
@@ -92,6 +96,8 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CHomingMissilePickup extends CPickup {
+
+        m_name = "PICKUP_HOMINGMISSILE";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -114,6 +120,7 @@ module Pickups {
 
     export class CCloakPickup extends CPickup {
 
+        m_name = "PICKUP_CLOAK";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -136,6 +143,8 @@ module Pickups {
 
     export class CLaserPickup extends CPickup {
 
+        m_name = "PICKUP_LASER";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_LASER_PICKUP);
@@ -157,6 +166,8 @@ module Pickups {
 
     export class CScorePickup extends CPickup {
 
+        m_name = "PICKUP_SCOREBONUS";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SCORE_PICKUP);
@@ -177,6 +188,8 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CShieldPickup extends CPickup {
+
+        m_name = "PICKUP_SHIELD";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -204,6 +217,8 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CSpeedPickup extends CPickup {
+
+        m_name = "PICKUP_SPEEDUP";
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
@@ -234,6 +249,8 @@ module Pickups {
 
     export class CWeaponPickup extends CPickup {
 
+        m_name = "PICKUP_WEAPON";
+
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WEAPON_PICKUP);
@@ -257,6 +274,9 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CWingtipPickup extends CPickup {
+
+        m_name = "PICKUP_WINGTIP";
+
         WINGTIP_FRAMES: number = 8;
 
         public getActorInfo() {

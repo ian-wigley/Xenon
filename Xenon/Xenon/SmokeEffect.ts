@@ -5,6 +5,8 @@ import enums = require("Enums");
 
 class CSmokeEffect extends CParticleEffect {
 
+    m_name = "SmokeEffect";
+
     constructor() {
         super();
         this.Parent = this;
@@ -25,11 +27,12 @@ class CSmokeEffect extends CParticleEffect {
 
             var p: Particle = new Particle;
             p.m_position = this.getPosition();
-            p.m_velocity = new gsCVector(0.67, 0.8); //p.m_velocity = new gsCVector::polar(1.0f, m_random.getFloat(360)) + gsCVector(0.0, 1.0);
+            //p ->m_velocity = gsCVector::polar(1.0f, m_random.getFloat(360.f)) + gsCVector(0.f, 1.f);
+            var temp: gsCVector = new gsCVector(0, 0);
+            p.m_velocity = temp.polar(1.0, (Math.random() * 360.0) + 1.0);
             p.m_age = 0.0;
             p.m_lifetime = 1.0;
             p.m_mass = 1.0;
-
             return p;
         }
         else

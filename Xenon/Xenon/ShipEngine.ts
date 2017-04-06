@@ -7,13 +7,17 @@ class CShipEngine extends CEngine {
 
     constructor(theScene: CScene) {
         super(theScene);
-        this.m_name = "RusherGenerator";
+        this.m_name = "ShipEngine";
     }
+
+    //-------------------------------------------------------------
 
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SHIP_ENGINE);
     }
+
+    //-------------------------------------------------------------
 
     public draw(ctx: CanvasRenderingContext2D) {
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP &&

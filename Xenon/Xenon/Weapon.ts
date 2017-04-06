@@ -31,6 +31,8 @@ class CWeapon extends CActor {
         this.m_direction = enums.WeaponDirection.WEAPON_FORWARD;
         this.m_position = new gsCVector(0, 0);
         this.WEAPON_ONSCREEN_RADIUS = 8;
+        this.m_fire_timer = new gsCTimer();
+        this.m_autofire_timer = new gsCTimer();
         this.m_name = "Weapon";
     }
 
@@ -72,10 +74,10 @@ class CWeapon extends CActor {
 
                     if (this.m_autofire) {
                         if (controls.fire) {
-                            //if (m_autofire_timer.getTime() >= getActorInfo().m_autofire_delay)
+                            if (this.m_autofire_timer.getTime() >= this.getActorInfo().m_autofire_delay)
                             {
                                 this.do_fire = true;
-                                //m_autofire_timer.start();
+                                this.m_autofire_timer.start();
                             }
                         }
                         else {
@@ -86,21 +88,20 @@ class CWeapon extends CActor {
 
                     if (controls.firePressed || (controls.fire && !this.m_autofire)) {
                         if (this.m_delay_fire) {
-                            //if (m_fire_timer.getTime() >= getActorInfo().m_fire_delay)
-                            {
+                            if (this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay) {
                                 this.m_delay_fire = false;
                             }
                         }
                         if (!this.m_delay_fire) {
                             this.do_fire = true;
                             this.m_delay_fire = true;
-                            //m_fire_timer.start();
+                            this.m_fire_timer.start();
                             if (this.getActorInfo().m_autofire_delay == 0.0) {
                                 this.m_autofire = false;
                             }
                             else {
                                 this.m_autofire = true;
-                                //m_autofire_timer.start();
+                                this.m_autofire_timer.start();
                             }
                         }
                     }
@@ -116,12 +117,13 @@ class CWeapon extends CActor {
 
             case enums.ActorType.ACTOR_TYPE_ALIEN:
                 {
-                    //if (!m_delay_fire || m_fire_timer.getTime() >= getActorInfo().m_fire_delay)
+                    if (!this.m_delay_fire || this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay)
                     {
                         this.m_delay_fire = true;
-                        //    m_fire_timer.start();
+                        this.m_fire_timer.start();
                         // This needs investigating !!! Cause of all the new objects being created !!!
                         //this.fire();
+                        this.do_fire = true;
                     }
                 }
                 break;

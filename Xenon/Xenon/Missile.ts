@@ -10,18 +10,25 @@ class CMissile extends CBullet {
 
     constructor(theScene: CScene) {
         super();
+        this.m_name = "Missile";
     }
+
+    //-------------------------------------------------------------
 
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE);
     }
 
+    //-------------------------------------------------------------
+
     // Get the Speed Vector
     public getSpeed() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_MISSILE).m_speed.y;
     }
+
+    //-------------------------------------------------------------
 
     public update(controls: gsCControls)
     {

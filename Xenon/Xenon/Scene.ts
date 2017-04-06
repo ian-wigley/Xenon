@@ -320,7 +320,8 @@ class CScene {
 
     public removeDeadActors(): void {
         var temp_actor_list = [];
-        for (var i = this.m_actor_list.length - 1; i >= 0; i--) {
+        //for (var i = this.m_actor_list.length - 1; i >= 0; i--) {
+        for (var i = 0; i < this.m_actor_list.length; i++) {
             if (this.m_actor_list[i].isActive()) {
                 temp_actor_list.push(this.m_actor_list[i]);
             }

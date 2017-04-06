@@ -7,6 +7,7 @@ class CExplosion extends CActor {
 
     constructor() {
         super();
+        this.m_name = "explosion";
     }
 
     //-------------------------------------------------------------

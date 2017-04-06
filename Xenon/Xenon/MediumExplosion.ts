@@ -5,6 +5,7 @@ class CMediumExplosion extends CExplosion {
 
     constructor() {
         super();
+        this.m_name = "MediumExplosion";
     }
 
     //-------------------------------------------------------------

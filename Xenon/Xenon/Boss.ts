@@ -14,6 +14,7 @@ class CBoss extends CActor {
 
     constructor() {
         super();
+		this.m_name = "Boss";
     }
 
     //-------------------------------------------------------------

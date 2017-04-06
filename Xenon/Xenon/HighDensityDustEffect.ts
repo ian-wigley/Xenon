@@ -5,6 +5,7 @@ class CHighDensityDustEffect extends CDustEffect {
 
     constructor() {
         super();
+        this.m_name = "HighDensityDustEffect";
     }
 
     //-------------------------------------------------------------

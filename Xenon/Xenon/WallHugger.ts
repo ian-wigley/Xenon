@@ -120,66 +120,66 @@ class CWallHugger extends CAlien {
 
         switch (this.m_state) {
             case WallHuggerState.WALLHUGGER_STILL:
-                {
-                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
+                //{
+                this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
 
                    /* if (this.m_timer.getTime() >= this.WALLHUGGER_STILL_TIME)*/ {
 
-                        if (this.m_grade == WallHuggerGrade.WALLHUGGER_STATIC /*|| m_random.getInt(100) < 50*/) {
-                            this.m_state = WallHuggerState.WALLHUGGER_SHOOTING;
-                            this.m_fired = false;
-                        }
-                        else {
-                            this.m_state = WallHuggerState.WALLHUGGER_WALKING;
-                            //if (m_random.getInt(100) < 50) {
-                            this.setVelocity(new gsCVector(0.0, -this.WALLHUGGER_WALK_SPEED));
-                            //} else {
-                            this.setVelocity(new gsCVector(0.0, this.WALLHUGGER_WALK_SPEED));
-                            //}
-                        }
-
-                        this.m_timer.start();
-                    }
-                }
-                break;
-            case WallHuggerState.WALLHUGGER_WALKING:
-                {
-                    var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
-                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START + frame % this.WALLHUGGER_WALK_FRAMES);
-
-                    this.m_position.plusEquals(this.m_velocity);
-
-                    // cancel movement if off edge of wall
-                    if (!this.validWalkPosition()) {
-                        this.m_position.minusEquals(this.m_velocity);
-
-                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
-                        this.m_timer.start();
-                    }
-
-                    if (this.m_timer.getTime() >= this.WALLHUGGER_WALK_TIME)
-                    {
-                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
-                        this.m_timer.start();
-                    }
-                }
-                break;
-            case WallHuggerState.WALLHUGGER_SHOOTING:
-                {
-                    var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
-                    if (frame >= this.WALLHUGGER_SHOT_FRAMES) {
-                        this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
-                        this.m_state = WallHuggerState.WALLHUGGER_STILL;
-                        this.m_timer.start();
+                    if (this.m_grade == WallHuggerGrade.WALLHUGGER_STATIC /*|| m_random.getInt(100) < 50*/) {
+                        this.m_state = WallHuggerState.WALLHUGGER_SHOOTING;
+                        this.m_fired = false;
                     }
                     else {
-                        this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_SHOT_START + frame);
-                        if (!this.m_fired && frame >= this.WALLHUGGER_LAUNCH_FRAME) {
-                            this.m_weapon.fire();
-                            this.m_fired = true;
-                        }
+                        this.m_state = WallHuggerState.WALLHUGGER_WALKING;
+                        //if (m_random.getInt(100) < 50) {
+                        this.setVelocity(new gsCVector(0.0, -this.WALLHUGGER_WALK_SPEED));
+                        //} else {
+                        this.setVelocity(new gsCVector(0.0, this.WALLHUGGER_WALK_SPEED));
+                        //}
+                    }
+
+                    this.m_timer.start();
+                }
+                //}
+                break;
+            case WallHuggerState.WALLHUGGER_WALKING:
+                //{
+                var frame: number = Math.floor(this.m_timer.getTime() * this.getActorInfo().m_anim_rate);
+                //var this.frame = (this.frame + 1) % num_frames;
+                this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START + frame % this.WALLHUGGER_WALK_FRAMES);
+
+                this.m_position.plusEquals(this.m_velocity);
+
+                // cancel movement if off edge of wall
+                if (!this.validWalkPosition()) {
+                    this.m_position.minusEquals(this.m_velocity);
+
+                    this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                    this.m_timer.start();
+                }
+
+                if (this.m_timer.getTime() >= this.WALLHUGGER_WALK_TIME) {
+                    this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                    this.m_timer.start();
+                }
+                //}
+                break;
+            case WallHuggerState.WALLHUGGER_SHOOTING:
+                //{
+                var frame: number = Math.floor(this.m_timer.getTime() * this.getActorInfo().m_anim_rate);
+                if (frame >= this.WALLHUGGER_SHOT_FRAMES) {
+                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
+                    this.m_state = WallHuggerState.WALLHUGGER_STILL;
+                    this.m_timer.start();
+                }
+                else {
+                    this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_SHOT_START + frame);
+                    if (!this.m_fired && frame >= this.WALLHUGGER_LAUNCH_FRAME) {
+                        this.m_weapon.fire();
+                        this.m_fired = true;
                     }
                 }
+                //}
                 break;
         }
         return true;

@@ -80,7 +80,8 @@ class CActor {
     //-------------------------------------------------------------
 
     public setPosition(position: gsCVector) {
-        this.m_position = position;
+        //this.m_position = position;
+        this.m_position = new gsCVector(position.x, position.y);
     }
 
     //-------------------------------------------------------------

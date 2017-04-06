@@ -5,6 +5,7 @@ class CBigExplosion extends CExplosion {
 
     constructor() {
         super();
+		this.m_name = "BigExplosion";
     }
 
     //-------------------------------------------------------------

@@ -54,9 +54,9 @@ class CRusher extends CAlien {
 
             // fire weapon towards ship
             if (ship != null && this.getPosition().Y < ship.getPosition().Y) {
-                //var dir: gsCVector = ship.getPosition().minus(this.getPosition());
-                //dir.normalize();
-                ////this.m_weapon.setDirection(dir);
+                var dir: gsCVector = ship.getPosition().minus(this.getPosition());
+                dir.normalize();
+                this.m_weapon.setDirectionS(dir);
             }
         }
 

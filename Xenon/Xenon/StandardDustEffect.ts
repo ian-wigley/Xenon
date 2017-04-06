@@ -3,6 +3,7 @@ import enums = require("Enums");
 
 class CStandardDustEffect extends CDustEffect {
 
+    m_name = "StandardDustEffect";
     constructor() {
         super();
     }
