@@ -6,7 +6,6 @@ import gsCRect = require("Rectangle");
 
 class gsScoreItem {
     m_score: number;
-    //char m_name[gsSCORE_NAME_SIZE];
     m_name: Array<string> = new Array<string>();
 }
 
@@ -64,14 +63,12 @@ class gsCScoreTable {
     //-------------------------------------------------------------
 
     public setSize(size: number): void {
-        //    destroy();
         this.m_score_list = [];
 
         for (var i = 0; i < size; i++) {
             var si: gsScoreItem = new gsScoreItem();
             si.m_score = 0;
-            //memset(si ->m_name, '.', gsSCORE_NAME_SIZE);
-            this.m_score_list.push(si);//.addItem(si);
+            this.m_score_list.push(si);
         }
     }
 
@@ -82,15 +79,15 @@ class gsCScoreTable {
             if (score > this.m_score_list[i].m_score) {
                 var last: number = this.m_score_list.length - 1;
                 var si: gsScoreItem = this.m_score_list[last];
-                this.m_score_list.pop();//.removeIndex(last);
+                this.m_score_list.pop();
                 si.m_score = score;
                 for (var c = 0; c < this.gsSCORE_NAME_SIZE; c++) {
-                    if (c < name.length)//strlen(name))
+                    if (c < name.length)
                         si.m_name[c] = name[c];
                     else
                         si.m_name[c] = '.';
                 }
-                this.m_score_list[i] = si;//.insertItem(i, si);
+                this.m_score_list[i] = si;
                 return i;
             }
         }
@@ -101,14 +98,16 @@ class gsCScoreTable {
 
     public draw(font: gsCFont, ctx: CanvasRenderingContext2D): boolean {
 
-        //    if (!m_font)
-        //        return false;
+        if (!font) {
+            return false;
+        }
 
         //    gsCScreen * screen = gsCApplication::getScreen();
         var screen = new gsCScreen();
 
-        //    if (!screen)
-        //        return false;
+        if (!screen) {
+            return false;
+        }
 
         var flash: boolean = this.m_flash_timer.getTime() < 0.1;
 
@@ -116,36 +115,26 @@ class gsCScoreTable {
             this.m_flash_timer.start();
         }
 
-        //    char buffer[100];
         var buffer: string;
 
         for (var i = 0; i < this.m_score_list.length; i++) {
 
             var item: gsScoreItem = this.m_score_list[i];
             buffer = item.m_score.toString();
-            //        sprintf(buffer, "%8i  ", item ->m_score);
-            //        int p = strlen(buffer);
             var p = buffer.length;
+            buffer += " ";
 
             for (var c = 0; c < this.gsSCORE_NAME_SIZE; c++) {
                 if (i == this.m_current_item && c == this.m_current_letter && !flash) {
-                    buffer[p++] = ' ';
+                    buffer += item.m_name[c];
                 } else {
-                    buffer[p++] = item.m_name[c];
+                    buffer += item.m_name[c];
                 }
             }
-            //}
-
-            //        buffer[p++] = 0;
 
             if (i == this.m_current_item) {
                 var size: gsCPoint = this.m_font.getStringSize(buffer);
                 var y = this.m_position.Y + this.m_spacing.Y * i;
-                //            screen.drawSolidRect(gsCRect((screen ->getSize().getX() - size.getX()) / 2 - 1,
-                //                y - 1,
-                //                (screen ->getSize().getX() + size.getX()) / 2 + 1,
-                //                y + size.getY() + 1),
-                //                gsCColour(128, 128, 128));
                 screen.drawSolidRect(new gsCRect((screen.m_rect.Right - size.X) / 2 - 1, y - 1, size.X + 2, size.Y + 2), "gray", ctx);
             }
 
@@ -184,7 +173,7 @@ class gsCScoreTable {
             if (letter == '.')
                 letter = 'A';
             else {
-                count++;//letter++;
+                count++;
                 if (letter > 'Z')
                     letter = '.';
             }
@@ -193,7 +182,7 @@ class gsCScoreTable {
             if (letter == '.')
                 letter = 'Z';
             else {
-                count--;//letter--;
+                count--;
                 if (letter < 'A')
                     letter = '.';
             }
