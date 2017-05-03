@@ -59,7 +59,7 @@ import CBossMouth = require("BossMouth");
 import CBossEye = require("BossEye");
 import CBossControl = require("BossControl");
 import enums = require("Enums");
-
+import CApplication = require("Application");
 
 enum AlienType {
     WALLHUGGER,				// 0
@@ -124,6 +124,7 @@ class CLevel {
     private m_blocks: BLKSTR[];
     private m_imageTiles: HTMLImageElement;
     private m_image: gsCTiledImage;
+    private m_application: CApplication;
 
     loaded: boolean = false;
 
@@ -136,8 +137,10 @@ class CLevel {
     CHUNK_BODY: number = ("B".charCodeAt(0) << 24) + ("O".charCodeAt(0) << 16) + ("D".charCodeAt(0) << 8) + ("Y".charCodeAt(0));
     CHUNK_LYR1: number = ("L".charCodeAt(0) << 24) + ("Y".charCodeAt(0) << 16) + ("R".charCodeAt(0) << 8) + ("1".charCodeAt(0));
 
-    constructor(imageTiles: HTMLImageElement) {
+    constructor(imageTiles: HTMLImageElement, application: CApplication) {
         this.m_imageTiles = imageTiles;
+        this.m_application = application;
+
         this.m_back_layer = new gsCMap();
         this.m_front_layer = new gsCMap();
 
@@ -223,20 +226,18 @@ class CLevel {
                     break;
 
                 case this.CHUNK_BGFX:
-                    {
-                        ////gsCFile::setDirectory(graphics_directory);
-                        ////    return error();
-                        this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
-                        console.log("Creating tile for : " + this.m_image.Image.id);
-                        this.m_image.setTileSize(new Point(32, 32));
-                        this.m_image.enableColourKey();//gsCColour(gsMAGENTA));
+                    ////gsCFile::setDirectory(graphics_directory);
+                    ////    return error();
+                    this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
+                    console.log("Creating tile for : " + this.m_image.Image.id);
+                    this.m_image.setTileSize(new Point(32, 32));
+                    this.m_image.enableColourKey();//gsCColour(gsMAGENTA));
 
-                        this.m_back_layer.setImage(this.m_image);
-                        this.m_front_layer.setImage(this.m_image);
+                    this.m_back_layer.setImage(this.m_image);
+                    this.m_front_layer.setImage(this.m_image);
 
-                        loaded_tiles = true;
-                        break;
-                    }
+                    loaded_tiles = true;
+                    break;
                 case this.CHUNK_BODY:
                 case this.CHUNK_LYR1:
                     {
@@ -514,9 +515,7 @@ class CLevel {
         this.m_boss_active = false;
         this.m_scan_y = Math.floor((-this.m_front_layer.getPosition().Y - 1 + 480) / this.m_image.getTileSize().Y);	//TEMP
 
-        // hide special tiles
-        // unhide everything else
-
+        // hide special tiles, unhide everything else
         for (var x = 0; x < this.m_front_layer.getSize().X; x++) {
             for (var y = 0; y < this.m_front_layer.getSize().Y; y++) {
                 var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, y));
@@ -602,9 +601,6 @@ class CLevel {
                     var size = mt.getUserData(3);
 
                     var pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
-
-                    //pos += new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0);
-                    //pos.add(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
                     pos.plusEquals(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
 
                     switch (id) {
@@ -732,142 +728,123 @@ class CLevel {
                                     break;
 
                                 case AlienType.LONER:
-                                    {
-                                        var l: Loner.CLoner = null;
+                                    var l: Loner.CLoner = null;
 
-                                        switch (grade) {
-                                            case 0:
-                                                l = new Loner.CStandardLoner();
-                                                console.log("CStandardLoner");
-                                                break;
-                                            case 1:
-                                                l = new Loner.CMediumLoner();
-                                                console.log("CMediumLoner");
-                                                break;
-                                            case 2:
-                                                l = new Loner.CArmouredLoner();
-                                                console.log("CArmouredLoner");
-                                                break;
-                                        }
+                                    switch (grade) {
+                                        case 0:
+                                            l = new Loner.CStandardLoner();
+                                            console.log("CStandardLoner");
+                                            break;
+                                        case 1:
+                                            l = new Loner.CMediumLoner();
+                                            console.log("CMediumLoner");
+                                            break;
+                                        case 2:
+                                            l = new Loner.CArmouredLoner();
+                                            console.log("CArmouredLoner");
+                                            break;
+                                    }
 
-                                        if (l != null) {
-                                            scene.addActor(l);
-                                            l.setPosition(pos);
-                                            l.setVelocity(new gsCVector(0.0, 0.5));
-                                            l.activate();
-                                        }
+                                    if (l != null) {
+                                        scene.addActor(l);
+                                        l.setPosition(pos);
+                                        l.setVelocity(new gsCVector(0.0, 0.5));
+                                        l.activate();
                                     }
                                     break;
 
                                 case AlienType.HOMER:
-                                    {
-                                        var h: CHomer = new CHomer();
-                                        console.log("HOMER");
-                                        scene.addActor(h);
-                                        h.setPosition(pos);
-                                        h.setVelocity(new gsCVector(0.0, 0.5));
-                                        h.activate();
-                                    }
+                                    var h: CHomer = new CHomer();
+                                    console.log("HOMER");
+                                    scene.addActor(h);
+                                    h.setPosition(pos);
+                                    h.setVelocity(new gsCVector(0.0, 0.5));
+                                    h.activate();
                                     break;
 
                                 case AlienType.POD:
-                                    {
-                                        var pO: CPod = new CPod();
-                                        console.log("POD");
-                                        scene.addActor(pO);
-                                        pO.setPosition(pos);
-                                        pO.setVelocity(new gsCVector(0.0, 0.0));
-                                        pO.activate();
-                                    }
+                                    var pO: CPod = new CPod();
+                                    console.log("POD");
+                                    scene.addActor(pO);
+                                    pO.setPosition(pos);
+                                    pO.setVelocity(new gsCVector(0.0, 0.0));
+                                    pO.activate();
                                     break;
 
                                 case AlienType.RUSHER:
-                                    {
-                                        var r: CRusher = new CRusher();
-                                        console.log("RUSHER");
-                                        scene.addActor(r);
-                                        r.setPosition(pos);
-                                        r.setVelocity(new gsCVector(0.0, 2.0));
-                                        r.activate();
-                                    }
+                                    var r: CRusher = new CRusher();
+                                    console.log("RUSHER");
+                                    scene.addActor(r);
+                                    r.setPosition(pos);
+                                    r.setVelocity(new gsCVector(0.0, 2.0));
+                                    r.activate();
                                     break;
 
                                 case AlienType.WALLHUGGER:
-                                    {
-                                        var w: CWallHugger = new CWallHugger();
-                                        console.log("WallHugger");
-                                        scene.addActor(w);
-                                        w.setPosition(pos);
-                                        w.setVelocity(new gsCVector(0.0, 0.0));
-                                        w.activate();
+                                    var w: CWallHugger = new CWallHugger();
+                                    console.log("WallHugger");
+                                    scene.addActor(w);
+                                    w.setPosition(pos);
+                                    w.setVelocity(new gsCVector(0.0, 0.0));
+                                    w.activate();
 
-                                        switch (grade) {
-                                            case 0:
-                                                w.setGrade(enums.WallHuggerGrade.WALLHUGGER_STATIC);
-                                                break;
-                                            case 1:
-                                                w.setGrade(enums.WallHuggerGrade.WALLHUGGER_MOVING);
-                                                break;
-                                        }
+                                    switch (grade) {
+                                        case 0:
+                                            w.setGrade(enums.WallHuggerGrade.WALLHUGGER_STATIC);
+                                            break;
+                                        case 1:
+                                            w.setGrade(enums.WallHuggerGrade.WALLHUGGER_MOVING);
+                                            break;
                                     }
                                     break;
 
                                 case AlienType.DRONE_GENERATOR:
-                                    {
-                                        var d: CDroneGenerator = new CDroneGenerator();
-                                        console.log("DroneGenerator");
-                                        scene.addActor(d);
-                                        d.setPosition(pos);
-                                        d.activate();
-                                    }
+                                    var d: CDroneGenerator = new CDroneGenerator(this.m_application);
+                                    console.log("DroneGenerator");
+                                    scene.addActor(d);
+                                    d.setPosition(pos);
+                                    d.activate();
                                     break;
 
                                 case AlienType.REVERSE_RUSHER:
-                                    {
-                                        var r: CRusher = new CRusher();
-                                        console.log("REVERSE_RUSHER");
-                                        scene.addActor(r);
-                                        //r.setPosition(pos + new gsCVector(0.0, (this.screen.getSize().y + m_image.getTileSize().Y));
-                                        r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
-                                        r.setVelocity(new gsCVector(0.0, -4.0));
-                                        r.activate();
-                                    }
+                                    var r: CRusher = new CRusher();
+                                    console.log("REVERSE_RUSHER");
+                                    scene.addActor(r);
+                                    r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
+                                    r.setVelocity(new gsCVector(0.0, -4.0));
+                                    r.activate();
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_LEFT:
-                                    {
-                                        var rG: CRusherGenerator = new CRusherGenerator();
-                                        console.log("RusherGenerator");
-                                        scene.addActor(rG);
-                                        rG.setPosition(pos);
-                                        rG.setVelocity(new gsCVector(-2.0, 0.0));
-                                        rG.activate();
-                                    }
+                                    var rG: CRusherGenerator = new CRusherGenerator();
+                                    console.log("RusherGenerator");
+                                    scene.addActor(rG);
+                                    rG.setPosition(pos);
+                                    rG.setVelocity(new gsCVector(-2.0, 0.0));
+                                    rG.activate();
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_RIGHT:
-                                    {
-                                        rG = new CRusherGenerator();
-                                        console.log("RusherGenerator");
-                                        scene.addActor(rG);
-                                        rG.setPosition(pos);
-                                        rG.setVelocity(new gsCVector(2.0, 0.0));
-                                        rG.activate();
-                                    }
+                                    rG = new CRusherGenerator();
+                                    console.log("RusherGenerator");
+                                    scene.addActor(rG);
+                                    rG.setPosition(pos);
+                                    rG.setVelocity(new gsCVector(2.0, 0.0));
+                                    rG.activate();
                                     break;
 
                                 case AlienType.ORGANIC_GUN:
-                                    {
-                                        var oG: COrganicGun = new COrganicGun();
-                                        console.log("OrganicGun");
-                                        scene.addActor(oG);
-                                        oG.setPosition(pos);
-                                        oG.setVelocity(new gsCVector(0.0, 0.0));
-                                        oG.activate();
-                                        if (grade == 0)
-                                            oG.setDirection(1);
-                                        else
-                                            oG.setDirection(-1);
+                                    var oG: COrganicGun = new COrganicGun();
+                                    console.log("OrganicGun");
+                                    scene.addActor(oG);
+                                    oG.setPosition(pos);
+                                    oG.setVelocity(new gsCVector(0.0, 0.0));
+                                    oG.activate();
+                                    if (grade == 0) {
+                                        oG.setDirection(1);
+                                    }
+                                    else {
+                                        oG.setDirection(-1);
                                     }
                                     break;
 
@@ -894,54 +871,45 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_MOUTH:
-                            {
-                                var m: CBossMouth = new CBossMouth();
-                                console.log("BossMouth");
-                                scene.addActor(m);
-                                m.setPosition(pos);
-                                m.setVelocity(new gsCVector(0.0, 0.0));
-                                m.activate();
-                            }
+                            var m: CBossMouth = new CBossMouth();
+                            console.log("BossMouth");
+                            scene.addActor(m);
+                            m.setPosition(pos);
+                            m.setVelocity(new gsCVector(0.0, 0.0));
+                            m.activate();
                             break;
-                        case TileId.ID_BOSS_EYE:
-                            {
-                                var e: CBossEye = new CBossEye();
-                                console.log("BossEye");
-                                e.setEyeNumber(type);
-                                scene.addActor(e);
-                                switch (type) {
-                                    case 0:
-                                    case 1:
-                                    case 4:
-                                    case 5:
-                                        e.setPosition(pos);
-                                        break;
-                                    case 2:
-                                        //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        //e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
-                                        e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
-                                        break;
-                                    case 3:
-                                        //e.setPosition(pos + new gsCVector(15.0, 20.0));
-                                        //e.setPosition(new gsCVector(0, 0).plus(pos, new gsCVector(15.0, 20.0)));
-                                        e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
-                                        break;
-                                }
-                                e.setVelocity(new gsCVector(0.0, 0.0));
-                                e.activate();
-                            }
-                            break;
-                        case TileId.ID_BOSS_CONTROL:
-                            {
-                                var bC: CBossControl = new CBossControl();
-                                console.log("BossControl");
-                                scene.addActor(bC);
-                                bC.setPosition(pos);
-                                bC.setVelocity(new gsCVector(0.0, 0.0));
-                                bC.activate();
 
-                                this.m_boss_active = true;
+                        case TileId.ID_BOSS_EYE:
+                            var e: CBossEye = new CBossEye();
+                            console.log("BossEye");
+                            e.setEyeNumber(type);
+                            scene.addActor(e);
+                            switch (type) {
+                                case 0:
+                                case 1:
+                                case 4:
+                                case 5:
+                                    e.setPosition(pos);
+                                    break;
+                                case 2:
+                                    e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
+                                    break;
+                                case 3:
+                                    e.setPosition(pos.plus1(new gsCVector(15.0, 20.0)));
+                                    break;
                             }
+                            e.setVelocity(new gsCVector(0.0, 0.0));
+                            e.activate();
+                            break;
+
+                        case TileId.ID_BOSS_CONTROL:
+                            var bC: CBossControl = new CBossControl();
+                            console.log("BossControl");
+                            scene.addActor(bC);
+                            bC.setPosition(pos);
+                            bC.setVelocity(new gsCVector(0.0, 0.0));
+                            bC.activate();
+                            this.m_boss_active = true;
                             break;
                     }
                 }

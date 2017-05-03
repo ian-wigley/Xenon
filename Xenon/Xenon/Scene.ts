@@ -57,7 +57,7 @@ class CScene {
         this.m_actor_list = [];
         this.m_collision_list = new gsCCollisionList();
         //m_screen = new gsCScreen();
-        this.lev = new CLevel(image);
+        this.lev = new CLevel(image, application);
     }
 
     //-------------------------------------------------------------
@@ -260,9 +260,9 @@ class CScene {
             !actor2.isActive())
             return;
 
-        //if (actor1.name == "bullet") {
-        //    var breakHere = true;
-        //}
+        if (actor1.name == "laser") {
+            var breakHere = true;
+        }
 
         actor1.onCollisionWithActor(actor2);
     }

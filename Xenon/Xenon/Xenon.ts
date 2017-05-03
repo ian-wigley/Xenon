@@ -6,7 +6,7 @@ import CActorInfoList = require("ActorInfoList");
 import CGameState = require("GameState");
 import CPlayGameState = require("PlayGameState");
 import CMainMenuState = require("MainMenuState");
-import CLevel = require("Level");
+//import CLevel = require("Level");
 import COptions = require("Options");
 import CApplication = require("Application");
 
@@ -25,7 +25,7 @@ class Xenon {
     private m_scene: CScene;
     private m_stars: CStarfield;
     private m_listOfActors: CActorInfoList;
-    private m_level: CLevel;
+    //private m_level: CLevel;
     private m_state: CGameState;
     private m_app: CApplication;
     private m_options: COptions;

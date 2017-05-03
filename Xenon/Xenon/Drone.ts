@@ -1,12 +1,11 @@
-﻿import CAlien = require("Alien");
+﻿import CApplication = require("Application");
+import CAlien = require("Alien");
 import CDroneGenerator = require("DroneGenerator");
 import enums = require("Enums");
 import Pickup = require("Pickup");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CPlayGameState = require("PlayGameState");
-
-
 import CExplosion = require("Explosion");
 import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
@@ -20,11 +19,12 @@ class CDrone extends CAlien {
     //private m_timer:number = 0.0;
     private m_playGameState: CPlayGameState;
 
-    constructor(generator?: CDroneGenerator) {
+    constructor(application: CApplication, generator?: CDroneGenerator) {
         super();
+        this.m_playGameState = application.playStateInstance;
         this.m_generator = generator;
         this.m_phase = 0.0;
-        this.m_name = "Drone";
+        this.m_name = "Drone";       
     }
 
     //-------------------------------------------------------------

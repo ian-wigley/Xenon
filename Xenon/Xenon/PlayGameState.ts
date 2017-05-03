@@ -166,15 +166,15 @@ class CPlayGameState extends CGameState {
         this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
 
         //#ifdef _PROFILING
-        this.m_ship.attachClone(0);
-        this.m_ship.attachClone(1);
-        this.m_ship.attachWingtip(0);
-        this.m_ship.attachWingtip(1);
-        this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
-        this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
-        this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
-        this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
-        this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //this.m_ship.attachClone(0);
+        //this.m_ship.attachClone(1);
+        //this.m_ship.attachWingtip(0);
+        //this.m_ship.attachWingtip(1);
+        //this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //this.m_ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+        //this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
         //#endif
 
         ////    playSample(SAMPLE_PLAYER_CREATED,m_ship->getPosition().getX());

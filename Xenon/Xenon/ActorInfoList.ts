@@ -70,7 +70,7 @@ class CActorInfoList {
         this.m_info_list.push(new ActorInfo("SmokeEffect", enums.ActorType.ACTOR_TYPE_EFFECT, "smoke", 32, 32, 16, 16, 8, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("Label", enums.ActorType.ACTOR_TYPE_LABEL, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         // generators
-        this.m_info_list.push(new ActorInfo("DroneGenerator", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("DroneGenerator", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 30, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("RusherGenerator", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("SporeGenerator", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         // boss
