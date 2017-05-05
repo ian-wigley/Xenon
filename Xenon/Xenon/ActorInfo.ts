@@ -19,10 +19,9 @@ class ActorInfo {
     public m_autofire_delay: number;		// delay between shots when using autofire
 
     // for bullets only
-    //public int[]m_energy = new int[(int)BulletGrade.BULLET_GRADES];//[BULLET_GRADES];		// energy for each grade of bullet
-    ////public float[] m_speed = new float[(int)BulletGrade.BULLET_GRADES];//[BULLET_GRADES];	// movement speed
+    //public m_speed = [];// movement speed
     public m_speed: gsCVector;
-    public m_energy = []; //: Array<enums.BulletGrade..BulletGrade.BULLET_GRADES>
+    public m_energy = []; // bullet energy
 
     constructor(name: string, actorType: enums.ActorType, filename: string, tile_width: number, tile_height: number, hotspot_x: number, hotspot_y: number, anirate: number, initial_shield: number, kill_bonus: number, speed: gsCVector) {
         this.m_name = name;
@@ -37,14 +36,15 @@ class ActorInfo {
         this.m_kill_bonus = kill_bonus;
         //m_fire_delay 	=	fire_delay;
         //m_autofire_delay 	=	autofire_delay;
-        //this.m_energy =	energy;//[BULLET_GRADES];
-        this.m_speed = speed;//[BULLET_GRADES];
+        this.m_speed = speed;
 
-        this.m_energy.push(enums.BulletGrade.BULLET_STANDARD);
-        this.m_energy.push(enums.BulletGrade.BULLET_MEDIUM);
-        this.m_energy.push(enums.BulletGrade.BULLET_BEST);
-        this.m_energy.push(enums.BulletGrade.BULLET_GRADES);
+        this.m_energy.push(1);
+        this.m_energy.push(2);
+        this.m_energy.push(3);
 
+        //this.m_speed.push(1);
+        //this.m_speed.push(2);
+        //this.m_speed.push(3);
     }
 }
 export = ActorInfo;

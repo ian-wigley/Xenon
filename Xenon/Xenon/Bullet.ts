@@ -11,7 +11,7 @@ class CBullet extends CActor {
 
     constructor() {
         super();
-        this.m_grade = enums.BulletGrade.BULLET_BEST;//.BULLET_STANDARD;
+        this.m_grade = enums.BulletGrade.BULLET_STANDARD;
         this.m_name = "bullet";
     }
 
@@ -23,7 +23,6 @@ class CBullet extends CActor {
 
     //-------------------------------------------------------------
 
-    //public draw(ctx: CanvasRenderingContext2D): boolean {
     public Draw(ctx: CanvasRenderingContext2D): boolean {
         if (!super.Draw(ctx)) {
             return false;
