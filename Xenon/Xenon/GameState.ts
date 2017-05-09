@@ -52,7 +52,7 @@ class CGameState {
 
     //-------------------------------------------------------------
 
-    constructor(font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?:CApplication, ctx?: CanvasRenderingContext2D) {
+    constructor(font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D) {
         this.m_font8x8 = font8x8;
         this.m_font16x16 = font16x16;
         this.m_app = app;
@@ -287,11 +287,11 @@ class CGameState {
     //-------------------------------------------------------------
     // play sample with stereo position based on screen x coordinate
 
-    public playSample(sample /*GameSampleType*/, x:number): void{
-    //    if (Options.getOption(OPTION_SOUNDFX)) {
-    //        int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
-    //        m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
-    //    }
+    public playSample(sample /*GameSampleType*/, x: number): void {
+        //    if (Options.getOption(OPTION_SOUNDFX)) {
+        //        int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
+        //        m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
+        //    }
     }
 
     //-------------------------------------------------------------
@@ -428,9 +428,6 @@ class CGameState {
         this.m_score_table.setSpacing(new gsCPoint(0, 20));
         this.m_score_table.setFont(this.m_medium_font);
 
-        //   gsCFile::setDirectory(DIRECTORY_ROOT);
-
-        //   if (!gsCFile::exists(HISCORE_FILENAME)) {
         this.m_score_table.insertScore(5000000, "JMP");
         this.m_score_table.insertScore(4500000, "EJB");
         this.m_score_table.insertScore(4000000, "MJM");
@@ -441,39 +438,11 @@ class CGameState {
         this.m_score_table.insertScore(1500000, "DC");
         this.m_score_table.insertScore(1000000, "JK");
         this.m_score_table.insertScore(500000, "SW");
-        //   }
-        //else {
-        //       gsCIniFile file;
-
-        //       file.open(HISCORE_FILENAME);
-        //       for (int i = 0; i < NUMBER_OF_SCORE_ENTRIES; i++) {
-        //           char buf[10];
-        //           sprintf(buf, "Entry%i", i);
-        //           int score = file.readInt(buf, "Score", 0);
-        //           const char *name = file.readString(buf, "Name", "JMP");
-        //           m_score_table.insertScore(score, name);
-        //       }
-        //       file.close();
-        //   }
     }
 
     //-------------------------------------------------------------
 
     public saveScoreTable(): boolean {
-        //gsCFile::setDirectory(DIRECTORY_ROOT);
-        //gsCIniFile file;
-        //if (!file.open(HISCORE_FILENAME))
-        //    return false;
-        //for (int i = 0; i < NUMBER_OF_SCORE_ENTRIES; i++) {
-        //    char buf[10];
-        //    sprintf(buf, "Entry%i", i);
-        //    file.writeInt(buf, "Score", m_score_table.getScore(i));
-        //    char name[gsSCORE_NAME_SIZE + 1];
-        //    memcpy(name, m_score_table.getName(i), gsSCORE_NAME_SIZE);
-        //    name[gsSCORE_NAME_SIZE] = 0;
-        //    file.writeString(buf, "Name", name);
-        //}
-        //file.close();
         return true;
     }
 

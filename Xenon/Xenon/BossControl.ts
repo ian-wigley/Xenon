@@ -97,6 +97,7 @@ class CBossControl extends CBoss {
             this.m_is_started = true;
             this.m_yscroll = 0;
             //this.m_script_pointer = this.m_loop_point = this.m_script;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
             this.m_active_eyes = this.BOSS_EYES_TOTAL;
             this.interpretScript();
         }
@@ -114,7 +115,7 @@ class CBossControl extends CBoss {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-    //public update(controls: gsCControls): boolean {
+        //public update(controls: gsCControls): boolean {
         if (this.m_state == BossState.BOSS_DEAD)
             return true;
 
@@ -147,11 +148,14 @@ class CBossControl extends CBoss {
     //-------------------------------------------------------------
 
     public interpretScript(): void {
-        if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
+        //if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
+        if (this.m_script_pointer.m_state == BossState.BOSS_BEGIN_LOOP) {
             //this.m_loop_point = ++m_script_pointer;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP) {
             //    this.m_script_pointer = this.m_loop_point;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_TRIGGER) {
             switch (this.m_script_pointer.m_param) {
@@ -174,27 +178,32 @@ class CBossControl extends CBoss {
         if (this.m_script_pointer.m_state == BossState.BOSS_ROAR) {
             //    CGameState::playSample(SAMPLE_ROAR);
             //    m_script_pointer++;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
             //    CGameState::playSample(SAMPLE_SNORT);
             //    m_script_pointer++;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_OPEN_EYES) {
             //    CBossEye::setState(BOSSEYE_OPEN);
             //    m_script_pointer++;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SHUT_EYES) {
             //    CBossEye::setState(BOSSEYE_SHUT);
             //    m_script_pointer++;
+            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         this.m_counter = this.m_script_pointer.m_param;
         this.m_state = this.m_script_pointer.m_state;
 
         //m_script_pointer++;
+        this.m_script_pointer = this.m_script[this.m_script_pointer_count];
     }
 
     //-------------------------------------------------------------

@@ -32,7 +32,7 @@ class CUpgrade extends CActor {
 
     public activate() {
         if (!this.isActive()) {
-            this.setWeapon(enums.WeaponType.MISSILE_WEAPON);
+            this.setWeapon(enums.WeaponType.MISSILE_WEAPON, 0);
         }
         return super.activate();
     }
