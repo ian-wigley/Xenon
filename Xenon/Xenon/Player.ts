@@ -49,6 +49,12 @@ class CPlayer {
 
     //-------------------------------------------------------------
 
+    public setLives(): void {
+        this.m_lives = this.INITIAL_LIVES;
+    }
+
+    //-------------------------------------------------------------
+
     public getLives(): number {
         return this.m_lives;
     }

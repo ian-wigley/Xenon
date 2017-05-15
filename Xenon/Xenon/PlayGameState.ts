@@ -129,6 +129,9 @@ class CPlayGameState extends CGameState {
 
         this.m_state = this;
 
+        // Reset the number of lives
+        this.getPlayer().setLives();
+
         return true;
     }
 
@@ -422,7 +425,7 @@ class CPlayGameState extends CGameState {
                 this.m_fast_forward = false;
                 if (this.m_game_end_timer.getTime() >= 0) { // 1.0) { TEMP !!
                     if (this.m_demo_mode != enums.DemoMode.DEMO_OFF) {
-                        this.setDemoMode(enums.DemoMode.DEMO_OFF);
+                        //this.setDemoMode(enums.DemoMode.DEMO_OFF);
 
                         this.resetGame();
 
