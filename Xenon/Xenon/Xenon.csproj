@@ -44,6 +44,7 @@
     <TypeScriptCompile Include="Controlmenustate.ts" />
     <TypeScriptCompile Include="Controls.ts" />
     <TypeScriptCompile Include="CreditsState.ts" />
+    <TypeScriptCompile Include="DemoRecorder.ts" />
     <TypeScriptCompile Include="Drone.ts" />
     <TypeScriptCompile Include="DroneGenerator.ts" />
     <TypeScriptCompile Include="DustEffect.ts" />
@@ -75,6 +76,7 @@
     <TypeScriptCompile Include="MenuOptionList.ts" />
     <TypeScriptCompile Include="Missile.ts" />
     <TypeScriptCompile Include="MissileWeapon.ts" />
+    <TypeScriptCompile Include="Music.ts" />
     <TypeScriptCompile Include="Options.ts" />
     <TypeScriptCompile Include="OptionsMenuState.ts" />
     <TypeScriptCompile Include="OrganicGun.ts" />
@@ -90,6 +92,7 @@
     <TypeScriptCompile Include="RetroEngine.ts" />
     <TypeScriptCompile Include="Rusher.ts" />
     <TypeScriptCompile Include="RusherGenerator.ts" />
+    <TypeScriptCompile Include="Sample.ts" />
     <TypeScriptCompile Include="Scene.ts" />
     <TypeScriptCompile Include="ScoreEntryState.ts" />
     <TypeScriptCompile Include="ScoreTable.ts" />
@@ -98,6 +101,7 @@
     <TypeScriptCompile Include="ShipEngine.ts" />
     <TypeScriptCompile Include="SmallExplosion.ts" />
     <TypeScriptCompile Include="SmokeEffect.ts" />
+    <TypeScriptCompile Include="SoundSystem.ts" />
     <TypeScriptCompile Include="Spinner.ts" />
     <TypeScriptCompile Include="SpinnerWeapon.ts" />
     <TypeScriptCompile Include="Spore.ts" />

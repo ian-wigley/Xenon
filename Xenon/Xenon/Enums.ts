@@ -120,6 +120,14 @@ module enu {
 
     //-------------------------------------------------------------
 
+    export enum BossEyeState {
+        BOSSEYE_OPEN,
+        BOSSEYE_CLOSING,
+        BOSSEYE_SHUT
+    }
+
+    //-------------------------------------------------------------
+
     export enum BulletGrade {
         BULLET_STANDARD,
         BULLET_MEDIUM,

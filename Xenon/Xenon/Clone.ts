@@ -6,8 +6,6 @@ import CScene = require("Scene");
 import gsCTimer = require("Timer");
 import CShip = require("Ship");
 import enums = require("Enums");
-
-
 import CExplosion = require("Explosion");
 import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
@@ -128,24 +126,12 @@ class CClone extends CUpgrade {
             this.m_engine.applyThrust(thrust);
         }
 
-        //m_offset = new Vector2::polar(CLONE_RADIUS, m_current_angle);
-        //this.m_offset = new gsCVector(0, 0);//this.CLONE_RADIUS, this.m_current_angle);
-        //this.m_offset.polar(this.CLONE_RADIUS, this.m_current_angle);
-
-
         var temp: gsCVector = new gsCVector(0, 0);
         this.m_offset = temp.polar(this.CLONE_RADIUS, this.m_current_angle);
-
-
-        //this.m_offset.polar(this.CLONE_RADIUS, this.m_current_angle);
-
-
-        //this.m_offset = new gsCVector(this.CLONE_RADIUS, this.m_current_angle);
 
         var d:number = ship.getDiveLevel();
 
         if (d == 0) {
-            //this.m_position = ship.getPosition().plus1(this.m_offset);
             this.m_position.x = ship.getPosition().x + this.m_offset.x;
             this.m_position.y = ship.getPosition().y + this.m_offset.y;
 
@@ -162,7 +148,6 @@ class CClone extends CUpgrade {
             }
         }
         else {
-            //this.m_position = ship.getPosition() + m_offset * ship.getDiveScale();
             this.m_position = ship.getPosition().plus1(this.m_offset).times1(ship.getDiveScale());
             this.m_sprite.setFrame(this.CLONE_DIVE_OFFSET + this.CLONE_DIVE_FRAMES * d / this.SHIP_DIVE_FRAMES);
         }

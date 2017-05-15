@@ -1,11 +1,20 @@
-﻿class CDemoRecorder {
+﻿import gsCControls = require("Controls");
+
+class DemoRecorder {
+
+    //gsCList<Controls *> m_event_list;
+    m_event_list: Array<gsCControls>;
+    m_event_index: number;
+    m_has_level: boolean;
+    //char m_level[_MAX_PATH];
+
+    constructor() {
+        this.m_event_list = [];
+        this.m_event_index = 0;
+        this.m_has_level = false;
+    }
 
     /*
-CDemoRecorder::CDemoRecorder()
-{
-	m_event_index = 0;
-	m_has_level = 0;
-}
 
 //-------------------------------------------------------------
 
@@ -113,69 +122,62 @@ bool CDemoRecorder::save()
 
 	return true;
 }
+*/
+    //-------------------------------------------------------------
 
-//-------------------------------------------------------------
+    public record(): void {
+        //this.destroy();
+    }
 
-void CDemoRecorder::record()
-{
-	destroy();
-}
+    //-------------------------------------------------------------
 
-//-------------------------------------------------------------
+    public addEvent(controls: gsCControls): boolean {
+        //Controls *c = new Controls;
+        //memcpy(c,&controls,sizeof(Controls));
+        //m_event_list.addItem(c);
+        this.m_event_list.push(controls);
+        return true;
+    }
 
-bool CDemoRecorder::addEvent(const Controls& controls)
-{
-	Controls *c = new Controls;
-	memcpy(c,&controls,sizeof(Controls));
-	m_event_list.addItem(c);
+    //-------------------------------------------------------------
 
-	return true;
-}
+    public playback() {
+        this.m_event_index = 0;
+    }
 
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-void CDemoRecorder::playback()
-{
-	m_event_index = 0;
-}
+    public getEvent(controls/*Controls& */) {
+        if (this.m_event_index < this.m_event_list.length) {
+        //	memcpy(&controls,m_event_list[m_event_index++],sizeof(Controls));
+        //	return true;
+        	}
 
-//-------------------------------------------------------------
+        //else
+        //	return false;
+    }
 
-bool CDemoRecorder::getEvent(Controls& controls)
-{
-	if (m_event_index < m_event_list.getSize()) {
-		memcpy(&controls,m_event_list[m_event_index++],sizeof(Controls));
-		return true;
-		}
+    //-------------------------------------------------------------
 
-	else
-		return false;
-}
+    public setLevel(filename) {
+        //if (filename) {
+        //	strcpy(m_level,filename);
+        //	m_has_level = true;
+        //	}
+        //else
+        //	m_has_level = false;
+    }
 
-//-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-void CDemoRecorder::setLevel(const char *filename)
-{
-	if (filename) {
-		strcpy(m_level,filename);
-		m_has_level = true;
-		}
-	else
-		m_has_level = false;
-}
+    public getLevel() {
+        //if (this.m_has_level)
+        //	return this.m_level;
+        //else
+        //	return 0;
+    }
 
-//-------------------------------------------------------------
-
-const char *CDemoRecorder::getLevel()
-{
-	if (m_has_level)
-		return m_level;
-	else
-		return 0;
-}
-
-//-------------------------------------------------------------
-
-    */
+    //-------------------------------------------------------------
 
 }
+export = DemoRecorder;

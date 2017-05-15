@@ -56,7 +56,7 @@ class CViewScoresState extends CGameState {
             controls.enterPressed = false;
             controls.lcontrolPressed = false;
 
-            //CGameState::playSample(SAMPLE_MENU_BACK);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
             return this.changeState(this.m_app.instance = this.m_mainMenuState);
         }
 

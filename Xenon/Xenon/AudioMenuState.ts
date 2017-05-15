@@ -88,7 +88,7 @@ class CAudioMenuState extends CGameState {
             controls.lcontrolPressed = false;
 
             if (item == enums.AudioMenuItem.OM_APPLY) {
-                //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
                 this.copyMenuToOptions();
                 if (this.m_options.areChanged()) {
                     //gsCFile::setDirectory(DIRECTORY_ROOT);
@@ -103,7 +103,6 @@ class CAudioMenuState extends CGameState {
                     return;
                 }
                 else {
-                    //	return changeState(COptionsMenuState::instance()); }
                     return this.changeState(this.m_app.instance = this.m_optionState);
                 }
                 //}
@@ -112,27 +111,27 @@ class CAudioMenuState extends CGameState {
                 //}
             }
             else if (item == enums.AudioMenuItem.OM_CANCEL) {
-                //CGameState::playSample(SAMPLE_MENU_BACK);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                 return this.changeState(this.m_app.instance = this.m_optionState);
             }
         }
 
         if (controls.up) {
-            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_menu.scroll(-1);
         }
         if (controls.down) {
-            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_menu.scroll(1);
         }
         if (controls.left) {
             if (this.m_menu.setValue(item, this.m_menu.getValue(item) - 1)) {
-                //CGameState::playSample(SAMPLE_MENU_OPTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             }
         }
         if (controls.right) {
             if (this.m_menu.setValue(item, this.m_menu.getValue(item) + 1)) {
-                //CGameState::playSample(SAMPLE_MENU_OPTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             }
         }
         return true;

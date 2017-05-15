@@ -25,8 +25,6 @@ class CMainMenuState extends CGameState {
     m_title: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
     m_starfield: CStarfield;//
     m_menu: gsCMenu;
-
-
     //-------------------------------------------------------------
 
     constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D) {
@@ -36,14 +34,11 @@ class CMainMenuState extends CGameState {
         //m_menu.clear();
 
         this.m_menu = new gsCMenu();
-
         this.m_introState = new CIntroState(scene, starfield, font8x8, font16x16, app, ctx, this);
         this.m_viewScoresState = new CViewScoresState(scene, starfield, font8x8, font16x16, app, ctx, this);
         this.m_optionsMenuState = new COptionsMenuState(scene, starfield, font8x8, font16x16, app, ctx, this, this.m_menu);
         this.m_creditsState = new CCreditsState(scene, starfield, font8x8, font16x16, app, ctx, this);
-
         this.m_stateName = "MainMenuState";
-
         this.create(); //TEMP! 
     }
 
@@ -70,15 +65,8 @@ class CMainMenuState extends CGameState {
         this.m_menu.setCurrentItem(enums.MainMenuItem.MM_ONEPLAYER);
         this.m_menu.setFont(this.m_medium_font);
 
-        //this.playMusic(enums.GameMusicType.MUSIC_TITLE);
+        this.playMusic(enums.GameMusicType.MUSIC_TITLE);
 
-        //if (m_screen.getBytesPerPixel() == 1)
-        //	gsCFile::setDirectory(DIRECTORY_GRAPHICS8);
-        //else
-        //	gsCFile::setDirectory(DIRECTORY_GRAPHICS24);
-
-        //if (!m_bblogo.load("bblogo.bmp"))
-        //	return false;
         //m_bblogo.enableColourKey(gsCColour(gsMAGENTA));
         this.bbTexture = <HTMLImageElement>document.getElementById("bblogo");
 
@@ -86,8 +74,6 @@ class CMainMenuState extends CGameState {
         //	return false;
         //m_pcflogo.enableColourKey(gsCColour(gsMAGENTA));
 
-        //if (!m_title.load("xlogo.bmp"))
-        //	return false;
         //m_title.enableColourKey(gsCColour(gsMAGENTA));
         this.introTexture = <HTMLImageElement>document.getElementById("Xlogo");
 
@@ -102,7 +88,6 @@ class CMainMenuState extends CGameState {
         //m_bblogo.destroy();
         //m_pcflogo.destroy();
         //m_title.destroy();
-
         return true;
     }
 
@@ -130,7 +115,6 @@ class CMainMenuState extends CGameState {
         //			m_attract_mode = OFF;
         //		}
 
-        //if (Options.getOption(OptionType.OPTION_BACKDROP)) {
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
             ctx.drawImage(this.backgroundTexture, 0, 0);
         }
@@ -140,9 +124,7 @@ class CMainMenuState extends CGameState {
 
         this.m_menu.draw(ctx);//TEMP!
 
-        //this.m_title.drawImage(new gsCPoint(64, 10), ctx, this.introTexture);//title);
         ctx.drawImage(this.introTexture, 64, 10);
-        //this.m_bblogo.drawImage(new gsCPoint(10, 360), ctx, this.bbTexture);//bblogo);
         ctx.drawImage(this.bbTexture, 10, 360);
         //this.m_pcflogo.drawImage(new gsCPoint(480, 400), ctx, pcflogo);
 
@@ -175,23 +157,23 @@ class CMainMenuState extends CGameState {
             switch (item) {
                 case enums.MainMenuItem.MM_ONEPLAYER:
                     this.m_number_of_players = 1;
-                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_CLICK);
                     //this.setDemoMode(DEMO_OFF);
                     return this.changeState(this.m_introState.instance());
                 case enums.MainMenuItem.MM_TWOPLAYER:
                     this.m_number_of_players = 2;
-                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_CLICK);
                     //this.setDemoMode(DEMO_OFF);
                     return this.changeState(this.m_introState.instance());
                 case enums.MainMenuItem.MM_SCORES:
-                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_CLICK);
                     return this.changeState(this.m_viewScoresState.instance());
                 case enums.MainMenuItem.MM_OPTIONS:
-                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_CLICK);
                     this.m_optionsMenuState.create();
                     return this.changeState(this.m_optionsMenuState.instance());
                 case enums.MainMenuItem.MM_CREDITS:
-                    //this.playSample(SAMPLE_MENU_CLICK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_CLICK);
                     this.m_creditsState.create();
                     return this.changeState(this.m_creditsState.instance());
                 case enums.MainMenuItem.MM_QUIT:
@@ -205,13 +187,13 @@ class CMainMenuState extends CGameState {
         if (controls.up) {
             controls.up = false;
             this.m_menu.scroll(-1);
-            //playSample(SAMPLE_MENU_SELECTION);
+            this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
         }
 
         if (controls.down) {
             controls.down = false;
             this.m_menu.scroll(1);
-            //playSample(SAMPLE_MENU_SELECTION);
+            this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
         }
 
         //		case gsKEY_F1:
@@ -240,8 +222,9 @@ class CMainMenuState extends CGameState {
         //			break;
         //}
 
-        //	if (m_sound_system.isMusicFinished())
-        //		m_sound_system.playMusic(enums.GameMusicType.MUSIC_TITLE);
+        if (this.m_sound_system.isMusicFinished()) {
+            this.m_sound_system.playMusic(enums.GameMusicType.MUSIC_TITLE);
+        }
 
         return true;
     }

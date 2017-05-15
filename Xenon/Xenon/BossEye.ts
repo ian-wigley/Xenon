@@ -1,8 +1,8 @@
-﻿enum BossEyeState {
-    BOSSEYE_OPEN,
-    BOSSEYE_CLOSING,
-    BOSSEYE_SHUT
-}
+﻿//enum BossEyeState {
+//    BOSSEYE_OPEN,
+//    BOSSEYE_CLOSING,
+//    BOSSEYE_SHUT
+//}
 
 import CBoss = require("Boss")
 import CExplosion = require("Explosion")
@@ -16,19 +16,23 @@ import CActor = require("Actor");
 class CBossEye extends CBoss {
     BOSSEYE_TOTAL: number = 6;
     m_eye_number: number;
-    m_state: BossEyeState = BossEyeState.BOSSEYE_SHUT;
+    m_state: enums.BossEyeState = enums.BossEyeState.BOSSEYE_SHUT;
 
     constructor() {
         super();
         this.m_eye_number = 0;
-        this.m_state = BossEyeState.BOSSEYE_SHUT;
+        this.m_state = enums.BossEyeState.BOSSEYE_SHUT;
         this.m_name = "Boss Eye";
     }
+
+    //-------------------------------------------------------------
 
     public getActorInfo(): ActorInfo {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BOSSEYE);
     }
+
+    //-------------------------------------------------------------
 
     public activate(): boolean {
         if (!this.isActive()) {
@@ -36,6 +40,8 @@ class CBossEye extends CBoss {
         }
         return super.activate();
     }
+
+    //-------------------------------------------------------------
 
     public kill(): void {
         var x: CExplosion = new CBigExplosion();
@@ -47,8 +53,10 @@ class CBossEye extends CBoss {
         super.kill();
     }
 
+    //-------------------------------------------------------------
+
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-        if (this.m_state != BossEyeState.BOSSEYE_OPEN) {
+        if (this.m_state != enums.BossEyeState.BOSSEYE_OPEN) {
             this.m_is_hit = false;
         }
         if (this.m_shield == 0) {
@@ -61,17 +69,23 @@ class CBossEye extends CBoss {
         return true;
     }
 
+    //-------------------------------------------------------------
+
     public registerHit(energy: number, hitter: CActor): void {
-        if (this.m_state == BossEyeState.BOSSEYE_OPEN) {
+        if (this.m_state == enums.BossEyeState.BOSSEYE_OPEN) {
             super.registerHit(energy, hitter);
         }
     }
+
+    //-------------------------------------------------------------
 
     public setEyeNumber(eye_number: number): void {
         this.m_eye_number = eye_number;
     }
 
-    public setState(state: BossEyeState): void {
+    //-------------------------------------------------------------
+
+    public setState(state: enums.BossEyeState): void {
         this.m_state = state;
     }
 }

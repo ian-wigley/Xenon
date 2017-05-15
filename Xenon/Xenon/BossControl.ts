@@ -6,6 +6,9 @@ import gsCTimer = require("Timer");
 import enums = require("Enums");
 import gsCMapTile = require("MapTile");
 import CBigExplosion = require("BigExplosion");
+import CBossEye = require("BossEye");
+import CBossMouth = require("BossMouth");
+import CApplication = require("Application");
 
 enum BossState {
     BOSS_MOVE_DOWN,
@@ -22,7 +25,6 @@ enum BossState {
     BOSS_SHUT_EYES,
 }
 
-
 class CBossControl extends CBoss {
 
     private m_is_started: boolean;
@@ -32,14 +34,16 @@ class CBossControl extends CBoss {
     private m_script: Array<BossScriptItem>;
     private m_script_pointer: BossScriptItem;
     private m_loop_point: BossScriptItem;
-
     private m_script_pointer_count = 0;
     private m_tile_pos: gsCPoint;
     private m_size: number;
     private m_destruction_timer: gsCTimer;
+    private m_application: CApplication;
+    private m_eye: CBossEye;
 
-    constructor() {
+    constructor(application: CApplication) {
         super();
+        this.m_application = application;
         this.m_is_started = false;
         this.m_timer = new gsCTimer();
 
@@ -97,8 +101,13 @@ class CBossControl extends CBoss {
             this.m_is_started = true;
             this.m_yscroll = 0;
             //this.m_script_pointer = this.m_loop_point = this.m_script;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
             this.m_active_eyes = this.BOSS_EYES_TOTAL;
+
+            for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
+                this.m_eye = new CBossEye();
+            }
+
+            this.m_mouth = new CBossMouth();
             this.interpretScript();
         }
 
@@ -115,15 +124,16 @@ class CBossControl extends CBoss {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-        //public update(controls: gsCControls): boolean {
-        if (this.m_state == BossState.BOSS_DEAD)
+        if (this.m_state == BossState.BOSS_DEAD) {
             return true;
+        }
 
-        if (this.m_active_eyes == 0 && this.m_state != BossState.BOSS_DESTROY)
+        if (this.m_active_eyes == 0 && this.m_state != BossState.BOSS_DESTROY) {
             this.initiateDestructionSequence();
-
-        if (this.m_state == BossState.BOSS_DESTROY)
+        }
+        if (this.m_state == BossState.BOSS_DESTROY) {
             this.updateDestructionSequence();
+        }
         else {
             if (this.m_counter <= 0)
                 this.interpretScript();
@@ -176,12 +186,14 @@ class CBossControl extends CBoss {
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_ROAR) {
+            this.m_application.instance.playSample(enums.GameSampleType.SAMPLE_ROAR);
             //    CGameState::playSample(SAMPLE_ROAR);
             //    m_script_pointer++;
             this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
+            this.m_application.instance.playSample(enums.GameSampleType.SAMPLE_SNORT);
             //    CGameState::playSample(SAMPLE_SNORT);
             //    m_script_pointer++;
             this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
@@ -189,6 +201,7 @@ class CBossControl extends CBoss {
 
         if (this.m_script_pointer.m_state == BossState.BOSS_OPEN_EYES) {
             //    CBossEye::setState(BOSSEYE_OPEN);
+            this.m_eye.setState(enums.BossEyeState.BOSSEYE_OPEN);
             //    m_script_pointer++;
             this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }

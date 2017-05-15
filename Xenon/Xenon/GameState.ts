@@ -9,6 +9,7 @@ import CApplication = require("Application");
 import CStarfield = require("Starfield");
 import CMainMenuState = require("MainMenuState");
 import gsCMenu = require("Menu");
+import gsCSoundSystem = require("SoundSystem");
 
 class CGameState {
     protected m_small_font: gsCFont;
@@ -30,6 +31,8 @@ class CGameState {
     protected backgroundTexture: HTMLImageElement;
     protected m_stateName: string = "";
     protected m_app: CApplication;
+
+    protected m_sound_system: gsCSoundSystem;
 
     //gsCScreen		m_screen;
     //gsCKeyboard		m_keyboard;
@@ -58,6 +61,7 @@ class CGameState {
         this.m_app = app;
         this.m_ctx = ctx;
 
+        this.m_sound_system = new gsCSoundSystem();
         this.m_options = new COptions();
         this.initialize(null);
     }
@@ -73,15 +77,16 @@ class CGameState {
         //    if (!ActorInfoList.load(ACTORINFO_FILENAME))
         //        return false;
 
-        //    if (!m_sound_system.create())
-        //        return false;
+        if (!this.m_sound_system.create()) {
+            return false;
+        }
 
         //    updateVolume();
 
         //    if (!m_keyboard.create())
         //        return false;
 
-        //    // joystick is optional
+        // joystick is optional
 
         //    if (Options.getOption(OPTION_JOYSTICK)) {
         //        if (!m_joystick.create())
@@ -111,25 +116,16 @@ class CGameState {
         //        m_screen.loadPalette("xenon.pal");
         //    }
 
-        //    // pre-load music/soundfx
+        // pre-load music/soundfx
+        if (!this.loadMusic()) {
+            return false;
+        }
 
-        //    gsCFile::setDirectory(DIRECTORY_MUSIC);
+        if (!this.loadSoundEffects()) {
+            return false;
+        }
 
-        //    if (!loadMusic())
-        //        return false;
-
-        //    gsCFile::setDirectory(DIRECTORY_SOUNDS);
-
-        //    if (!loadSoundEffects())
-        //        return false;
-
-        //    // pre-load graphics
-
-        //    if (m_screen.getBytesPerPixel() == 1)
-        //        gsCFile::setDirectory(DIRECTORY_GRAPHICS8);
-        //    else
-        //        gsCFile::setDirectory(DIRECTORY_GRAPHICS24);
-
+        // pre-load graphics
         if (!this.loadGraphics())
             return false;
 
@@ -152,18 +148,6 @@ class CGameState {
     //-------------------------------------------------------------
 
     public shutdown(): boolean {
-        //saveScoreTable();
-        //m_level.m_image.destroy();
-        ////	m_backdrop_tiles.destroy();
-        //m_backdrop.destroy();
-        //m_medium_font.destroy();
-        //m_small_font.destroy();
-        //m_scene.destroyAll();
-        //m_screen.destroy();
-        //m_joystick.destroy();
-        //m_keyboard.destroy();
-        //m_sound_system.destroy();
-
         return true;
     }
 
@@ -194,8 +178,6 @@ class CGameState {
     //-------------------------------------------------------------
 
     public loadGraphics(): boolean {
-        //if (!m_scene.loadImages())
-        //    return false;
 
         this.m_small_font = new gsCFont(this.m_font8x8, this.m_ctx);
         this.m_small_font.setTileSize(new gsCPoint(8, 8));
@@ -211,43 +193,41 @@ class CGameState {
     //-------------------------------------------------------------
 
     public loadMusic(): boolean {
-        //m_sound_system.addMusic("title.mp3");
-        //m_sound_system.addMusic("intro.mp3");
-        //m_sound_system.addMusic("game.mp3");
-        //m_sound_system.addMusic("hiscore.mp3");
-        //m_sound_system.addMusic("boss.mp3");
-        //m_sound_system.addMusic("outro.mp3");
+
+        this.m_sound_system.addMusic("boss");
+        this.m_sound_system.addMusic("game");
+        this.m_sound_system.addMusic("hiscore");
+        this.m_sound_system.addMusic("intro");
+        this.m_sound_system.addMusic("outro");
+        this.m_sound_system.addMusic("title");
         return true;
     }
 
     //-------------------------------------------------------------
 
     public loadSoundEffects(): boolean {
-        //m_sound_system.addSample("menu_selection.wav");
-        //m_sound_system.addSample("menu_option.wav");
-        //m_sound_system.addSample("menu_click.wav");
-        //m_sound_system.addSample("menu_back.wav");
 
-        //m_sound_system.addSample("player_created.wav");
-        //m_sound_system.addSample("player_destroyed.wav");
-        //m_sound_system.addSample("fire_missile.wav");
-        //m_sound_system.addSample("fire_homing_missile.wav");
-        //m_sound_system.addSample("fire_laser.wav");
-        //m_sound_system.addSample("small_explosion.wav");
-        //m_sound_system.addSample("medium_explosion.wav");
-        //m_sound_system.addSample("big_explosion.wav");
-        //m_sound_system.addSample("asteroid_breakup.wav");
-        //m_sound_system.addSample("pickup.wav");
-        //m_sound_system.addSample("bonus.wav");
-        //m_sound_system.addSample("dive_down.wav");
-        //m_sound_system.addSample("dive_up.wav");
-        //m_sound_system.addSample("hit_background.wav");
-
-        //m_sound_system.addSample("roar.wav");
-        //m_sound_system.addSample("snort.wav");
-
-        //m_sound_system.addSample("checkpoint.wav");
-
+        this.m_sound_system.addSample("menu_selection");
+        this.m_sound_system.addSample("menu_option");
+        this.m_sound_system.addSample("menu_click");
+        this.m_sound_system.addSample("menu_back");
+        this.m_sound_system.addSample("player_created");
+        this.m_sound_system.addSample("player_destroyed");
+        this.m_sound_system.addSample("fire_missile");
+        this.m_sound_system.addSample("fire_homing_missile");
+        this.m_sound_system.addSample("fire_laser");
+        this.m_sound_system.addSample("small_explosion");
+        this.m_sound_system.addSample("medium_explosion");
+        this.m_sound_system.addSample("big_explosion");
+        this.m_sound_system.addSample("asteroid_breakup");
+        this.m_sound_system.addSample("pickup");
+        this.m_sound_system.addSample("bonus");
+        this.m_sound_system.addSample("dive_down");
+        this.m_sound_system.addSample("dive_up");
+        this.m_sound_system.addSample("hit_background");
+        this.m_sound_system.addSample("roar");
+        this.m_sound_system.addSample("snort");
+        this.m_sound_system.addSample("checkpoint");
         return true;
     }
 
@@ -285,32 +265,34 @@ class CGameState {
     //}
 
     //-------------------------------------------------------------
-    // play sample with stereo position based on screen x coordinate
 
-    public playSample(sample /*GameSampleType*/, x: number): void {
-        //    if (Options.getOption(OPTION_SOUNDFX)) {
-        //        int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
-        //        m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
-        //    }
+    // play sample with stereo position based on screen x coordinate
+    public playSample(sample /*GameSampleType*/, x?: number): void {
+        if (this.m_options.getOption(enums.OptionType.OPTION_SOUNDFX)) {
+            //        int w2 = gsCApplication::getScreen() ->getSize().getX() / 2;
+            //        m_sound_system.playSample((int) sample, 100 * ((int) x - w2) / w2);
+            this.m_sound_system.playSample(<number>sample, 0);
+        }
     }
 
     //-------------------------------------------------------------
 
     public playMusic(music/*: GameMusicType*/): void {
-        //if (Options.getOption(OPTION_MUSIC))
-        //    m_sound_system.playMusic((int) music);
+        if (this.m_options.getOption(enums.OptionType.OPTION_MUSIC)) {
+            this.m_sound_system.playMusic(music);
+        }
     }
 
     //-------------------------------------------------------------
 
     public stopSamples(): void {
-        //m_sound_system.stopSamples();
+        this.m_sound_system.stopSamples();
     }
 
     //-------------------------------------------------------------
 
     public stopMusic(): void {
-        //m_sound_system.stopMusic();
+        this.m_sound_system.stopMusic();
     }
 
     //-------------------------------------------------------------
@@ -408,16 +390,16 @@ class CGameState {
     //-------------------------------------------------------------
 
     public setDemoMode(mode /*:DemoMode */): void {
-        //m_demo_mode = mode;
+        this.m_demo_mode = mode;
 
-        //switch (mode) {
-        //    case DEMO_RECORD:
-        //        m_demo_recorder.record();
-        //        break;
-        //    case DEMO_PLAYBACK:
-        //        m_demo_recorder.playback();
-        //        break;
-        //}
+        switch (mode) {
+            case enums.DemoMode.DEMO_RECORD:
+                //this.m_demo_recorder.record();
+                break;
+            case enums.DemoMode.DEMO_PLAYBACK:
+                //this.m_demo_recorder.playback();
+                break;
+        }
     }
 
     //-------------------------------------------------------------

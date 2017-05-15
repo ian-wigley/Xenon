@@ -11,7 +11,7 @@
     private m_return: boolean;	        // true if return control has just been pressed
     private m_enter: boolean;	        // true if enter control has just been pressed
     private m_lcontrol: boolean;	    // true if left control has just been pressed
-    //gsKeyCode key: boolean;			// latest key press
+    //private m_key: boolean;			// latest key press
 
     constructor() {
         this.m_left = false;
@@ -25,7 +25,7 @@
         this.m_return = false;
         this.m_enter = false;
         this.m_lcontrol = false;
-        //gsKeyCode key= false;			// latest key press
+        //this.m_key= false;			// latest key press
     }
 
     public get left(): boolean {
@@ -74,6 +74,14 @@
 
     public set firePressed(value: boolean) {
         this.m_firePressed = value;
+    }
+
+    public set divePressed(value: boolean) {
+        this.m_divePressed = value;
+    }
+
+    public set reversePressed(value: boolean) {
+        this.m_reversePressed = value;
     }
 
     public get returnPressed(): boolean {

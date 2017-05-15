@@ -671,15 +671,15 @@ class CLevel {
                                             case 0:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CSmallStandardAsteroid();
+                                                        a = new Asteroid.CSmallStandardAsteroid(this.m_application);
                                                         console.log("CSmallStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CSmallHighDensityAsteroid();
+                                                        a = new Asteroid.CSmallHighDensityAsteroid(this.m_application);
                                                         console.log("CSmallHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CSmallIndestructibleAsteroid();
+                                                        a = new Asteroid.CSmallIndestructibleAsteroid(this.m_application);
                                                         console.log("CSmallIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -687,15 +687,15 @@ class CLevel {
                                             case 1:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CMediumStandardAsteroid();
+                                                        a = new Asteroid.CMediumStandardAsteroid(this.m_application);
                                                         console.log("CMediumStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CMediumHighDensityAsteroid();
+                                                        a = new Asteroid.CMediumHighDensityAsteroid(this.m_application);
                                                         console.log("CMediumHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CMediumIndestructibleAsteroid();
+                                                        a = new Asteroid.CMediumIndestructibleAsteroid(this.m_application);
                                                         console.log("CMediumIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -703,15 +703,15 @@ class CLevel {
                                             case 2:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CBigStandardAsteroid();
+                                                        a = new Asteroid.CBigStandardAsteroid(this.m_application);
                                                         console.log("CBigStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CBigHighDensityAsteroid();
+                                                        a = new Asteroid.CBigHighDensityAsteroid(this.m_application);
                                                         console.log("CBigHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CBigIndestructibleAsteroid();
+                                                        a = new Asteroid.CBigIndestructibleAsteroid(this.m_application);
                                                         console.log("CBigIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -903,7 +903,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_CONTROL:
-                            var bC: CBossControl = new CBossControl();
+                            var bC: CBossControl = new CBossControl(this.m_application);
                             console.log("BossControl");
                             scene.addActor(bC);
                             bC.setPosition(pos);

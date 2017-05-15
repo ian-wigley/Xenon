@@ -83,19 +83,19 @@ class COptionsMenuState extends CGameState {
             controls.lcontrolPressed = false;
             switch (item) {
                 case enums.OptionsMenuItem.OM_CONTROL:
-                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
                     this.m_controlMenuState.create();
                     return this.changeState(this.m_app.instance = this.m_controlMenuState);
                 case enums.OptionsMenuItem.OM_VIDEO:
-                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
                     this.m_videoMenuState.create();
                     return this.changeState(this.m_app.instance = this.m_videoMenuState);
                 case enums.OptionsMenuItem.OM_AUDIO:
-                    //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
                     this.m_audioMenuState.create();
                     return this.changeState(this.m_app.instance = this.m_audioMenuState);
                 case enums.OptionsMenuItem.OM_BACK:
-                    //CGameState::playSample(SAMPLE_MENU_BACK);
+                    this.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                     //return this.changeState(this.m_mainMenuState.instance());
                     this.m_mainMenuState.create();
                     return this.changeState(this.m_app.instance = this.m_mainMenuState);
@@ -104,13 +104,13 @@ class COptionsMenuState extends CGameState {
         if (controls.up) {
             controls.up = false;
             this.m_menu.scroll(-1);
-            //playSample(SAMPLE_MENU_SELECTION);
+            this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
         }
 
         if (controls.down) {
             controls.down = false;
             this.m_menu.scroll(1);
-            //playSample(SAMPLE_MENU_SELECTION);
+            this.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
         }
         return true;
     }

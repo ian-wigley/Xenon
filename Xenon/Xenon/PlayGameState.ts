@@ -23,6 +23,8 @@ import CViewScoresState = require("ViewScoresState");
 import CScoreEntryState = require("ScoreEntryState");
 import CApplication = require("Application");
 
+import CDemoRecorder = require("DemoRecorder");
+
 enum m_gameMode {  //m_mode
     CREATEPLAYER,
     PLAYERACTIVE,
@@ -62,6 +64,9 @@ class CPlayGameState extends CGameState {
     //private m_options: Options;
 
     private m_mode: m_gameMode;
+
+    m_demo_recorder: CDemoRecorder;
+
 
     constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
         super(font8x8, font16x16, app, ctx);
@@ -190,7 +195,6 @@ class CPlayGameState extends CGameState {
             return false;
         }
 
-
         //gsKeyCode key = m_keyboard.getKey();
 
         //if (m_paused) {
@@ -217,44 +221,40 @@ class CPlayGameState extends CGameState {
         }
 
         //Controls controls;
+        this.getControl(controls, this.m_active_player);
 
-        //getControl(controls,m_active_player);
+        if (this.m_ship) {
+            if (controls.divePressed) {
+                if (this.getPlayer().hasDive()) {
+                    this.m_ship.dive(3.0);
+                    this.getPlayer().useDive();
+                }
+            }
 
-        //if (m_ship) {
-        //	if (controls.divePressed) {
-        //		if (getPlayer()->hasDive()) {
-        //			m_ship->dive(3.f);
-        //			getPlayer()->useDive();
-        //			}
-        //		}
+            if (controls.reversePressed) {
+                this.m_ship.reverseWeapon();
+            }
 
-        //	if (controls.reversePressed)
-        //		m_ship->reverseWeapon();
+            // disable firing when diving
+            if (this.m_ship.getDiveLevel() > 0) {
+                controls.fire = false;
+                controls.firePressed = false;
+            }
+        }
 
-        //	// disable firing when diving
-
-        //	if (m_ship->getDiveLevel() > 0) {
-        //		controls.fire = false;
-        //		controls.firePressed = false;
-        //		}
-        //	}
-
-        //switch (m_demo_mode) {
-        //	case DEMO_RECORD:
-        //		m_demo_recorder.addEvent(controls);
-        //		break;
-        //	case DEMO_PLAYBACK:
-        //		if (!m_demo_recorder.getEvent(controls))
-        //			return changeState(CMainMenuState::instance());
-        //		break;
-        //	}
-
+        switch (this.m_demo_mode) {
+            case enums.DemoMode.DEMO_RECORD:
+                this.m_demo_recorder.addEvent(controls);
+                break;
+            case enums.DemoMode.DEMO_PLAYBACK:
+                if (!this.m_demo_recorder.getEvent(controls))
+                    //return changeState(CMainMenuState::instance());
+                    break;
+        }
 
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
             ctx.drawImage(this.backgroundTexture, 0, 0);
         }
-
-
 
         var loop: number = 1;
 
@@ -410,7 +410,7 @@ class CPlayGameState extends CGameState {
                         if (this.getPlayer().getCheckpoint() != this.m_scene.getCheckpoint()) {
                             this.getPlayer().setCheckpoint(this.m_scene.getCheckpoint());
                             this.m_scene.createLabel(this.m_scene.getCheckpoint(), "CHECKPOINT REACHED");
-                            //this.playSample(enums.GameSampleType.SAMPLE_CHECKPOINT);
+                            this.playSample(enums.GameSampleType.SAMPLE_CHECKPOINT);
                         }
                         this.m_scene.clearCheckpoint();
                     }

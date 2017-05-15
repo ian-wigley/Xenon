@@ -196,35 +196,6 @@ class CActor {
 
     //-------------------------------------------------------------
 
-    // Moved to the ship during testing... 07/03/2017..
-    // Recursive explosion problems !
-    //
-    //public explode() {
-
-    //    var x : CExplosion = null;
-
-    //    if (this.m_image != null) {
-    //        var size: Point = this.m_image.getTileSize();
-    //        var area = size.X * size.Y;
-
-    //        if (area <= 32 * 32) {
-    //            x = new CSmallExplosion();
-    //        }
-    //        else if (area <= 64 * 64) {
-    //            x = new CMediumExplosion();
-    //        }
-    //        else {
-    //            x = new CBigExplosion();
-    //        }
-
-    //        this.m_scene.addActor(x);
-    //        x.setPosition(this.getPosition());
-    //        x.activate();
-    //    }
-    //}
-
-    //-------------------------------------------------------------
-
     public registerHit(energy: number, hitter: CActor): void {
         if (this.m_shield != this.INFINITE_SHIELD) {
             if (this.m_shield > 0) {
@@ -258,13 +229,12 @@ class CActor {
         return true;
     }
 
+        //-------------------------------------------------------------
+
     public Draw(ctx: CanvasRenderingContext2D): boolean {
 
         if (this.isActive() && this.m_image != null) {
-
-            //m_sprite.setPosition(gsCPoint(m_position) + m_scene->getMap()->getPosition());
             this.m_sprite.setPosition(new gsCVector(0, 0).plus(this.m_position, this.m_scene.getMapFrontLayer().getPosition()));
-
 
             if (this.m_is_hit) {
                 if (this.m_hit_timer.getTime() > this.ACTOR_HIT_TIME) {
@@ -367,7 +337,6 @@ class CActor {
     public get name(): string {
         return this.m_name;
     }
-
 }
 
 export = CActor;

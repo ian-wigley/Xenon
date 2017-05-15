@@ -35,24 +35,20 @@ class gsCCollisionList {
     private m_zones: gsCPoint;
     private m_zone_size: gsCPoint;
 
-    m_collider_list: Array<gsCCollider> = new Array<gsCCollider>(); //gsCList<gsCCollider *> 
-
+    m_collider_list: Array<gsCCollider> = new Array<gsCCollider>();
     gsColliderList: gsCCollider;
-
-    //typedef gsCList<gsCCollider *> gsColliderList;
-    //m_zone: Array<gsCCollider>;//(gsCCollider);//: gsColliderList;
-    m_zone = [];//: Array<this.m_collider_list>;//(gsCCollider);//: gsColliderList;
+    m_zone = [];
 
     constructor() {
         this.m_pixel_size = new gsCPoint(0, 0);
         this.m_zone_size = new gsCPoint(0, 0);
         this.m_zones = new gsCPoint(0, 0);
-        this.m_zone = null;//0
+        this.m_zone = null;
     }
 
     //-------------------------------------------------------------
 
-    //void gsCCollisionList::destroy()
+    //destroy(): void
     //{
     //    clear();
 
@@ -93,19 +89,14 @@ class gsCCollisionList {
         }
 
         // clear out the object list
-        //for (var i = 0; i < m_collider_list.getSize(); i++)
-        //    delete m_collider_list[i];
         this.m_collider_list = [];
-
-        //this.m_collider_list.clear();
     }
 
     //-------------------------------------------------------------
 
-    public addObject(object: Object, rect: gsCRectangle, object_mask, target_mask)//void *object,const gsCRect& rect, gsUDWORD object_mask, gsUDWORD target_mask):void
+    public addObject(object: Object, rect: gsCRectangle, object_mask, target_mask)
     {
         // get range of zones which object overlaps
-
         var left_zone: number = Math.floor(rect.Left / this.m_zone_size.X);
         var right_zone: number = Math.floor((rect.Right - 1) / this.m_zone_size.X);
         var top_zone: number = Math.floor(rect.Top / this.m_zone_size.Y);
@@ -150,15 +141,11 @@ class gsCCollisionList {
         }
     }
 
-    ////-------------------------------------------------------------
+    //-------------------------------------------------------------
 
-
-    public scan( /*gsCollisionCallback * */callback): void {
-        //if (!callback)
-        //    return;
+    public scan( /*gsCollisionCallback*/callback): void {
 
         var num_objects: number = this.m_collider_list.length;
-
 
         // scan the zones
         //for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
@@ -172,14 +159,12 @@ class gsCCollisionList {
                 // Ship !
                 var obj_a: gsCCollider = this.m_collider_list[a];
 
-
-                for (var b = a + 1; b < this.m_collider_list.length; b++) { //length; b++) {
+                for (var b = a + 1; b < this.m_collider_list.length; b++) {
 
                     var obj_b: gsCCollider = this.m_collider_list[b];
 
                     // skip pairs we've already tested
                     //if (tp[obj_b.m_uid] == 0) {
-
 
                     // check if rectangles overlap
                     if (obj_a.m_rect.overlaps(obj_b.m_rect)) {
@@ -197,149 +182,7 @@ class gsCCollisionList {
                 }
             }
         }
-        //}
-        //}
-
-        // delete the flags
-        //tested = [];
     }
-
-
-
-
-
-    //public scan( /*gsCollisionCallback * */callback): void {
-    //    //if (!callback)
-    //    //    return;
-
-    //    var num_objects: number = this.m_collider_list.length;
-
-
-    //    // scan the zones
-    //    //for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
-
-    //        // skip if empty or only one collider
-    //        if (this.m_collider_list.length > 1) {
-    //            //    // we've found a zone with at least 2 objects in it
-    //            //    // test all combinations of pairs of objects
-    //            for (var a = 0; a < this.m_collider_list.length - 1; a++) {
-
-    //                // Ship !
-    //                var obj_a: gsCCollider = this.m_collider_list[num_objects - 1];
-
-    //                var obj_b: gsCCollider = this.m_collider_list[a];
-
-    //                // skip pairs we've already tested
-    //                //if (tp[obj_b.m_uid] == 0) {
-
-
-    //                // check if rectangles overlap
-    //                if (obj_a.m_rect.overlaps(obj_b.m_rect)) {
-
-    //                    // if object a can hit object b test collision
-    //                    if ((obj_a.m_target_mask & obj_b.m_object_mask) != 0)
-    //                        callback(obj_a.m_object, obj_b.m_object);
-
-    //                    if ((obj_b.m_target_mask & obj_a.m_object_mask) != 0)
-    //                        callback(obj_b.m_object, obj_a.m_object);
-    //                }
-
-    //                // mark pair as having been tested
-    //                //tp[obj_b.m_uid] = 1;
-    //            }
-    //        }
-    //    //}
-    //    //}
-    //    //}
-
-    //    // delete the flags
-    //    //tested = [];
-    //}
-
-
-
-
-
-
-
-
-
-
-
-
-
-    //public scan( /*gsCollisionCallback * */callback): void {
-    //    //if (!callback)
-    //    //    return;
-
-    //    var num_objects: number = this.m_collider_list.length;
-
-    //    // create an array of flags to mark whether we've tested
-    //    // a particular combination of objects
-    //    var tested: number = 0; // Array<number> = new Array<number>(num_objects * num_objects);
-    //    ////if (num_objects == 0){
-    //    //    tested.push(num_objects);
-    //    //    //tested[0] = 0;
-    //    ////}
-    //    ////memset(tested,0,num_objects * num_objects);
-
-    //    // scan the zones
-    //    for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
-
-    //        // get list of the colliders in the zone
-    //        //var collider_list: Array<gsCCollider> = this.m_zone[i];
-    //        var collider_list = this.m_zone[i];
-
-    //        //var rar = this.m_zone[i];
-    //        //if (rar.blobject.length > 1) {
-    //        //    var stopHere = true;
-    //        //}
-
-    //        // skip if empty or only one collider
-    //        //if (collider_list...length > 1) {
-    //        if (collider_list.count > 1) {
-    //            //    // we've found a zone with at least 2 objects in it
-    //            //    // test all combinations of pairs of objects
-    //            for (var a = 0; a < collider_list.count; a++) {//   length; a++) {
-
-    //                var obj_a: gsCCollider = collider_list.blobject[a + 1]; //length
-
-    //                        // get pointer to row of flags for object a
-    //                //var tp /*: number*/ = tested[a] + obj_a.m_uid * num_objects;
-    //                var tp /*: number*/ = obj_a.m_uid * num_objects;
-
-    //                        for (var b = a + 1; b < collider_list.count;b++){ //length; b++) {
-
-    //                            var obj_b: gsCCollider = collider_list.blobject[b];
-
-    //                            // skip pairs we've already tested
-    //                            if (tp[obj_b.m_uid] == 0) {
-
-    //                                //gsASSERT(obj_a->m_object);
-    //                                //gsASSERT(obj_b->m_object);
-
-    //                                // check if rectangles overlap
-    //                                if (obj_a.m_rect.overlaps(obj_b.m_rect)) {
-
-    //                                    // if object a can hit object b test collision
-    //                                    if ((obj_a.m_target_mask & obj_b.m_object_mask) != 0)
-    //                                        callback(obj_a.m_object, obj_b.m_object);
-
-    //                                    if ((obj_b.m_target_mask & obj_a.m_object_mask) != 0)
-    //                                        callback(obj_b.m_object, obj_a.m_object);
-    //                                }
-
-    //                                // mark pair as having been tested
-    //                                tp[obj_b.m_uid] = 1;
-    //                            }
-    //                        }
-    //            }
-    //        }
-    //    }
-
-    //    // delete the flags
-    //    //tested = [];
-    //}
 
     //-------------------------------------------------------------
 }

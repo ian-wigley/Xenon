@@ -40,9 +40,9 @@ class CScoreEntryState extends CGameState {
     //-------------------------------------------------------------
 
     public create(): boolean {
-        //stopSamples();
-        //playMusic(MUSIC_HISCORE);
-       return true;
+        this.stopSamples();
+        this.playMusic(enums.GameMusicType.MUSIC_HISCORE);
+        return true;
     }
 
     //-------------------------------------------------------------
@@ -60,56 +60,52 @@ class CScoreEntryState extends CGameState {
         this.m_starfield.Update(4);
         this.m_starfield.Draw(ctx);
 
-        //char *m = m_congratulation_messages[m_score_table.getCurrentItem()];
         var m = this.m_congratulation_messages[this.m_score_table.getCurrentItem()];
 
         this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
         this.m_medium_font.justifyString(m);
-
         this.m_score_table.draw(this.m_medium_font, ctx);
-        //(screen: gsCScreen, font: gsCFont, ctx: CanvasRenderingContext2D)
 
         this.m_medium_font.setTextCursor(new gsCPoint(0, 400));
         this.m_medium_font.justifyString("Use Movement Keys To Enter Your Name");
         this.m_medium_font.setTextCursor(new gsCPoint(0, 430));
         this.m_medium_font.justifyString("Press Fire To Exit To Main Menu");
 
-
         if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
             controls.returnPressed = false;
             controls.enterPressed = false;
             controls.lcontrolPressed = false;
-            //playSample(SAMPLE_MENU_BACK);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
             return this.changeState(this.m_app.instance = this.m_mainMenuState);
         }
 
         if (controls.up) {
             controls.up = false;
-            //		playSample(SAMPLE_MENU_OPTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             this.m_score_table.cycleLetter(1);
         }
 
         if (controls.down) {
             controls.down = false;
-            //		playSample(SAMPLE_MENU_OPTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             this.m_score_table.cycleLetter(-1);
         }
 
         if (controls.left) {
             controls.left = false;
-            //		playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_score_table.scrollLetter(-1);
         }
 
         if (controls.right) {
             controls.right = false;
-            //		playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_score_table.scrollLetter(1);
         }
 
-        //if (m_sound_system.isMusicFinished())
-        //	playMusic(MUSIC_HISCORE);
-
+        if (this.m_sound_system.isMusicFinished()) {
+            this.playMusic(enums.GameMusicType.MUSIC_HISCORE);
+        }
         return true;
     }
 

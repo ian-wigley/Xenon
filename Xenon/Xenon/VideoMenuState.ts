@@ -119,7 +119,7 @@ class CVideoMenuState extends CGameState {
             controls.enterPressed = false;
             controls.lcontrolPressed = false;
             if (item == enums.VideoMenuItem.OM_APPLY) {
-                //CGameState::playSample(SAMPLE_MENU_SELECTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
                 this.copyMenuToOptions();
                 if (this.m_options.areChanged()) {
                     //gsCFile::setDirectory(DIRECTORY_ROOT);
@@ -143,33 +143,33 @@ class CVideoMenuState extends CGameState {
                 }
             }
             else if (item == enums.VideoMenuItem.OM_CANCEL) {
-                //CGameState::playSample(SAMPLE_MENU_BACK);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                 this.m_optionState.create();
                 return this.changeState(this.m_app.instance = this.m_optionState);
             }
         }
         if (controls.up) {
             controls.up = false;
-            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_menu.scroll(-1);
         }
 
         if (controls.down) {
             controls.down = false;
-            //CGameState::playSample(SAMPLE_MENU_SELECTION);
+            super.playSample(enums.GameSampleType.SAMPLE_MENU_SELECTION);
             this.m_menu.scroll(1);
         }
 
         if (controls.left) {
             controls.left = false;
             if (this.m_menu.setValue(item, this.m_menu.getValue(item) - 1)) {
-                //CGameState::playSample(SAMPLE_MENU_OPTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             }
         }
         if (controls.right) {
             controls.right = false;
             if (this.m_menu.setValue(item, this.m_menu.getValue(item) + 1)) {
-                //CGameState::playSample(SAMPLE_MENU_OPTION);
+                super.playSample(enums.GameSampleType.SAMPLE_MENU_OPTION);
             }
         }
         return true;

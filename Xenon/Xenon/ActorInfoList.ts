@@ -40,18 +40,18 @@ class CActorInfoList {
         this.m_info_list.push(new ActorInfo("ArmouredLoner", enums.ActorType.ACTOR_TYPE_ALIEN, "LonerC", 64, 64, 32, 32, 16, 6, 90, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("OrganicGun", enums.ActorType.ACTOR_TYPE_ALIEN, "GShoot", 64, 64, 32, 32, 8, 5, 20, new gsCVector(0, 0)));
         // bullets
-        this.m_info_list.push(new ActorInfo("Missile", enums.ActorType.ACTOR_TYPE_BULLET, "missile", 16, 16, 8, 8, 0, this.INFINITE_SHIELD, 0, new gsCVector(10, 10)));//,0,0,1,2,3,10,10,10	));
-        this.m_info_list.push(new ActorInfo("HomingMissile", enums.ActorType.ACTOR_TYPE_BULLET, "hmissile", 32, 32, 16, 16, 0, this.INFINITE_SHIELD, 0, new gsCVector(5, 5)));//,0,0,1,2,3,5,5,5		));
-        this.m_info_list.push(new ActorInfo("Laser", enums.ActorType.ACTOR_TYPE_BULLET, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(20, 20)));//,0,0,2,4,6,20,20,20		));
-        this.m_info_list.push(new ActorInfo("HomerProjectile", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "HomProjc", 16, 16, 8, 8, 0, 1, 50, new gsCVector(3, 3)));//,0,0,2,4,6,3,3,3					));
-        this.m_info_list.push(new ActorInfo("Spinner", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "EnWeap6", 16, 16, 8, 8, 16, this.INFINITE_SHIELD, 0, new gsCVector(5, 5)));//,0,0,1,2,3,5,5,5		));
-        this.m_info_list.push(new ActorInfo("Spore", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "SporesA", 16, 16, 8, 8, 8, 1, 5, new gsCVector(1.5, 1.5)));//,0,0,2,4,6,1.5f,1.5f,1.5f ));
+        this.m_info_list.push(new ActorInfo("Missile", enums.ActorType.ACTOR_TYPE_BULLET, "missile", 16, 16, 8, 8, 0, this.INFINITE_SHIELD, 0, new gsCVector(10, 10)));
+        this.m_info_list.push(new ActorInfo("HomingMissile", enums.ActorType.ACTOR_TYPE_BULLET, "hmissile", 32, 32, 16, 16, 0, this.INFINITE_SHIELD, 0, new gsCVector(5, 5)));
+        this.m_info_list.push(new ActorInfo("Laser", enums.ActorType.ACTOR_TYPE_BULLET, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(20, 20)));
+        this.m_info_list.push(new ActorInfo("HomerProjectile", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "HomProjc", 16, 16, 8, 8, 0, 1, 50, new gsCVector(3, 3)));
+        this.m_info_list.push(new ActorInfo("Spinner", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "EnWeap6", 16, 16, 8, 8, 16, this.INFINITE_SHIELD, 0, new gsCVector(5, 5)));
+        this.m_info_list.push(new ActorInfo("Spore", enums.ActorType.ACTOR_TYPE_ALIENBULLET, "SporesA", 16, 16, 8, 8, 8, 1, 5, new gsCVector(1.5, 1.5)));
         // weapons
-        this.m_info_list.push(new ActorInfo("MissileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));//,0.1f,0.25f	));
-        this.m_info_list.push(new ActorInfo("HomingMissileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));//,0.1f,0.25f	));
-        this.m_info_list.push(new ActorInfo("LaserWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));//,0.1f,0.1f 	));
-        this.m_info_list.push(new ActorInfo("HomerProjectileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));//,5,5		));
-        this.m_info_list.push(new ActorInfo("SpinnerWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));//,1,1		));
+        this.m_info_list.push(new ActorInfo("MissileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("HomingMissileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("LaserWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("HomerProjectileWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("SpinnerWeapon", enums.ActorType.ACTOR_TYPE_WEAPON, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         // ship
         this.m_info_list.push(new ActorInfo("Ship", enums.ActorType.ACTOR_TYPE_SHIP, "Ship2", 64, 64, 32, 32, 0, 100, 0, new gsCVector(0, 0)));
         // upgrades
@@ -61,7 +61,7 @@ class CActorInfoList {
         this.m_info_list.push(new ActorInfo("ShipEngine", enums.ActorType.ACTOR_TYPE_ENGINE, "Burner1", 16, 32, 8, 0, 10, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("CloneEngine", enums.ActorType.ACTOR_TYPE_ENGINE, "Burner2", 32, 32, 16, 0, 10, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("RetroEngine", enums.ActorType.ACTOR_TYPE_ENGINE, "Retros", 32, 32, 16, 16, 10, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
-        //// effects
+        // effects
         this.m_info_list.push(new ActorInfo("SmallExplosion", enums.ActorType.ACTOR_TYPE_ALIEN, "explode16", 16, 16, 8, 8, 40, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("MediumExplosion", enums.ActorType.ACTOR_TYPE_ALIEN, "explode32", 32, 32, 16, 16, 40, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("BigExplosion", enums.ActorType.ACTOR_TYPE_ALIEN, "explode64", 64, 64, 32, 32, 40, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
@@ -79,22 +79,32 @@ class CActorInfoList {
         this.m_info_list.push(new ActorInfo("BossControl", enums.ActorType.ACTOR_TYPE_BOSS, "", 0, 0, 0, 0, 0, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
     }
 
+    //-------------------------------------------------------------
+
     public GetActorInfoListItem(index: number) {
         return this.m_info_list[index];
     }
+
+    //-------------------------------------------------------------
 
     //------------------- m_speed test !!
     public GetActorSpeed(index: number) {
         return this.m_info_list[index].m_speed;
     }
 
+    //-------------------------------------------------------------
+
     public GetTileWidth(index: number) {
         return this.m_info_list[index].m_tile_width;
     }
 
+    //-------------------------------------------------------------
+
     public GetTileHeight(index: number) {
         return this.m_info_list[index].m_tile_height;
     }
+
+    //-------------------------------------------------------------
 
     // Method to return the Actor Image File Names
     public GetActorTextureName() {
@@ -107,6 +117,8 @@ class CActorInfoList {
         }
         return names;
     }
+
+    //-------------------------------------------------------------
 
     // Instantiate a new Actor's information and push into an array
     AddValues(name: string, actorType: enums.ActorType, info: string, one: number, two: number, three: number, four: number, five: number, shield: number, six: number, vector: gsCVector) {
