@@ -108,7 +108,8 @@ class CBossControl extends CBoss {
             }
 
             this.m_mouth = new CBossMouth();
-            this.m_state = BossState.BOSS_MOVE_DOWN;
+            //this.m_state = BossState.BOSS_MOVE_DOWN;
+            this.m_script_pointer = this.m_script[0];
             this.interpretScript();
         }
 
@@ -217,7 +218,7 @@ class CBossControl extends CBoss {
         this.m_state = this.m_script_pointer.m_state;
 
         //m_script_pointer++;
-        this.m_script_pointer = this.m_script[this.m_script_pointer_count];
+        this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
     }
 
     //-------------------------------------------------------------
