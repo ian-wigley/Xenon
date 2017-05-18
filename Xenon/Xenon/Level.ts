@@ -60,6 +60,7 @@ import CBossEye = require("BossEye");
 import CBossControl = require("BossControl");
 import enums = require("Enums");
 import CApplication = require("Application");
+import CPlayGameState = require("PlayGameState");
 
 enum AlienType {
     WALLHUGGER,				// 0
@@ -112,22 +113,18 @@ class CLevel {
     // collision flags
     public COLLIDE_WITH_SHIP: number = 1;
     public COLLIDE_WITH_BULLETS: number = 2;
-
     public m_back_layer: gsCMap;
     public m_front_layer: gsCMap;
-
     private m_scan_y: number = 0;
     private m_boss_active: boolean;
-
     private LevelCounter: number = 0;
     private m_header: MPHD;
     private m_blocks: BLKSTR[];
     private m_imageTiles: HTMLImageElement;
     private m_image: gsCTiledImage;
-    private m_application: CApplication;
+    private m_playGameState: CPlayGameState;
 
     loaded: boolean = false;
-
 
     CHUNK_FORM: number = ("F".charCodeAt(0) << 24) + ("O".charCodeAt(0) << 16) + ("R".charCodeAt(0) << 8) + ("M".charCodeAt(0));
     CHUNK_FMAP: number = ("F".charCodeAt(0) << 24) + ("M".charCodeAt(0) << 16) + ("A".charCodeAt(0) << 8) + ("P".charCodeAt(0));
@@ -139,8 +136,7 @@ class CLevel {
 
     constructor(imageTiles: HTMLImageElement, application: CApplication) {
         this.m_imageTiles = imageTiles;
-        this.m_application = application;
-
+        this.m_playGameState = application.playStateInstance;
         this.m_back_layer = new gsCMap();
         this.m_front_layer = new gsCMap();
 
@@ -164,6 +160,8 @@ class CLevel {
         };
         xhr.send();
     }
+
+    //-------------------------------------------------------------
 
     private parseLevel(): void {
 
@@ -190,8 +188,7 @@ class CLevel {
             id = this.readUDWORD();
             var chunk_length = 0;
             chunk_length = this.readUDWORD();
-            var currentFilePos = this.LevelCounter;// * 4;
-            //gsUDWORD chunk_end = m_file.getPosition() + chunk_length;
+            var currentFilePos = this.LevelCounter;
             var chunk_end = currentFilePos + chunk_length;
 
             switch (id) {
@@ -199,8 +196,6 @@ class CLevel {
                     this.m_header = new MPHD();
                     var size = 24;
                     this.FileRead(this.m_header, size);
-                    ////if (m_file.read(&m_header,sizeof(MPHD)) != sizeof(MPHD))
-                    ////return error();
 
                     if (this.m_header.blockdepth != 24) {
                         //this.error();
@@ -226,8 +221,6 @@ class CLevel {
                     break;
 
                 case this.CHUNK_BGFX:
-                    ////gsCFile::setDirectory(graphics_directory);
-                    ////    return error();
                     this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
                     console.log("Creating tile for : " + this.m_image.Image.id);
                     this.m_image.setTileSize(new Point(32, 32));
@@ -335,6 +328,7 @@ class CLevel {
         }
     }
 
+    //-------------------------------------------------------------
 
     private readUDWORD() {
         var bytes = this.GetFourBytes();
@@ -342,12 +336,16 @@ class CLevel {
         return d;
     }
 
+    //-------------------------------------------------------------
+
     private GetTwoBytes() {
         var bytes = new Array<string>(2);
         bytes[0] = this.LevelBytes[this.LevelCounter++];
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         return bytes;
     }
+
+    //-------------------------------------------------------------
 
     private GetFourBytes() {
         var bytes = new Array<string>(4);
@@ -357,6 +355,8 @@ class CLevel {
         bytes[3] = this.LevelBytes[this.LevelCounter++];
         return bytes;
     }
+
+    //-------------------------------------------------------------
 
     private FileRead(m_header: MPHD, size: number) {
         m_header.mapverhigh = parseInt(this.LevelBytes[this.LevelCounter++]);
@@ -405,6 +405,8 @@ class CLevel {
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         m_header.numblockgfx = this.ByteConverterToUInt16(bytes);
     }
+
+    //-------------------------------------------------------------
 
     private FileRead2(blocks: BLKSTR, size: number): BLKSTR {
         var m_blocks = new BLKSTR();
@@ -472,6 +474,7 @@ class CLevel {
         return m_blocks;
     }
 
+    //-------------------------------------------------------------
 
     private ByteConverterToUInt16(bytes) {
 
@@ -485,6 +488,7 @@ class CLevel {
         return va;
     }
 
+    //-------------------------------------------------------------
 
     private ByteConverterToUInt32(bytes) {
 
@@ -503,13 +507,19 @@ class CLevel {
         return va;
     }
 
+    //-------------------------------------------------------------
+
     public getMapFrontLayer(): gsCMap {
         return this.m_front_layer;
     }
 
+    //-------------------------------------------------------------
+
     public getMapBackLayer(): gsCMap {
         return this.m_back_layer;
     }
+
+    //-------------------------------------------------------------
 
     public reset(): void {
         this.m_boss_active = false;
@@ -540,10 +550,12 @@ class CLevel {
         }
     }
 
+    //-------------------------------------------------------------
 
-    public scanForNewActors(scene: CScene): void {
+    public scanForNewActors(scene: CScene, playGameState): void {
+        this.m_playGameState = playGameState;
+
         //gsCScreen *screen = gsCApplication::getScreen();
-
         //if (!screen)
         //    return;
 
@@ -551,7 +563,6 @@ class CLevel {
         var source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
         var dest_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);//source_rect;
         //dest_rect.move(m_front_layer.getPosition());
-
 
         dest_rect.Left += this.m_front_layer.getPosition().X;
         dest_rect.Top += this.m_front_layer.getPosition().Y;
@@ -611,43 +622,43 @@ class CLevel {
 
                                 switch (type) {
                                     case PickupType.PICKUP_SHIELD:
-                                        p = new Pickup.CShieldPickup();
+                                        p = new Pickup.CShieldPickup(this.m_playGameState);
                                         console.log("PICKUP_SHIELD");
                                         break;
                                     case PickupType.PICKUP_SPEEDUP:
-                                        p = new Pickup.CSpeedPickup();
+                                        p = new Pickup.CSpeedPickup(this.m_playGameState);
                                         console.log("PICKUP_SPEEDUP");
                                         break;
                                     case PickupType.PICKUP_WEAPONUP:
-                                        p = new Pickup.CWeaponPickup();
+                                        p = new Pickup.CWeaponPickup(this.m_playGameState);
                                         console.log("PICKUP_WEAPONUP");
                                         break;
                                     case PickupType.PICKUP_CLOAK:
-                                        p = new Pickup.CCloakPickup();
+                                        p = new Pickup.CCloakPickup(this.m_playGameState);
                                         console.log("PICKUP_CLOAK");
                                         break;
                                     case PickupType.PICKUP_DIVE:
-                                        p = new Pickup.CDivePickup();
+                                        p = new Pickup.CDivePickup(this.m_playGameState);
                                         console.log("PICKUP_DIVE");
                                         break;
                                     case PickupType.PICKUP_SCOREBONUS:
-                                        p = new Pickup.CScorePickup();
+                                        p = new Pickup.CScorePickup(this.m_playGameState);
                                         console.log("PICKUP_SCOREBONUS");
                                         break;
                                     case PickupType.PICKUP_CLONE:
-                                        p = new Pickup.CClonePickup();
+                                        p = new Pickup.CClonePickup(this.m_playGameState);
                                         console.log("PICKUP_CLONE");
                                         break;
                                     case PickupType.PICKUP_WINGTIP:
-                                        p = new Pickup.CWingtipPickup();
+                                        p = new Pickup.CWingtipPickup(this.m_playGameState);
                                         console.log("PICKUP_WINGTIP");
                                         break;
                                     case PickupType.PICKUP_HOMINGMISSILE:
-                                        p = new Pickup.CHomingMissilePickup();
+                                        p = new Pickup.CHomingMissilePickup(this.m_playGameState);
                                         console.log("PICKUP_HOMINGMISSILE");
                                         break;
                                     case PickupType.PICKUP_LASER:
-                                        p = new Pickup.CLaserPickup();
+                                        p = new Pickup.CLaserPickup(this.m_playGameState);
                                         console.log("PICKUP_LASER");
                                         break;
                                 }
@@ -657,29 +668,26 @@ class CLevel {
                                     p.activate();
                                 }
                             }
-
                             break;
                         case TileId.ID_ALIEN:
                             // aliens
-
                             switch (type) {
                                 case AlienType.ASTEROID:
                                     {
                                         var a: Asteroid.CAsteroid = null;
-
                                         switch (size) {
                                             case 0:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CSmallStandardAsteroid(this.m_application);
+                                                        a = new Asteroid.CSmallStandardAsteroid(this.m_playGameState);
                                                         console.log("CSmallStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CSmallHighDensityAsteroid(this.m_application);
+                                                        a = new Asteroid.CSmallHighDensityAsteroid(this.m_playGameState);
                                                         console.log("CSmallHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CSmallIndestructibleAsteroid(this.m_application);
+                                                        a = new Asteroid.CSmallIndestructibleAsteroid(this.m_playGameState);
                                                         console.log("CSmallIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -687,15 +695,15 @@ class CLevel {
                                             case 1:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CMediumStandardAsteroid(this.m_application);
+                                                        a = new Asteroid.CMediumStandardAsteroid(this.m_playGameState);
                                                         console.log("CMediumStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CMediumHighDensityAsteroid(this.m_application);
+                                                        a = new Asteroid.CMediumHighDensityAsteroid(this.m_playGameState);
                                                         console.log("CMediumHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CMediumIndestructibleAsteroid(this.m_application);
+                                                        a = new Asteroid.CMediumIndestructibleAsteroid(this.m_playGameState);
                                                         console.log("CMediumIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -703,15 +711,15 @@ class CLevel {
                                             case 2:
                                                 switch (grade) {
                                                     case 0:
-                                                        a = new Asteroid.CBigStandardAsteroid(this.m_application);
+                                                        a = new Asteroid.CBigStandardAsteroid(this.m_playGameState);
                                                         console.log("CBigStandardAsteroid");
                                                         break;
                                                     case 1:
-                                                        a = new Asteroid.CBigHighDensityAsteroid(this.m_application);
+                                                        a = new Asteroid.CBigHighDensityAsteroid(this.m_playGameState);
                                                         console.log("CBigHighDensityAsteroid");
                                                         break;
                                                     case 2:
-                                                        a = new Asteroid.CBigIndestructibleAsteroid(this.m_application);
+                                                        a = new Asteroid.CBigIndestructibleAsteroid(this.m_playGameState);
                                                         console.log("CBigIndestructibleAsteroid");
                                                         break;
                                                 }
@@ -732,15 +740,15 @@ class CLevel {
 
                                     switch (grade) {
                                         case 0:
-                                            l = new Loner.CStandardLoner();
+                                            l = new Loner.CStandardLoner(this.m_playGameState);
                                             console.log("CStandardLoner");
                                             break;
                                         case 1:
-                                            l = new Loner.CMediumLoner();
+                                            l = new Loner.CMediumLoner(this.m_playGameState);
                                             console.log("CMediumLoner");
                                             break;
                                         case 2:
-                                            l = new Loner.CArmouredLoner();
+                                            l = new Loner.CArmouredLoner(this.m_playGameState);
                                             console.log("CArmouredLoner");
                                             break;
                                     }
@@ -754,7 +762,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.HOMER:
-                                    var h: CHomer = new CHomer();
+                                    var h: CHomer = new CHomer(this.m_playGameState);
                                     console.log("HOMER");
                                     scene.addActor(h);
                                     h.setPosition(pos);
@@ -763,7 +771,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.POD:
-                                    var pO: CPod = new CPod();
+                                    var pO: CPod = new CPod(this.m_playGameState);
                                     console.log("POD");
                                     scene.addActor(pO);
                                     pO.setPosition(pos);
@@ -799,7 +807,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.DRONE_GENERATOR:
-                                    var d: CDroneGenerator = new CDroneGenerator(this.m_application);
+                                    var d: CDroneGenerator = new CDroneGenerator(this.m_playGameState);
                                     console.log("DroneGenerator");
                                     scene.addActor(d);
                                     d.setPosition(pos);
@@ -849,7 +857,7 @@ class CLevel {
                                     break;
 
                                 default:
-                                    var xp: CBigExplosion = new CBigExplosion();
+                                    var xp: CBigExplosion = new CBigExplosion(this.m_playGameState);
                                     console.log("BigExplosion");
                                     scene.addActor(xp);
                                     xp.setPosition(pos);
@@ -880,7 +888,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_EYE:
-                            var e: CBossEye = new CBossEye();
+                            var e: CBossEye = new CBossEye(this.m_playGameState);
                             console.log("BossEye");
                             e.setEyeNumber(type);
                             scene.addActor(e);
@@ -903,7 +911,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_CONTROL:
-                            var bC: CBossControl = new CBossControl(this.m_application);
+                            var bC: CBossControl = new CBossControl(this.m_playGameState);
                             console.log("BossControl");
                             scene.addActor(bC);
                             bC.setPosition(pos);
@@ -919,9 +927,13 @@ class CLevel {
         }
     }
 
+    //-------------------------------------------------------------
+
     public get LoadingComplete(): boolean {
         return this.loaded;
     }
+
+    //-------------------------------------------------------------
 }
 
 export = CLevel;

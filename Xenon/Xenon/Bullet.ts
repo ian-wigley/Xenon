@@ -9,9 +9,10 @@ class CBullet extends CActor {
 
     protected m_grade: enums.BulletGrade;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
         this.m_grade = enums.BulletGrade.BULLET_STANDARD;
+        this.m_playGameState = playGameState;
         this.m_name = "bullet";
     }
 
@@ -63,7 +64,7 @@ class CBullet extends CActor {
 
                     // NOTE: don't let alien bullets score points :)
                     if (this.getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_BULLET) {
-                        //this.m_playGameState.getPlayer().scoreBonus(5);
+                        this.m_playGameState.getPlayer().scoreBonus(5);
                     }
                 }
             }

@@ -4,6 +4,8 @@
     constructor() {
     }
 
+    //-------------------------------------------------------------
+
     public load(filename: string): boolean {
         this.sample = <HTMLAudioElement>document.getElementById(filename);
         if (this.sample) {
@@ -13,5 +15,8 @@
             return false;
         }
     }
+
+    //-------------------------------------------------------------
+
 }
 export = gsCSample;

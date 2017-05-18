@@ -6,23 +6,23 @@ import ActorInfo = require("ActorInfo")
 import CShip = require("Ship");
 import gsCVector = require("Vector");
 import CSpinnerWeapon = require("SpinnerWeapon");
-
 import CExplosion = require("Explosion");
 import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
 import CBigExplosion = require("BigExplosion");
 import gsCPoint = require("Point");
-
+import CPlayGameState = require("PlayGameState");
 
 export = Loner;
 module Loner {
 
     export class CLoner extends CAlien {
 
-        m_weapon: CSpinnerWeapon;
+        private m_weapon: CSpinnerWeapon;
 
-        constructor() {
+        constructor(playGameState: CPlayGameState) {
             super();
+            this.m_playGameState = playGameState;
             this.m_name = "Loner";
         }
 
@@ -91,7 +91,7 @@ module Loner {
                     x = new CMediumExplosion();
                 }
                 else {
-                    x = new CBigExplosion();
+                    x = new CBigExplosion(this.m_playGameState);
                 }
 
                 this.m_scene.addActor(x);

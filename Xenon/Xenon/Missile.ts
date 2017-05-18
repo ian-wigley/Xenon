@@ -3,13 +3,14 @@ import CScene = require("Scene");
 import CBullet = require("Bullet");
 import CActor = require("Actor");
 import enums = require("Enums");
+import CPlayGameState = require("PlayGameState");
 
 class CMissile extends CBullet {
 
     MISSILE_FRAMES: number = 2;
 
-    constructor(theScene: CScene) {
-        super();
+    constructor(theScene: CScene, playGameState: CPlayGameState) {
+        super(playGameState);
         this.m_name = "Missile";
     }
 

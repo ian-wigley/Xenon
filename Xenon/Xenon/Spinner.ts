@@ -2,14 +2,17 @@
 import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CPlayGameState = require("PlayGameState");
 
 class CSpinner extends CBullet {
     private SPINNER_FRAMES: number = 8;
 
-    constructor() {
-        super();
+    constructor(playGameState: CPlayGameState) {
+        super(playGameState);
         this.m_name = "Spinner";
     }
+
+    //-------------------------------------------------------------
 
     public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();

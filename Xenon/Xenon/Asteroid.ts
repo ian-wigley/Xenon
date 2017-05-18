@@ -11,17 +11,16 @@ import gsCPoint = require("Point");
 import CDustEffect = require("DustEffect");
 import CStandardDustEffect = require("StandardDustEffect");
 import CHighDensityDustEffect = require("HighDensityDustEffect");
-import CApplication = require("Application");
+import CPlayGameState = require("PlayGameState");
 
 export = Asteroid;
 module Asteroid {
 
     export class CAsteroid extends CAlien {
-        protected m_application: CApplication;
 
-        constructor(application: CApplication) { /// Need the gamestate & Options ref's
+        constructor(playGameState: CPlayGameState) { /// Need the gamestate & Options ref's
             super();
-            this.m_application = application;
+            this.m_playGameState = playGameState;
             this.m_name = "Asteroid";
         }
 
@@ -70,7 +69,7 @@ module Asteroid {
                     x = new CMediumExplosion();
                 }
                 else {
-                    x = new CBigExplosion();
+                    x = new CBigExplosion(this.m_playGameState);
                 }
 
                 this.m_scene.addActor(x);
@@ -96,6 +95,7 @@ module Asteroid {
         public fragment(): void {
             super.explode();
             this.kill();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
         }
     }
@@ -116,6 +116,7 @@ module Asteroid {
         public fragment(): void {
             super.explode();
             this.kill();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
         }
     }
@@ -149,14 +150,14 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CSmallStandardAsteroid(this.m_application );
+            var child1: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CSmallStandardAsteroid(this.m_application );
+            var child2: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
@@ -192,14 +193,14 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CSmallHighDensityAsteroid(this.m_application);
+            var child1: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CSmallHighDensityAsteroid(this.m_application );
+            var child2: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
@@ -217,6 +218,7 @@ module Asteroid {
             //}
 
             this.kill();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
         }
     }
@@ -250,21 +252,21 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CMediumStandardAsteroid(this.m_application);
+            var child1: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CMediumStandardAsteroid(this.m_application);
+            var child2: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
             child2.setVelocity(new gsCVector(0.0, 1.3));
             child2.increaseScoreMultiplier(0.5);
 
-            var child3: CAsteroid = new CMediumStandardAsteroid(this.m_application);
+            var child3: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child3);
             child3.activate();
             child3.setPosition(this.getPosition());
@@ -282,6 +284,7 @@ module Asteroid {
             //}
 
             this.kill();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
         }
     }
@@ -300,21 +303,21 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CMediumHighDensityAsteroid(this.m_application);
+            var child1: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.50);
 
-            var child2: CAsteroid = new CMediumHighDensityAsteroid(this.m_application);
+            var child2: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
             child2.setVelocity(new gsCVector(0.0, 1.3));
             child2.increaseScoreMultiplier(0.5);
 
-            var child3: CAsteroid = new CMediumHighDensityAsteroid(this.m_application);
+            var child3: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child3);
             child3.activate();
             child3.setPosition(this.getPosition());
@@ -332,6 +335,7 @@ module Asteroid {
             //}
 
             this.kill();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
             //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
         }
     }

@@ -52,8 +52,7 @@ class gsCMap {
 
     public destroyMapTiles(): void {
         if (this.m_map_tiles != null) {
-            //delete[] m_map_tiles;
-            //m_map_tiles = 0;
+            this.m_map_tiles = [];
         }
     }
 
@@ -117,7 +116,7 @@ class gsCMap {
 
     //-------------------------------------------------------------
 
-    public setPosition(position: gsCVector /*Point*/): void {
+    public setPosition(position: gsCVector): void {
         this.m_position = position;
     }
 
@@ -176,7 +175,7 @@ class gsCMap {
 
     //-------------------------------------------------------------
 
-    public getPosition(): gsCVector { //: Point {
+    public getPosition(): gsCVector {
         return this.m_position;
     }
 

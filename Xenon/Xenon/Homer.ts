@@ -5,19 +5,20 @@ import gsCTimer = require("Timer");
 import enums = require("Enums");
 import CShip = require("Ship");
 import gsCVector = require("Vector");
-
 import CExplosion = require("Explosion");
 import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
 import CBigExplosion = require("BigExplosion");
 import gsCPoint = require("Point");
+import CPlayGameState = require("PlayGameState");
 
 class CHomer extends CAlien {
     HOMER_MAX_XSPEED: number = 3.0;
     HOMER_XSPEED_SCALE: number = 0.025;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_name = "Homer";
     }
 
@@ -37,25 +38,21 @@ class CHomer extends CAlien {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-        //this.gameTime = gameTime;
 
         if (this.m_shield == 0) {
-
-            var weapon: CHomerProjectileWeapon = new CHomerProjectileWeapon();
+            var weapon: CHomerProjectileWeapon = new CHomerProjectileWeapon(this.m_playGameState);
             this.m_scene.addActor(weapon);
             weapon.activate();
             weapon.setOwner(this);
             weapon.setOffset(new gsCVector(0.0, 0.0));
             weapon.detonate();
 
-            //super.explode();
             this.explode();
             super.kill();
             return true;
         }
 
         var ship: CShip = this.m_scene.findShip();
-
         var dx: number = 0.0;
 
         if (ship != null) {
@@ -91,7 +88,7 @@ class CHomer extends CAlien {
                 x = new CMediumExplosion();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
             this.m_scene.addActor(x);
             x.setPosition(this.getPosition());

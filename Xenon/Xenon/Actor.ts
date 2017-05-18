@@ -7,13 +7,10 @@ import gsCTimer = require("Timer");
 import CScene = require("Scene");
 import CActorInfoList = require("ActorInfoList");
 import ActorInfo = require("ActorInfo");
-//import CExplosion = require("Explosion");
-//import CSmallExplosion = require("SmallExplosion");
-//import CMediumExplosion = require("MediumExplosion");
-//import CBigExplosion = require("BigExplosion");
 import enums = require("Enums");
 import Point = require("Point");
 import CApplication = require("Application");
+import CPlayGameState = require("PlayGameState");
 
 class CActor {
 
@@ -41,6 +38,7 @@ class CActor {
 
     protected m_name: string = "";
     protected m_app: CApplication;
+    protected m_playGameState: CPlayGameState;
 
     private frame: number = 0;
 

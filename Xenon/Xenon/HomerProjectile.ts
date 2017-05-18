@@ -36,9 +36,7 @@ class CHomerProjectile extends CBullet {
     //-------------------------------------------------------------
 
     public explode() {
-
         var x: CExplosion = null;
-
         if (this.m_image != null) {
             var size: Point = this.m_image.getTileSize();
             var area = size.X * size.Y;
@@ -50,7 +48,7 @@ class CHomerProjectile extends CBullet {
                 x = new CMediumExplosion();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
 
             this.m_scene.addActor(x);

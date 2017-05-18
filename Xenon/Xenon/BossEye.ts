@@ -1,10 +1,4 @@
-﻿//enum BossEyeState {
-//    BOSSEYE_OPEN,
-//    BOSSEYE_CLOSING,
-//    BOSSEYE_SHUT
-//}
-
-import CBoss = require("Boss")
+﻿import CBoss = require("Boss")
 import CExplosion = require("Explosion")
 import CBigExplosion = require("BigExplosion")
 import ActorInfo = require("ActorInfo")
@@ -12,14 +6,17 @@ import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CActor = require("Actor");
+import CPlayGameState = require("PlayGameState");
 
 class CBossEye extends CBoss {
+
     BOSSEYE_TOTAL: number = 6;
     m_eye_number: number;
     m_state: enums.BossEyeState = enums.BossEyeState.BOSSEYE_SHUT;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_eye_number = 0;
         this.m_state = enums.BossEyeState.BOSSEYE_SHUT;
         this.m_name = "Boss Eye";
@@ -44,7 +41,7 @@ class CBossEye extends CBoss {
     //-------------------------------------------------------------
 
     public kill(): void {
-        var x: CExplosion = new CBigExplosion();
+        var x: CExplosion = new CBigExplosion(this.m_playGameState);
         this.m_scene.addActor(x);
         x.setPosition(this.getPosition());
         x.activate();

@@ -9,10 +9,7 @@ class gsCMapTile {
     private m_hidden: number = 0;
     private m_data: number[];   // user data
     private m_collision_flags: number;
-
-
     private m_size: Point;
-
 
     constructor(tile?: number, empty?: boolean, hidden?: boolean)
     {
@@ -26,6 +23,8 @@ class gsCMapTile {
             this.m_data[i] = 0;
         }
     }
+
+    //-------------------------------------------------------------
 
     public setTile(tile: number): void {
         this.m_tile = tile;
@@ -85,7 +84,6 @@ class gsCMapTile {
 
     public getUserData(index: number): number {
         //gsASSERT(index >= 0 && index < gsMAPTILE_USERDATA);
-
         return this.m_data[index];
     }
 
@@ -94,8 +92,8 @@ class gsCMapTile {
     public getCollisionFlags(): number {
         return this.m_collision_flags;
     }
-    //-------------------------------------------------------------
 
+    //-------------------------------------------------------------
 }
 
 export = gsCMapTile;

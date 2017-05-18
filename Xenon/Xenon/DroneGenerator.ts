@@ -5,6 +5,7 @@ import CDrone = require("Drone");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import gsCVector = require("Vector");
+import CPlayGameState = require("PlayGameState");
 
 class CDroneGenerator extends CActor {
     //-------------------------------------------------------------
@@ -19,19 +20,19 @@ class CDroneGenerator extends CActor {
     private m_drones_created: number;
     private m_drones_active: number;
     private m_drones_killed: number;
-    private m_application: CApplication;
 
-    constructor(application: CApplication) {
+    constructor(playGameState: CPlayGameState) {
         super();
         this.m_drones_created = 0;
         this.m_drones_active = 0;
         this.m_drones_killed = 0;
         this.m_name = "DroneGenerator";
-        this.m_application = application;
+        this.m_playGameState = playGameState;
     }
 
-    public getActorInfo() {
+    //-------------------------------------------------------------
 
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DRONE_GENERATOR);
     }
@@ -46,7 +47,7 @@ class CDroneGenerator extends CActor {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         if (this.m_drones_created < this.DRONE_TOTAL) {
-            var d: CDrone = new CDrone(this.m_application, this);
+            var d: CDrone = new CDrone(this.m_playGameState, this);
             this.m_scene.addActor(d);
             d.setPosition(this.getPosition().plus1(new gsCVector(0.0, this.m_drones_created * this.DRONE_SPACING)));
             d.setVelocity(new gsCVector(0.0, this.DRONE_SPEED));

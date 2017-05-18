@@ -271,7 +271,7 @@ class CPlayGameState extends CGameState {
             this.m_starfield.Draw(ctx);
 
             if (this.m_mode == m_gameMode.PLAYERACTIVE) {
-                this.m_level.scanForNewActors(this.m_scene);
+                this.m_level.scanForNewActors(this.m_scene, this);
             }
 
             this.even = !this.even;

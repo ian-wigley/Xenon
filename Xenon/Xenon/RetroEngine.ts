@@ -16,6 +16,8 @@ class CRetroEngine extends CEngine {
         this.m_actorInfo = listOfActors;
     }
 
+    //-------------------------------------------------------------
+
     public Draw(ctx: CanvasRenderingContext2D) {
         //if (getOwner() &&  getOwner().getActorInfo().m_type == ACTOR_TYPE_SHIP &&
         //    ((CShip *) getOwner())->isCloaked())
@@ -49,7 +51,9 @@ class CRetroEngine extends CEngine {
         this.m_direction = direction;
     }
 
-    getActorInfo() {
+    //-------------------------------------------------------------
+
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RETRO_ENGINE);
 

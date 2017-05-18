@@ -17,11 +17,10 @@ class CDrone extends CAlien {
     private m_generator: CDroneGenerator;
     private m_phase: number;
     //private m_timer:number = 0.0;
-    private m_playGameState: CPlayGameState;
 
-    constructor(application: CApplication, generator?: CDroneGenerator) {
+    constructor(playGameState: CPlayGameState, generator?: CDroneGenerator) {
         super();
-        this.m_playGameState = application.playStateInstance;
+        this.m_playGameState = playGameState;
         this.m_generator = generator;
         this.m_phase = 0.0;
         this.m_name = "Drone";       
@@ -50,12 +49,11 @@ class CDrone extends CAlien {
 
         this.m_timer.update(false);
 
-        //this.gameTime = this.gameTime = gameTime;;
         if (this.m_shield == 0) {
             var score: number = this.m_generator.droneKilled(true);
 
             if (score == 0) {
-                var s: Pickup.CScorePickup = new Pickup.CScorePickup();
+                var s: Pickup.CScorePickup = new Pickup.CScorePickup(this.m_playGameState);
                 this.m_scene.addActor(s);
                 s.setPosition(this.getPosition());
                 s.activate();
@@ -107,7 +105,7 @@ class CDrone extends CAlien {
                 x = new CMediumExplosion();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
 
             this.m_scene.addActor(x);

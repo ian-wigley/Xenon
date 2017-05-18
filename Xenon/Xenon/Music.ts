@@ -4,6 +4,8 @@
     constructor() {
     }
 
+    //-------------------------------------------------------------
+
     public load(filename: string): boolean {
         this.music = <HTMLAudioElement>document.getElementById(filename);
         if (this.music) {
@@ -13,5 +15,8 @@
             return false;
         }
     }
+
+    //-------------------------------------------------------------
+
 }
 export = gsCMusic;

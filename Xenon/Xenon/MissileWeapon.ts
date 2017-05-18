@@ -5,11 +5,15 @@ import CMissile = require("Missile");
 import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CApplication = require("Application");
+
+import CPlayGameState = require("PlayGameState");
 
 class CMissileWeapon extends CWeapon {
 
-    constructor(scene: CScene) {
+    constructor(scene: CScene, playGameState: CPlayGameState) {
         super(scene);
+        this.m_playGameState = playGameState;
         this.m_name = "MissileWeapon";
     }
 
@@ -38,7 +42,7 @@ class CMissileWeapon extends CWeapon {
             return false;
         }
 
-        var m: CMissile = new CMissile(this.m_scene);
+        var m: CMissile = new CMissile(this.m_scene, this.m_playGameState);
         this.m_scene.addActor(m);
         m.activate();
         var grade: number = this.m_grade;
@@ -59,6 +63,7 @@ class CMissileWeapon extends CWeapon {
         }
 
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);
             //   CGameState::playSample(SAMPLE_FIRE_MISSILE,getPosition().getX());
         }
         return true;

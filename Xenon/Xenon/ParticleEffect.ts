@@ -97,9 +97,6 @@ class CParticleEffect extends CActor {
         // update all
         var delta_time: number = this.m_timer.getDeltaTime();
 
-        // *********************** This bit stops breaks the asteroid ************************* //
-
-        //        for (var i = this.m_particle_list.length - 1; i >= 0; i--) {
         for (var i = 0; i < this.m_particle_list.length; i++) {
             var p: Particle = this.m_particle_list[i];
             if (p) {
@@ -121,15 +118,12 @@ class CParticleEffect extends CActor {
                 ////            //}
                 //     }
             }
-            // *********************** This bit stops breaks the asteroid ************************* //
         }
-
         return true;
     }
 
     //-------------------------------------------------------------
 
-    //public draw(ctx: CanvasRenderingContext2D): boolean {
     public Draw(ctx: CanvasRenderingContext2D): boolean {
         //    gsCRect screen_rect = gsCApplication::getScreen() ->getRect();
 

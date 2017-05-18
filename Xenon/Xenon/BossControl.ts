@@ -9,6 +9,7 @@ import CBigExplosion = require("BigExplosion");
 import CBossEye = require("BossEye");
 import CBossMouth = require("BossMouth");
 import CApplication = require("Application");
+import CPlayGameState = require("PlayGameState");
 
 enum BossState {
     BOSS_MOVE_DOWN,
@@ -38,12 +39,11 @@ class CBossControl extends CBoss {
     private m_tile_pos: gsCPoint;
     private m_size: number;
     private m_destruction_timer: gsCTimer;
-    private m_application: CApplication;
     private m_eye: CBossEye;
 
-    constructor(application: CApplication) {
+    constructor(playGameState: CPlayGameState) {
         super();
-        this.m_application = application;
+        this.m_playGameState = playGameState;
         this.m_is_started = false;
         this.m_timer = new gsCTimer();
 
@@ -104,10 +104,11 @@ class CBossControl extends CBoss {
             this.m_active_eyes = this.BOSS_EYES_TOTAL;
 
             for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
-                this.m_eye = new CBossEye();
+                this.m_eye = new CBossEye(this.m_playGameState);
             }
 
             this.m_mouth = new CBossMouth();
+            this.m_state = BossState.BOSS_MOVE_DOWN;
             this.interpretScript();
         }
 
@@ -186,14 +187,14 @@ class CBossControl extends CBoss {
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_ROAR) {
-            this.m_application.instance.playSample(enums.GameSampleType.SAMPLE_ROAR);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ROAR);
             //    CGameState::playSample(SAMPLE_ROAR);
             //    m_script_pointer++;
             this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
-            this.m_application.instance.playSample(enums.GameSampleType.SAMPLE_SNORT);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_SNORT);
             //    CGameState::playSample(SAMPLE_SNORT);
             //    m_script_pointer++;
             this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
@@ -276,7 +277,7 @@ class CBossControl extends CBoss {
         if (tile) {
             if (!tile.isEmpty() && !tile.isHidden()) {
                 tile.setHidden(true); //?
-                var exp: CBigExplosion = new CBigExplosion();
+                var exp: CBigExplosion = new CBigExplosion(this.m_playGameState);
                 this.m_scene.addActor(exp);
                 var tile_size: gsCPoint = map.getImage().getTileSize();
                 //var tile_centre: gsCPoint = tile_size / new gsCPoint(2, 2);

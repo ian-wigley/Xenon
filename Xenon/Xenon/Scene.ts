@@ -558,6 +558,13 @@ class CScene {
         return this.m_application;
     }
 
+    //-------------------------------------------------------------
+
+    //public State(val): void {
+    //    this.lev.State(val);
+    //}
+
+
 }
 
 export = CScene;

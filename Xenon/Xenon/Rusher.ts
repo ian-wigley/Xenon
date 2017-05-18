@@ -16,11 +16,15 @@ class CRusher extends CAlien {
         this.m_name = "Rusher";
     }
 
+    //-------------------------------------------------------------
+
     public getActorInfo()
     {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RUSHER);
     }
+
+    //-------------------------------------------------------------
 
     public activate(): boolean {
         if (!this.isActive()) {

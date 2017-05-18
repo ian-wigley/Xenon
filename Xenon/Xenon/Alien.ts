@@ -16,16 +16,6 @@ class CAlien extends CActor {
     }
 
     //-------------------------------------------------------------
-
-    //public activate(): boolean {
-    //    return super.activate();
-    //}
-
-    ////-------------------------------------------------------------
-    //public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-    //    this.gameTime = gameTime;
-    //    return super.update(controls, gameTime);
-    //}
 }
 
 export = CAlien;

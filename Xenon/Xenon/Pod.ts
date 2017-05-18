@@ -5,13 +5,12 @@ import enums = require("Enums");
 import CSporeGenerator = require("SporeGenerator");
 import CShip = require("Ship");
 import gsCVector = require("Vector");
-
-
 import CExplosion = require("Explosion");
 import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
 import CBigExplosion = require("BigExplosion");
 import gsCPoint = require("Point");
+import CPlayGameState = require("PlayGameState");
 
 class CPod extends CAlien {
 
@@ -22,8 +21,9 @@ class CPod extends CAlien {
 
     //-------------------------------------------------------------
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_name = "POD";
     }
 
@@ -49,7 +49,7 @@ class CPod extends CAlien {
         this.gameTime = gameTime;
         if (this.m_shield == 0) {
 
-            var gen: CSporeGenerator = new CSporeGenerator();
+            var gen: CSporeGenerator = new CSporeGenerator(this.m_playGameState);
             this.m_scene.addActor(gen);
             gen.activate();
             gen.setPosition(this.getPosition());
@@ -98,7 +98,7 @@ class CPod extends CAlien {
                 x = new CMediumExplosion();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
             this.m_scene.addActor(x);
             x.setPosition(this.getPosition());

@@ -4,6 +4,7 @@ import gsCVector = require("Vector");
 import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CPlayGameState = require("PlayGameState");
 
 class CSporeGenerator extends CActor {
 
@@ -11,13 +12,16 @@ class CSporeGenerator extends CActor {
     private m_spores_alive: number;
     private m_spores_killed: number;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_spores_created = 0;
         this.m_spores_alive = 0;
         this.m_spores_killed = 0;
         this.m_name = "SporeGenerator";
     }
+
+    //-------------------------------------------------------------
 
     public activate(): boolean {
         return super.activate();
@@ -35,7 +39,7 @@ class CSporeGenerator extends CActor {
 
             for (var ring = 0; ring < 2; ring++) {
                 for (var i = 0; i < 8; i++) {
-                    s = new CSpore();
+                    s = new CSpore(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     var radius: number = 16.0 + 16.0 * ring;

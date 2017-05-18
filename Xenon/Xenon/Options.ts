@@ -18,9 +18,7 @@
 
 class COptions {
 
-
     FRAME_RATE: number = 60.0;
-
     private m_changed: boolean;
     private m_reload: boolean;
     private m_options: Array<number>;
@@ -94,71 +92,6 @@ class COptions {
         for (var i = 0; i < OptionType.TOTAL_OPTIONS; i++)
             this.setOption(<OptionType>i, this.m_defaults[i]);
     }
-
-    //-------------------------------------------------------------
-
-    //bool COptions::load(const char *filename)
-    //{
-    //	if (!m_file.open(filename))
-    //		return false;
-
-    //	readOption(OPTION_DIFFICULTY,	"Options","Difficulty");
-    //	readOption(OPTION_HIRES,		"Options","Hires");
-    //	readOption(OPTION_WINDOWED,		"Options","Windowed");
-    //	readOption(OPTION_COLOURDEPTH,	"Options","ColourDepth");
-    //	readOption(OPTION_JOYSTICK,		"Options","Joystick");
-    //	readOption(OPTION_MUSIC,		"Options","Music");
-    //	readOption(OPTION_SOUNDFX,		"Options","SoundFx");
-    //	readOption(OPTION_PARTICLEFX,	"Options","ParticleFx");
-    //	readOption(OPTION_BACKDROP,		"Options","Backdrop");
-    //	readOption(OPTION_DEBUGINFO,	"Options","DebugInfo");
-    //	readOption(OPTION_CHEATS,		"Options","Cheats");
-    //	readOption(OPTION_CONTROL1,		"Options","Control1");
-    //	readOption(OPTION_CONTROL2,		"Options","Control2");
-
-    //	m_file.close();
-
-    //	changesNoted();
-
-    //	return true;
-    //}
-
-    ////-------------------------------------------------------------
-
-    //bool COptions::save(const char *filename)
-    //{
-    //	if (!m_file.open(filename))
-    //		return false;
-
-    //	if (!m_file.writeInt("Options","Difficulty",	getOption(OPTION_DIFFICULTY)) ||
-    //		!m_file.writeInt("Options","Hires",			getOption(OPTION_HIRES)) ||
-    //		!m_file.writeInt("Options","Windowed",		getOption(OPTION_WINDOWED)) ||
-    //		!m_file.writeInt("Options","ColourDepth",	getOption(OPTION_COLOURDEPTH)) ||
-    //		!m_file.writeInt("Options","Joystick",		getOption(OPTION_JOYSTICK)) ||
-    //		!m_file.writeInt("Options","Music",			getOption(OPTION_MUSIC)) ||
-    //		!m_file.writeInt("Options","SoundFx",		getOption(OPTION_SOUNDFX)) ||
-    //		!m_file.writeInt("Options","ParticleFx",	getOption(OPTION_PARTICLEFX)) ||
-    //		!m_file.writeInt("Options","Backdrop",		getOption(OPTION_BACKDROP)) ||
-    //		!m_file.writeInt("Options","DebugInfo",		getOption(OPTION_DEBUGINFO)) ||
-    //		!m_file.writeInt("Options","Cheats",		getOption(OPTION_CHEATS)) ||
-
-    //		!m_file.writeInt("Options","Control1",		getOption(OPTION_CONTROL1)) ||
-    //		!m_file.writeInt("Options","Control2",		getOption(OPTION_CONTROL2))) {
-
-    //		m_file.close();
-    //		return false;
-    //		}
-    //	else {
-    //		m_file.close();
-    //		return true;
-    //		}
-    //}
-
-    //-------------------------------------------------------------
-
-    //public readOption(type /*: OptionType*/, section, key): void {
-    //    this.setOption(type, m_file.readInt(section, key, this.m_defaults[type]));
-    //}
 
     //-------------------------------------------------------------
 

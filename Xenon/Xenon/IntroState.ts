@@ -13,7 +13,6 @@ import CApplication = require("Application");
 
 class CIntroState extends CGameState {
 
-    //CIntroState *CIntroState::m_instance = 0;
     m_playGameState: CPlayGameState;
     m_originalState: CIntroState;
     //m_mainMenuState: CMainMenuState;
@@ -31,7 +30,6 @@ class CIntroState extends CGameState {
     public instance(): CGameState {
         return this.m_app.instance = this.m_playGameState;
     }
-
 
     //-------------------------------------------------------------
 
@@ -61,7 +59,7 @@ class CIntroState extends CGameState {
     //	m_menu.setCurrentItem(IM_FIRSTFILE);
     //	m_menu.setFont(&m_medium_font);
 
-    //	playMusic(MUSIC_INTRO);
+        this.playMusic(enums.GameMusicType.MUSIC_INTRO);
         this.m_state = this;
         this.m_originalState = this;
     	return true;

@@ -11,6 +11,7 @@ import CSmallExplosion = require("SmallExplosion");
 import CMediumExplosion = require("MediumExplosion");
 import CBigExplosion = require("BigExplosion");
 import gsCPoint = require("Point");
+import CPlayGameState = require("PlayGameState");
 
 class CClone extends CUpgrade {
 
@@ -29,7 +30,7 @@ class CClone extends CUpgrade {
     scene: CScene
     m_name = "clone";
 
-    constructor(theScene: CScene) {
+    constructor(theScene: CScene, playGameState: CPlayGameState) {
         super(theScene);
         this.scene = theScene;
         this.m_min_angle = 0.0;
@@ -37,6 +38,7 @@ class CClone extends CUpgrade {
         this.m_current_angle = 0.0;
         this.m_required_angle = 0.0;
         this.m_engine = null;
+        this.m_playGameState = playGameState;
         this.m_name = "clone";
     }
 
@@ -59,7 +61,6 @@ class CClone extends CUpgrade {
             this.m_engine.setParams(new gsCVector(0.0, -16.0), new gsCVector(0.0, 0.0), 0.05);
             this.m_timer.start();
         }
-
         return super.activate();
     }
 
@@ -160,7 +161,6 @@ class CClone extends CUpgrade {
     public setAngleRange(min: number, max: number):void {
         this.m_min_angle = min;
         this.m_max_angle = max;
-
         this.setAngle(this.m_min_angle, true);
     }
 
@@ -187,7 +187,7 @@ class CClone extends CUpgrade {
                 x = new CMediumExplosion();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
             this.m_scene.addActor(x);
             x.setPosition(this.getPosition());

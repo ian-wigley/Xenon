@@ -3,6 +3,7 @@ import gsCVector = require("Vector");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import enums = require("Enums");
+import CPlayGameState = require("PlayGameState");
 
 class CHomingMissile extends CBullet {
 
@@ -17,8 +18,8 @@ class CHomingMissile extends CBullet {
     m_target: gsCVector;
     m_has_target: boolean;
 
-    constructor() {
-        super();
+    constructor(playGameState: CPlayGameState) {
+        super(playGameState);
         this.m_target = new gsCVector(0.0, 0.0);
         this.m_has_target = false;
         this.m_name = "HomingMissile";

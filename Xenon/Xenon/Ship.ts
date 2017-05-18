@@ -1,5 +1,4 @@
-﻿
-import gsCControls = require("Controls");
+﻿import gsCControls = require("Controls");
 import gsCRectangle = require("Rectangle");
 import gsCTiledImage = require("TiledImage");
 import gsCVector = require("Vector");
@@ -30,39 +29,33 @@ import CPlayGameState = require("PlayGameState");
 
 class CShip extends CActor {
 
+    private SHIP_CENTRE_FRAME: number = 3;		// ship centred frame
+    private SHIP_ROLL_FRAMES: number = 3;		// frame range for roll i.e. -3..+3 from centre
+    private SHIP_CLOAK_OFFSET: number = 7;		// offset to invulnerability frames
+    private SHIP_DIVE_FRAMES: number = 6;		// number of dive frames
+    private SHIP_DIVE_OFFSET: number = 14;		// offset to dive frames
+    private SHIP_DIVE_SCALE: number = 52 / 64;	// scale of dived ship
+    private SHIP_ROLL_RATE: number = 10.0;		// frames per seconds
+    private SHIP_MAP_HIT: number = 10;			// energy lost if ship hits map
     //-------------------------------------------------------------
-
-    SHIP_CENTRE_FRAME: number = 3;		// ship centred frame
-    SHIP_ROLL_FRAMES: number = 3;		// frame range for roll i.e. -3..+3 from centre
-    SHIP_CLOAK_OFFSET: number = 7;		// offset to invulnerability frames
-    SHIP_DIVE_FRAMES: number = 6;		// number of dive frames
-    SHIP_DIVE_OFFSET: number = 14;		// offset to dive frames
-    SHIP_DIVE_SCALE: number = 52 / 64;	// scale of dived ship
-    SHIP_ROLL_RATE: number = 10.0;		// frames per seconds
-    SHIP_MAP_HIT: number = 10;			// energy lost if ship hits map
-
+    private CLOAK_FLASH_TIME: number = 1.0;	    // time for flashing to signify end of cloaking
+    private CLOAK_FLASH_RATE: number = 0.15;	// flash rate
     //-------------------------------------------------------------
-
-    CLOAK_FLASH_TIME: number = 1.0;	    // time for flashing to signify end of cloaking
-    CLOAK_FLASH_RATE: number = 0.15;	// flash rate
-
-    //-------------------------------------------------------------
-
     private m_weapon_type: enums.WeaponType;
     private m_weapon: CWeapon;
 
-    m_left_clone: CClone;
-    m_right_clone: CClone;
+    private m_left_clone: CClone;
+    private m_right_clone: CClone;
 
-    m_left_wingtip: CWingtip;
-    m_right_wingtip: CWingtip;
+    private m_left_wingtip: CWingtip;
+    private m_right_wingtip: CWingtip;
 
-    m_left_engine: CShipEngine;
-    m_right_engine: CShipEngine;
-    m_retro_nw: CRetroEngine;
-    m_retro_ne: CRetroEngine;
-    m_retro_sw: CRetroEngine;
-    m_retro_se: CRetroEngine;
+    private m_left_engine: CShipEngine;
+    private m_right_engine: CShipEngine;
+    private m_retro_nw: CRetroEngine;
+    private m_retro_ne: CRetroEngine;
+    private m_retro_sw: CRetroEngine;
+    private m_retro_se: CRetroEngine;
 
     private m_max_speed: number;
     private m_acceleration: number;
@@ -83,10 +76,7 @@ class CShip extends CActor {
 
     //public m_direction: Controls;
 
-
-    private m_playGameState: CPlayGameState;
-
-    constructor(scene: CScene, playGameState: CPlayGameState) { //timer: gsCTimer) {
+    constructor(scene: CScene, playGameState: CPlayGameState) {
 
         super(scene);
         this.m_weapon = null;
@@ -111,28 +101,20 @@ class CShip extends CActor {
         this.m_screenWidth = 640;
         this.m_screenHeight = 480;
 
-        //this.m_timer = timer;
-
         this.m_cloak_timer = new gsCTimer();
         this.m_dive_timer = new gsCTimer();
         this.m_timer = new gsCTimer();
 
         this.m_playGameState = playGameState;
-
         this.m_name = "Ship";
-        //    /* Test.. */
-        //    //           m_max_speed = 200.0f;
-        //    //           m_acceleration = 1000.0f;
-        //    //           m_damping = 1500.0f;
     }
 
     public activateShip() {
-
         if (!this.isActive()) {
             this.setHandling(enums.ShipHandling.HANDLING_NORMAL);
 
             this.m_roll = 0;
-            this.setWeapon(enums.WeaponType.NO_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);//;NO_WEAPON);
+            this.setWeapon(enums.WeaponType.NO_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
             this.setVelocity(new gsCVector(0, 0));
 
             this.m_left_engine = new CShipEngine(this.m_scene);
@@ -242,9 +224,6 @@ class CShip extends CActor {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer) {
-
-        //this.m_timer = gameTime;
-
         this.m_timer.update(false);
 
         if (this.m_shield == 0) {
@@ -288,8 +267,7 @@ class CShip extends CActor {
 
             var x: number = this.m_velocity.x;
 
-            if (thrust.x != 0.0)
-            {
+            if (thrust.x != 0.0) {
                 x += thrust.x * t;
                 if (x < -this.m_max_speed)
                     x = -this.m_max_speed;
@@ -350,7 +328,7 @@ class CShip extends CActor {
         var minx: number = 64.0;
         var maxx: number = this.m_screenWidth - 64;
         var miny: number = -map_y + 32;
-        var maxy = miny + this.m_screenHeight -32;// - 128;
+        var maxy = miny + this.m_screenHeight - 32;// - 128;
 
         if (this.m_position.x < minx) {
             this.m_position.x = minx;
@@ -408,14 +386,13 @@ class CShip extends CActor {
 
             case enums.DiveMode.DIVING_DOWN:
                 this.m_sprite.setFrame(this.SHIP_DIVE_OFFSET + this.m_dive_level);
-                if (this.m_dive_timer.getTime() >= 0.1)
-                {
+                if (this.m_dive_timer.getTime() >= 0.1) {
                     this.m_dive_level++;
                     if (this.m_dive_level < this.SHIP_DIVE_FRAMES - 1) {
-                         this.m_dive_timer.start();
+                        this.m_dive_timer.start();
                     }
                     else {
-                         this.m_dive_timer.start();
+                        this.m_dive_timer.start();
                         this.m_dive_mode = enums.DiveMode.DIVE_ACTIVE;
                     }
                 }
@@ -423,10 +400,10 @@ class CShip extends CActor {
 
             case enums.DiveMode.DIVE_ACTIVE:
                 this.m_sprite.setFrame(this.SHIP_DIVE_OFFSET + this.m_dive_level);
-                if (this.m_dive_timer.getTime() >= this.m_dive_time_limit) 
-                {
+                if (this.m_dive_timer.getTime() >= this.m_dive_time_limit) {
                     this.m_dive_timer.start();
                     this.m_dive_mode = enums.DiveMode.DIVING_UP;
+                    this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_DIVE_UP);
                     //CGameState::playSample(SAMPLE_DIVE_UP,getPosition().getX());
                 }
                 break;
@@ -543,13 +520,13 @@ class CShip extends CActor {
                 this.m_weapon = null;
                 break;
             case enums.WeaponType.MISSILE_WEAPON:
-                this.m_weapon = new CMissileWeapon(this.m_scene);
+                this.m_weapon = new CMissileWeapon(this.m_scene, this.m_playGameState);
                 break;
             case enums.WeaponType.HOMING_MISSILE_WEAPON:
-                this.m_weapon = new CHomingMissileWeapon(this.m_scene);
+                this.m_weapon = new CHomingMissileWeapon(this.m_scene, this.m_playGameState);
                 break;
             case enums.WeaponType.LASER_WEAPON:
-                this.m_weapon = new CLaserWeapon(this.m_scene);
+                this.m_weapon = new CLaserWeapon(this.m_scene, this.m_playGameState);
                 break;
         }
 
@@ -559,7 +536,7 @@ class CShip extends CActor {
             this.m_weapon.setOwner(this);
             this.m_weapon.setGrade(grade);
 
-//            this.m_weapon.setPlayGameState(this.m_playGameState);
+            //            this.m_weapon.setPlayGameState(this.m_playGameState);
         }
     }
 
@@ -571,7 +548,6 @@ class CShip extends CActor {
 
     //-------------------------------------------------------------
 
-    //public addWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
     public addWeapon(type: enums.WeaponType, grade?: enums.WeaponGrade) {
         switch (type) {
             case enums.WeaponType.MISSILE_WEAPON:
@@ -642,7 +618,7 @@ class CShip extends CActor {
 
     public attachClone(side: number): boolean {
         if (side <= 0 && this.m_left_clone == null) {
-            this.m_left_clone = new CClone(this.m_scene);
+            this.m_left_clone = new CClone(this.m_scene, this.m_playGameState);
             this.m_scene.addActor(this.m_left_clone);
             this.m_left_clone.activate();
             this.m_left_clone.setOwner(this);
@@ -651,7 +627,7 @@ class CShip extends CActor {
             return true;
         }
         else if (this.m_right_clone == null) {
-            this.m_right_clone = new CClone(this.m_scene);
+            this.m_right_clone = new CClone(this.m_scene, this.m_playGameState);
             this.m_scene.addActor(this.m_right_clone);
             this.m_right_clone.activate();
             this.m_right_clone.setOwner(this);
@@ -677,7 +653,7 @@ class CShip extends CActor {
 
     public attachWingtip(side: number): boolean {
         if (side <= 0 && !this.m_left_wingtip) {
-            this.m_left_wingtip = new CWingtip();//this.m_scene);
+            this.m_left_wingtip = new CWingtip();
             this.m_scene.addActor(this.m_left_wingtip);
             this.m_left_wingtip.activate();
             this.m_left_wingtip.setOwner(this);
@@ -691,7 +667,7 @@ class CShip extends CActor {
             return true;
         }
         else if (!this.m_right_wingtip) {
-            this.m_right_wingtip = new CWingtip();//this.m_scene);
+            this.m_right_wingtip = new CWingtip();
             this.m_scene.addActor(this.m_right_wingtip);
             this.m_right_wingtip.activate();
             this.m_right_wingtip.setOwner(this);
@@ -802,6 +778,7 @@ class CShip extends CActor {
         this.m_dive_level = 0;
         this.m_dive_mode = enums.DiveMode.DIVING_DOWN;
         this.m_dive_timer.start();
+        this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_DIVE_DOWN);
         //CGameState::playSample(SAMPLE_DIVE_DOWN,getPosition().getX());
     }
 
@@ -864,7 +841,7 @@ class CShip extends CActor {
                 //x = inter.explodeMiddle();
             }
             else {
-                x = new CBigExplosion();
+                x = new CBigExplosion(this.m_playGameState);
             }
 
             this.m_scene.addActor(x);

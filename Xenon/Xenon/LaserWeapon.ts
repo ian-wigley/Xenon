@@ -5,11 +5,13 @@ import enums = require("Enums");
 import gsCVector = require("Vector");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CPlayGameState = require("PlayGameState");
 
 class CLaserWeapon extends CWeapon {
 
-    constructor(scene: CScene) {
+    constructor(scene: CScene, playGameState: CPlayGameState) {
         super(scene);
+        this.m_playGameState = playGameState;
         this.m_name = "LaserWeapon";
     }
 
@@ -33,27 +35,27 @@ class CLaserWeapon extends CWeapon {
 
     //-------------------------------------------------------------
 
-    public fire() { //:boolean
-        if (!this.isValidFiringPosition())
+    public fire(): boolean {
+        if (!this.isValidFiringPosition()) {
             return false;
+        }
 
-        var l: CLaser = new CLaser();
+        var l: CLaser = new CLaser(this.m_playGameState);
         this.m_scene.addActor(l);
-
         l.activate();
         var grade: number = this.m_grade;
         l.setGrade(grade);// (BulletGrade) m_grade);
         l.setPosition(this.getPosition());
         l.setVelocity(new gsCVector(0.0, -20));//l.getActorInfo().m_speed));//this.m_grade]));
 
-        if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP)
+        if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_LASER);
             //CGameState::playSample(SAMPLE_FIRE_LASER, getPosition().getX());
-
-            return true;
+        }
+        return true;
     }
 
     //-------------------------------------------------------------
-
 }
 
 export = CLaserWeapon;

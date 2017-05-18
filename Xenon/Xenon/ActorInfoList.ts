@@ -87,7 +87,6 @@ class CActorInfoList {
 
     //-------------------------------------------------------------
 
-    //------------------- m_speed test !!
     public GetActorSpeed(index: number) {
         return this.m_info_list[index].m_speed;
     }

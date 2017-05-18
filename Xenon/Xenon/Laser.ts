@@ -9,6 +9,7 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import gsCScreen = require("Screen");
 import gsCRectangle = require("Rectangle");
+import CPlayGameState = require("PlayGameState");
 
 class CLaser extends CBullet {
 
@@ -23,13 +24,14 @@ class CLaser extends CBullet {
     private m_map_collider_list: Array<gsCPoint>;
     //gsCRandom m_random;
 
-    constructor() {
-        super();
+    constructor(playGameState: CPlayGameState) {
+        super(playGameState);
+        this.m_playGameState = playGameState;
         this.m_hit_map = null;
         this.m_name = "laser";
         this.m_actor_collider_list = [];
         this.m_map_collider_list = [];
-
+        
         this.m_grade = 2; //TEMP!
 
     }
@@ -69,7 +71,6 @@ class CLaser extends CBullet {
             return;
 
         // save colliders for later
-
         this.m_hit_map = map;
 
         this.m_map_collider_list = new Array<gsCPoint>(hits);//.setSize(hits);
@@ -135,6 +136,7 @@ class CLaser extends CBullet {
                 mt.setHidden(true);
                 this.m_scene.createMapExplosion(this.m_hit_map, pos);
 
+                this.m_playGameState.getPlayer().scoreBonus(5);
                 //CPlayGameState::getPlayer()->scoreBonus(5);
             }
 
@@ -166,7 +168,6 @@ class CLaser extends CBullet {
 
     //-------------------------------------------------------------
 
-    //public draw(ctx: CanvasRenderingContext2D): boolean {
     public Draw(ctx: CanvasRenderingContext2D): boolean {
         var screen: gsCScreen = new gsCScreen(); //gsCApplication::getScreen();
 
@@ -180,14 +181,14 @@ class CLaser extends CBullet {
         switch (this.m_grade) {
             case enums.BulletGrade.BULLET_STANDARD:
                 colour = "red";//gsCColour(0,flash,255);
-        			break;
+                break;
             case enums.BulletGrade.BULLET_MEDIUM:
                 colour = "green";//gsCColour(flash,255,0);
-        			break;
+                break;
             case enums.BulletGrade.BULLET_BEST:
                 colour = "blue";//gsCColour(255,0,flash);
-        			break;
-        		}
+                break;
+        }
 
         var rect: gsCRectangle = this.getCollisionRect();
 

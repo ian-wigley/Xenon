@@ -6,6 +6,7 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import Pickup = require("Pickup");
 import CSporeGenerator = require("SporeGenerator");
+import CPlayGameState = require("PlayGameState");
 
 class CSpore extends CBullet {
 
@@ -13,8 +14,8 @@ class CSpore extends CBullet {
     private m_delay_timer: gsCTimer;
     private m_killed_by_player: boolean;
 
-    constructor() {
-        super();
+    constructor(playGameState: CPlayGameState) {
+        super(playGameState);
         this.m_name = "SPORE";
         this.m_delay_timer = new gsCTimer();
     }
@@ -75,7 +76,7 @@ class CSpore extends CBullet {
 
     public kill(): void {
         if (this.getOwner() != null && (<CSporeGenerator>this.getOwner()).sporeKilled(this.m_killed_by_player)) {
-            var s: Pickup.CScorePickup = new Pickup.CScorePickup();
+            var s: Pickup.CScorePickup = new Pickup.CScorePickup(this.m_playGameState);
             this.m_scene.addActor(s);
             s.setPosition(this.getPosition());
             s.activate();

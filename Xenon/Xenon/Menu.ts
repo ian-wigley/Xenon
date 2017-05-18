@@ -24,9 +24,13 @@ class gsCMenuSlider extends gsCMenuItem {
         this.m_max = max;
     }
 
+    //-------------------------------------------------------------
+
     public getType(): gsMenuItemType {
         return gsMenuItemType.gsMENU_SLIDER;
     }
+
+    //-------------------------------------------------------------
 
     public setValue(value: number): boolean {
         if (value < this.m_min || value > this.m_max) {
@@ -35,6 +39,8 @@ class gsCMenuSlider extends gsCMenuItem {
         this.m_value = value;
         return true;
     }
+
+    //-------------------------------------------------------------
 
     public draw(screen: gsCScreen, font: gsCFont, y: number, highlight: boolean, ctx: CanvasRenderingContext2D): void {
 
@@ -71,6 +77,7 @@ class gsCMenuSlider extends gsCMenuItem {
         font.setTextCursor(new gsCPoint(0, y));
         font.justifyString(buffer);
     }
+    //-------------------------------------------------------------
 }
 
 class gsCMenu {

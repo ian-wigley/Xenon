@@ -132,11 +132,11 @@ class gsCCollisionList {
         // add to EACH zone which it overlaps
         for (var y = top_zone; y <= bottom_zone; y++) {
             for (var x = left_zone; x <= right_zone; x++) {
-                // this.m_zone[y * this.m_zones.X + x] = collider;//.addItem(collider);
-                var hmmm = y * this.m_zones.X + x;
-                // this.m_zone[y * this.m_zones.X + x].blobject.push(collider);
-                //addItem
-                this.m_zone[y * this.m_zones.X + x].addItem(collider);//
+                //// this.m_zone[y * this.m_zones.X + x] = collider;//.addItem(collider);
+                //var hmmm = y * this.m_zones.X + x;
+                //// this.m_zone[y * this.m_zones.X + x].blobject.push(collider);
+                ////addItem
+                this.m_zone[y * this.m_zones.X + x].addItem(collider);
             }
         }
     }

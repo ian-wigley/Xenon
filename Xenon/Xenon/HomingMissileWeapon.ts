@@ -4,15 +4,15 @@ import CHomingMissile = require("HomingMissile");
 import CAlien = require("Alien");
 import gsCVector = require("Vector");
 import enums = require("Enums");
-
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
-
+import CPlayGameState = require("PlayGameState");
 
 class CHomingMissileWeapon extends CWeapon {
 
-    constructor(scene: CScene) {
+    constructor(scene: CScene, playGameState: CPlayGameState) {
         super(scene);
+        this.m_playGameState = playGameState;
         this.m_name = "HomingMissileWeapon";
     }
 
@@ -41,7 +41,7 @@ class CHomingMissileWeapon extends CWeapon {
         if (!this.isValidFiringPosition())
             return false;
 
-        var h: CHomingMissile = new CHomingMissile();
+        var h: CHomingMissile = new CHomingMissile(this.m_playGameState);
         this.m_scene.addActor(h);
 
         var alien: CAlien = null;
@@ -79,6 +79,7 @@ class CHomingMissileWeapon extends CWeapon {
         h.setGrade(grade);
 
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_HOMING_MISSILE);
             //        CGameState::playSample(SAMPLE_FIRE_HOMING_MISSILE, getPosition().getX());
         }
 

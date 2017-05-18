@@ -9,6 +9,7 @@ import CLaserWeapon = require("LaserWeapon");
 import enums = require("Enums");
 import CShip = require("Ship");
 import Pickup = require("Pickup");
+import CPlayGameState = require("PlayGameState");
 
 class CUpgrade extends CActor {
 
@@ -19,6 +20,7 @@ class CUpgrade extends CActor {
     m_offset: gsCVector;
     m_weapon: CWeapon;
     m_weapon_type: enums.WeaponType;
+    protected m_playGameState: CPlayGameState;
 
     constructor(scene?: CScene) {
         super(scene);
@@ -110,13 +112,13 @@ class CUpgrade extends CActor {
                 this.m_weapon = null;
                 break;
             case enums.WeaponType.MISSILE_WEAPON:
-                this.m_weapon = new CMissileWeapon(this.m_scene);
+                this.m_weapon = new CMissileWeapon(this.m_scene, this.m_playGameState);
                 break;
             case enums.WeaponType.HOMING_MISSILE_WEAPON:
-                this.m_weapon = new CHomingMissileWeapon(this.m_scene);
+                this.m_weapon = new CHomingMissileWeapon(this.m_scene, this.m_playGameState);
                 break;
             case enums.WeaponType.LASER_WEAPON:
-                this.m_weapon = new CLaserWeapon(this.m_scene);
+                this.m_weapon = new CLaserWeapon(this.m_scene, this.m_playGameState);
                 break;
         }
 

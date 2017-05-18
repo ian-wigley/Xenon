@@ -3,17 +3,23 @@ import CShip = require("Ship");
 import Controls = require("Controls");
 import enums = require("Enums");
 import gsCTimer = require("Timer");
+//import CApplication = require("Application");
+import CPlayGameState = require("PlayGameState");
 
 export = Pickups;
 module Pickups {
 
     export class CPickup extends CActor {
 
+        protected m_playGameState: CPlayGameState;
         CLOAK_TIME: number = 5.0;			// total length of cloaking
 
-        constructor() {
+        constructor(playGameState: CPlayGameState) {
             super();
+            this.m_playGameState = playGameState;
         }
+
+        //-------------------------------------------------------------
 
         public activate() {
             if (!this.isActive())
@@ -22,14 +28,20 @@ module Pickups {
             return super.activate();
         }
 
+        //-------------------------------------------------------------
+
         public update(controls: Controls, gametime: gsCTimer) {
             this.animate(enums.AnimationMode.ANIMATE_LOOP);
             return true;
         }
 
+        //-------------------------------------------------------------
+
         public onLeavingScreen() {
             this.kill();
         }
+
+        //-------------------------------------------------------------
 
         public collect() {
         }
@@ -40,13 +52,14 @@ module Pickups {
     export class CClonePickup extends CPickup {
 
         m_name = "PICKUP_CLONE";
-
         CLONE_FRAMES: number = 16;
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLONE_PICKUP);
         }
+
+        //-------------------------------------------------------------
 
         public collect(): void {
             var ship: CShip = this.m_scene.findShip();
@@ -61,8 +74,11 @@ module Pickups {
             else
                 ship.attachClone(1);
 
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);
             //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
         }
+
+        //-------------------------------------------------------------
 
         public update(controls: Controls, gametime: gsCTimer) {
             this.animations(enums.AnimationMode.ANIMATE_LOOP, 0, this.CLONE_FRAMES);
@@ -81,6 +97,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DIVE_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
@@ -89,6 +107,7 @@ module Pickups {
 
             this.m_scene.createLabel(this.getPosition(), "DIVE");
             //CPlayGameState::getPlayer().diveBonus();
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BONUS);
             //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
         }
     }
@@ -104,6 +123,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_HOMING_MISSILE_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
@@ -112,6 +133,7 @@ module Pickups {
 
             //this.m_scene.createLabel(this.getPosition(), "HOMING MISSILE");
             //ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
         }
     }
@@ -127,14 +149,16 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_CLOAK_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
-
-            if (!ship)
+            if (!ship) {
                 return;
-
+            }
             this.m_scene.createLabel(this.getPosition(), "CLOAK");
             ship.setCloak(this.CLOAK_TIME);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
         }
     }
@@ -150,6 +174,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_LASER_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
@@ -158,6 +184,7 @@ module Pickups {
 
             this.m_scene.createLabel(this.getPosition(), "LASER");
             ship.addWeapon(enums.WeaponType.LASER_WEAPON);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
         }
     }
@@ -173,6 +200,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SCORE_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
@@ -181,6 +210,7 @@ module Pickups {
 
             this.m_scene.createLabel(this.getPosition(), this.getActorInfo().m_kill_bonus.toString());
             //CPlayGameState::getPlayer() ->scoreBonus(getActorInfo().m_kill_bonus);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
         }
     }
@@ -196,6 +226,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SHIELD_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
@@ -210,6 +242,7 @@ module Pickups {
                 new_shield = max;
 
             ship.setShield(new_shield);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
         }
     }
@@ -224,6 +257,8 @@ module Pickups {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_SPEED_PICKUP);
         }
+
+        //-------------------------------------------------------------
 
         public collect(): void {
             var ship: CShip = this.m_scene.findShip();
@@ -241,6 +276,7 @@ module Pickups {
                     this.m_scene.createLabel(this.getPosition(), "SPEED UP");
                     break;
             }
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
         }
     }
@@ -256,6 +292,8 @@ module Pickups {
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WEAPON_PICKUP);
         }
 
+        //-------------------------------------------------------------
+
         public collect(): void {
             var ship: CShip = this.m_scene.findShip();
 
@@ -267,6 +305,7 @@ module Pickups {
             } else {
                 this.m_scene.createLabel(this.getPosition(), "WEAPON FULL");
             }
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
         }
     }
@@ -276,13 +315,14 @@ module Pickups {
     export class CWingtipPickup extends CPickup {
 
         m_name = "PICKUP_WINGTIP";
-
         WINGTIP_FRAMES: number = 8;
 
         public getActorInfo() {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_WINGTIP_PICKUP);
         }
+
+        //-------------------------------------------------------------
 
         public collect(): void {
             var ship: CShip = this.m_scene.findShip();
@@ -296,8 +336,11 @@ module Pickups {
             } else {
                 ship.attachWingtip(1);
             }
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
         }
+
+        //-------------------------------------------------------------
 
         public update(controls: Controls, gametime: gsCTimer) {
             this.animations(enums.AnimationMode.ANIMATE_LOOP, 0, this.WINGTIP_FRAMES);

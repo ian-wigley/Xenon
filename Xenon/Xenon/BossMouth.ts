@@ -36,7 +36,6 @@ class CBossMouth extends CBoss {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-    //public update(controls: gsCControls): boolean {
         if (this.m_shield == 0) {
             //this.explode();
             this.kill();
@@ -50,7 +49,7 @@ class CBossMouth extends CBoss {
                 var s: CSpinner = null;
 
                 if (this.m_mode == 0) {
-                    s = new CSpinner;
+                    s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
@@ -61,7 +60,7 @@ class CBossMouth extends CBoss {
                     s.setGrade(enums.BulletGrade.BULLET_STANDARD);
                 }
                 else if (this.m_mode == 1) {
-                    s = new CSpinner;
+                    s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
@@ -72,7 +71,7 @@ class CBossMouth extends CBoss {
                     s.setGrade(enums.BulletGrade.BULLET_MEDIUM);
                 }
                 else if (this.m_mode == 2) {
-                    s = new CSpinner;
+                    s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
@@ -83,7 +82,7 @@ class CBossMouth extends CBoss {
                     s.setGrade(enums.BulletGrade.BULLET_BEST);
                 }
                 else {
-                    s = new CSpinner;
+                    s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());

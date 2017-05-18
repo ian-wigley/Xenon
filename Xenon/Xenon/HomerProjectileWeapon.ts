@@ -6,13 +6,15 @@ import gsCVector = require("Vector");
 import CHomerProjectile = require("HomerProjectile");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CPlayGameState = require("PlayGameState");
 
 class CHomerProjectileWeapon extends CWeapon {
 
     m_trigger: boolean;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_trigger = false;
         this.m_name = "HomerProjectileWeapon";
     }
@@ -56,7 +58,7 @@ class CHomerProjectileWeapon extends CWeapon {
         var hp: CHomerProjectile;
 
         for (var i = 0; i < 8; i++) {
-            hp = new CHomerProjectile();
+            hp = new CHomerProjectile(this.m_playGameState);
             this.m_scene.addActor(hp);
             hp.activate();
             var grade: number = this.m_grade;

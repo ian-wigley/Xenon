@@ -96,9 +96,9 @@ class COptionsMenuState extends CGameState {
                     return this.changeState(this.m_app.instance = this.m_audioMenuState);
                 case enums.OptionsMenuItem.OM_BACK:
                     this.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
-                    //return this.changeState(this.m_mainMenuState.instance());
                     this.m_mainMenuState.create();
                     return this.changeState(this.m_app.instance = this.m_mainMenuState);
+                    //return this.changeState(this.m_mainMenuState.instance());
             }
         }
         if (controls.up) {
