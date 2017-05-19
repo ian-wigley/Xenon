@@ -185,9 +185,8 @@ class CScene {
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, controls, gameTime);
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, controls, gameTime);
         this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, controls, gameTime);
-
+        this.updateActorsOfType(enums.ActorType.ACTOR_TYPE_BOSS, controls, gameTime);
         controls.fire = false;
-
     }
 
     //-------------------------------------------------------------
@@ -227,6 +226,7 @@ class CScene {
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_WEAPON, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, total, ctx);
+            this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BOSS, total, ctx);
         }
     }
 

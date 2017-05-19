@@ -163,11 +163,11 @@ class CBossControl extends CBoss {
         //if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
         if (this.m_script_pointer.m_state == BossState.BOSS_BEGIN_LOOP) {
             //this.m_loop_point = ++m_script_pointer;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP) {
             //    this.m_script_pointer = this.m_loop_point;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_TRIGGER) {
             switch (this.m_script_pointer.m_param) {
@@ -191,27 +191,27 @@ class CBossControl extends CBoss {
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ROAR);
             //    CGameState::playSample(SAMPLE_ROAR);
             //    m_script_pointer++;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_SNORT);
             //    CGameState::playSample(SAMPLE_SNORT);
             //    m_script_pointer++;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_OPEN_EYES) {
             //    CBossEye::setState(BOSSEYE_OPEN);
             this.m_eye.setState(enums.BossEyeState.BOSSEYE_OPEN);
             //    m_script_pointer++;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SHUT_EYES) {
             //    CBossEye::setState(BOSSEYE_SHUT);
             //    m_script_pointer++;
-            this.m_script_pointer = this.m_script[this.m_script_pointer_count++];
+            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         this.m_counter = this.m_script_pointer.m_param;
