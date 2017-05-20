@@ -105,9 +105,21 @@ class CBossControl extends CBoss {
 
             for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
                 this.m_eye = new CBossEye(this.m_playGameState);
+                console.log("BossEye");
+                this.m_scene.addActor(this.m_eye);
+                this.m_eye.setPosition(new gsCVector(200.0, 200.0));
+                this.m_eye.setVelocity(new gsCVector(0.0, 0.0));
+                this.m_eye.activate();
             }
 
             this.m_mouth = new CBossMouth();
+            this.m_mouth = new CBossMouth();
+            console.log("BossMouth");
+            this.m_scene.addActor(this.m_mouth);
+            //this.m_mouth.setPosition(pos);
+            this.m_mouth.setVelocity(new gsCVector(0.0, 0.0));
+            this.m_mouth.activate();
+
             //this.m_state = BossState.BOSS_MOVE_DOWN;
             this.m_script_pointer = this.m_script[0];
             this.interpretScript();

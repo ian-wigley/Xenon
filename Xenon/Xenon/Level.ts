@@ -918,6 +918,7 @@ class CLevel {
                             bC.setVelocity(new gsCVector(0.0, 0.0));
                             bC.activate();
                             this.m_boss_active = true;
+                            this.m_playGameState.bossControl = bC;
                             break;
                     }
                 }
