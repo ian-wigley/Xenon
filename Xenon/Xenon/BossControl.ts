@@ -34,7 +34,8 @@ class CBossControl extends CBoss {
     private m_counter: number;
     private m_script: Array<BossScriptItem>;
     private m_script_pointer: BossScriptItem;
-    private m_loop_point: BossScriptItem;
+    //private m_loop_point: BossScriptItem;
+    private m_loop_point: number;
     private m_script_pointer_count = 0;
     private m_tile_pos: gsCPoint;
     private m_size: number;
@@ -105,20 +106,14 @@ class CBossControl extends CBoss {
 
             for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
                 this.m_eye = new CBossEye(this.m_playGameState);
-                console.log("BossEye");
-                this.m_scene.addActor(this.m_eye);
-                this.m_eye.setPosition(new gsCVector(200.0, 200.0));
-                this.m_eye.setVelocity(new gsCVector(0.0, 0.0));
-                this.m_eye.activate();
             }
 
             this.m_mouth = new CBossMouth();
-            this.m_mouth = new CBossMouth();
-            console.log("BossMouth");
             this.m_scene.addActor(this.m_mouth);
-            //this.m_mouth.setPosition(pos);
+            this.m_mouth.setPosition(new gsCVector(0.0, 0.0));
             this.m_mouth.setVelocity(new gsCVector(0.0, 0.0));
             this.m_mouth.activate();
+            //this.m_mouth_active = true;
 
             //this.m_state = BossState.BOSS_MOVE_DOWN;
             this.m_script_pointer = this.m_script[0];
@@ -175,12 +170,18 @@ class CBossControl extends CBoss {
         //if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
         if (this.m_script_pointer.m_state == BossState.BOSS_BEGIN_LOOP) {
             //this.m_loop_point = ++m_script_pointer;
-            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
+            this.m_loop_point = ++this.m_script_pointer_count;
+            //this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP) {
-            //    this.m_script_pointer = this.m_loop_point;
-            this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
+            this.m_script_pointer_count = this.m_loop_point;
+            //this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
+
+        if (this.m_script_pointer == null || this.m_script_pointer == undefined) {
+            var stopHere = true;
+        }
+
         if (this.m_script_pointer.m_state == BossState.BOSS_TRIGGER) {
             switch (this.m_script_pointer.m_param) {
                 case 0:

@@ -624,16 +624,20 @@ class CPlayGameState extends CGameState {
         this.m_small_font.setTextCursor(new gsCPoint(x + 6, y - 10));
         this.m_small_font.printString("BOSS SHIELD");
 
-        this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + 100, y + 9), "white", ctx);
+        //this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + 100, y + 9), "white", ctx);
+        this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, 100, 9), "white", ctx);
 
         var shield: number = this.m_boss.getShield();
 
-        if (shield < 0)
+        if (shield < 0) {
             shield = 0;
-        if (shield > 100)
+        }
+        if (shield > 100) {
             shield = 100;
+        }
 
-        this.m_screen.drawSolidRect(new gsCRectangle(x, y, x + shield, y + 9), "red", ctx);
+        //this.m_screen.drawSolidRect(new gsCRectangle(x, y, x + shield, y + 9), "red", ctx);
+        this.m_screen.drawSolidRect(new gsCRectangle(x, y, shield, 9), "red", ctx);
     }
 
     //-------------------------------------------------------------
