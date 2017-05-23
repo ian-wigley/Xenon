@@ -51,7 +51,7 @@ class CEngine extends CActor {
     public applyThrust(thrust: number): void {
         //if (this.m_thrust_timer.getTime() > this.m_thrust_rate) {
         //    this.m_thrust_timer.start();
-        // Get time not working correctly !!!!!!
+        // .getTime not working correctly !!!!!!
 
         if (thrust > 0) {
             this.m_thrust++;

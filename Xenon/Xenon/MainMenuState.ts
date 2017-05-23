@@ -20,9 +20,9 @@ class CMainMenuState extends CGameState {
     m_viewScoresState: CViewScoresState;
     m_optionsMenuState: COptionsMenuState;
     m_creditsState: CCreditsState;
-    m_bblogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
-    m_pcflogo: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
-    m_title: gsCImage;//HTMLImageElement;//gsCImage	CMainMenuState::
+    m_bblogo: gsCImage;
+    m_pcflogo: gsCImage;
+    m_title: gsCImage;
     m_starfield: CStarfield;//
     m_menu: gsCMenu;
     //-------------------------------------------------------------
@@ -200,22 +200,28 @@ class CMainMenuState extends CGameState {
         //			ActorInfoList.save(ACTORINFO_FILENAME);
         //			break;
 
-        //		case gsKEY_R:
-        //			setDemoMode(DEMO_RECORD);
-        //			return changeState(CIntroState::instance());
+        if (controls.record) {
+
+            //		case gsKEY_R:
+            //			setDemoMode(DEMO_RECORD);
+            //			return changeState(CIntroState::instance());
+        }
 
         //		case gsKEY_L:
         //			m_demo_recorder.load(DEMO_FILENAME);
-        //		case gsKEY_P:
-        //			{
-        //				const char *level = m_demo_recorder.getLevel();
-        //				if (level != 0) {
-        //					strcpy(m_level_filename,level);
-        //					setDemoMode(DEMO_PLAYBACK);
-        //					return changeState(CPlayGameState::instance());
-        //					}
-        //			}
-        //			break;
+
+        if (controls.play) {
+            //		case gsKEY_P:
+            //			{
+            //				const char *level = m_demo_recorder.getLevel();
+            //				if (level != 0) {
+            //					strcpy(m_level_filename,level);
+            //					setDemoMode(DEMO_PLAYBACK);
+            //					return changeState(CPlayGameState::instance());
+            //					}
+            //			}
+            //			break;
+        }
 
         //		case gsKEY_S:
         //			m_demo_recorder.save();

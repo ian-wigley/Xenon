@@ -54,7 +54,6 @@ module Loner {
         //-------------------------------------------------------------
 
         public update(controls: gsCControls, gameTime: gsCTimer): boolean {
-            //this.gameTime = gametime;
             if (this.m_shield == 0) {
                 //super.explode();
                 this.explode();

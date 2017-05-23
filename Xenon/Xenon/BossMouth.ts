@@ -52,7 +52,7 @@ class CBossMouth extends CBoss {
                     s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
-                    s.setPosition(this.getPosition());
+                    s.setPosition(new gsCVector(300, 200));//   this.getPosition());
 
                     var x = -2.0 + 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
 

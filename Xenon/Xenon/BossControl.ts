@@ -34,7 +34,6 @@ class CBossControl extends CBoss {
     private m_counter: number;
     private m_script: Array<BossScriptItem>;
     private m_script_pointer: BossScriptItem;
-    //private m_loop_point: BossScriptItem;
     private m_loop_point: number;
     private m_script_pointer_count = 0;
     private m_tile_pos: gsCPoint;
@@ -101,7 +100,6 @@ class CBossControl extends CBoss {
             this.m_timer.start();
             this.m_is_started = true;
             this.m_yscroll = 0;
-            //this.m_script_pointer = this.m_loop_point = this.m_script;
             this.m_active_eyes = this.BOSS_EYES_TOTAL;
 
             for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
@@ -114,12 +112,10 @@ class CBossControl extends CBoss {
             this.m_mouth.setVelocity(new gsCVector(0.0, 0.0));
             this.m_mouth.activate();
             //this.m_mouth_active = true;
-
             //this.m_state = BossState.BOSS_MOVE_DOWN;
             this.m_script_pointer = this.m_script[0];
             this.interpretScript();
         }
-
         return super.activate();
     }
 
@@ -167,15 +163,11 @@ class CBossControl extends CBoss {
     //-------------------------------------------------------------
 
     public interpretScript(): void {
-        //if (this.m_script_pointer[0].m_state == BossState.BOSS_BEGIN_LOOP) {
         if (this.m_script_pointer.m_state == BossState.BOSS_BEGIN_LOOP) {
-            //this.m_loop_point = ++m_script_pointer;
             this.m_loop_point = ++this.m_script_pointer_count;
-            //this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
         if (this.m_script_pointer.m_state == BossState.BOSS_END_LOOP) {
             this.m_script_pointer_count = this.m_loop_point;
-            //this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer == null || this.m_script_pointer == undefined) {
@@ -197,40 +189,30 @@ class CBossControl extends CBoss {
                     this.m_mouth.trigger(3, 16, 0.05);
                     break;
             }
-            //this.m_script_pointer++;
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_ROAR) {
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ROAR);
-            //    CGameState::playSample(SAMPLE_ROAR);
-            //    m_script_pointer++;
             this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SNORT) {
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_SNORT);
-            //    CGameState::playSample(SAMPLE_SNORT);
-            //    m_script_pointer++;
             this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_OPEN_EYES) {
-            //    CBossEye::setState(BOSSEYE_OPEN);
             this.m_eye.setState(enums.BossEyeState.BOSSEYE_OPEN);
-            //    m_script_pointer++;
             this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_SHUT_EYES) {
-            //    CBossEye::setState(BOSSEYE_SHUT);
-            //    m_script_pointer++;
+            this.m_eye.setState(enums.BossEyeState.BOSSEYE_SHUT);
             this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
         }
 
         this.m_counter = this.m_script_pointer.m_param;
         this.m_state = this.m_script_pointer.m_state;
-
-        //m_script_pointer++;
         this.m_script_pointer = this.m_script[++this.m_script_pointer_count];
     }
 

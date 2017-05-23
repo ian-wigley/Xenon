@@ -5,11 +5,13 @@ class DemoRecorder {
     m_event_list: Array<gsCControls>;
     m_event_index: number;
     m_has_level: boolean;
+    m_level: string;
 
     constructor() {
         this.m_event_list = [];
         this.m_event_index = 0;
         this.m_has_level = false;
+        this.m_level = "";
     }
 
     //-------------------------------------------------------------
@@ -40,14 +42,16 @@ class DemoRecorder {
 
     //-------------------------------------------------------------
 
-    public getEvent(controls/*Controls& */) {
+    public getEvent(controls/*Controls& */): boolean {
         if (this.m_event_index < this.m_event_list.length) {
-            //	memcpy(&controls,m_event_list[m_event_index++],sizeof(Controls));
-            //	return true;
+            this.m_event_list.push(controls);
+            this.m_event_index++;
+            return true;
         }
 
-        //else
-        //	return false;
+        else {
+            return false;
+        }
     }
 
     //-------------------------------------------------------------
@@ -64,10 +68,10 @@ class DemoRecorder {
     //-------------------------------------------------------------
 
     public getLevel() {
-        //if (this.m_has_level)
-        //	return this.m_level;
-        //else
-        //	return 0;
+        if (this.m_has_level)
+            return this.m_level;
+        else
+            return null;
     }
 
     //-------------------------------------------------------------

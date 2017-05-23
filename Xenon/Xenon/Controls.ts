@@ -11,6 +11,8 @@
     private m_return: boolean;	        // true if return control has just been pressed
     private m_enter: boolean;	        // true if enter control has just been pressed
     private m_lcontrol: boolean;	    // true if left control has just been pressed
+    private m_record: boolean;
+    private m_play: boolean;
     //private m_key: boolean;			// latest key press
 
     constructor() {
@@ -25,6 +27,8 @@
         this.m_return = false;
         this.m_enter = false;
         this.m_lcontrol = false;
+        this.m_record = false;
+        this.m_play = false;
         //this.m_key= false;			// latest key press
     }
 
@@ -107,6 +111,23 @@
     public set lcontrolPressed(value: boolean) {
         this.m_lcontrol = value;
     }
+
+    public set record(value: boolean) {
+        this.m_record = value;
+    }
+
+    public get record(): boolean {
+        return this.m_record;
+    }
+
+    public set play(value: boolean) {
+        this.m_record = value;
+    }
+
+    public get play(): boolean {
+        return this.m_record;
+    }
+
 }
 
 export = gsCControls;

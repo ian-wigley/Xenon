@@ -20,15 +20,20 @@ class CDustEffect extends CParticleEffect {
 
             p.m_position = this.getPosition();
             //this.p.m_velocity = new gsCVector::polar(1.0, m_random.getFloat(360.0)) + gsCVector(0.0, 1.0);
-            p.m_velocity = new gsCVector(1.0, Math.floor(Math.random() * 360.0)).plus1(new gsCVector(0.0, 1.0));
+            //p.m_velocity = new gsCVector(1.0, Math.floor(Math.random() * 360.0)).plus1(new gsCVector(0.0, 1.0));
+
+            var temp: gsCVector = new gsCVector(0, 0);
+            p.m_velocity = temp.polar(1.0, (Math.random() * 360.0) + 1.0);
+
             p.m_age = 0.0;
             p.m_lifetime = 1.0;
             p.m_mass = 1.0;
 
             return p;
         }
-        else
+        else {
             return null;
+        }
     }
 
     //-------------------------------------------------------------
