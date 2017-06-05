@@ -3,7 +3,6 @@ import CShip = require("Ship");
 import Controls = require("Controls");
 import enums = require("Enums");
 import gsCTimer = require("Timer");
-//import CApplication = require("Application");
 import CPlayGameState = require("PlayGameState");
 
 export = Pickups;
@@ -64,8 +63,9 @@ module Pickups {
         public collect(): void {
             var ship: CShip = this.m_scene.findShip();
 
-            if (!ship)
+            if (!ship) {
                 return;
+            }
 
             this.m_scene.createLabel(this.getPosition(), "CLONE");
 
@@ -102,10 +102,12 @@ module Pickups {
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
-            if (!ship)
+            if (!ship) {
                 return;
+            }
 
             this.m_scene.createLabel(this.getPosition(), "DIVE");
+            this.m_playGameState.getPlayer().diveBonus();
             //CPlayGameState::getPlayer().diveBonus();
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BONUS);
             //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
@@ -128,11 +130,12 @@ module Pickups {
         public collect() {
             var ship: CShip = this.m_scene.findShip();
 
-            if (!ship)
+            if (!ship) {
                 return;
+            }
 
-            //this.m_scene.createLabel(this.getPosition(), "HOMING MISSILE");
-            //ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON);
+            this.m_scene.createLabel(this.getPosition(), "HOMING MISSILE");
+            ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON);
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
         }
@@ -209,7 +212,9 @@ module Pickups {
                 return;
 
             this.m_scene.createLabel(this.getPosition(), this.getActorInfo().m_kill_bonus.toString());
+            this.m_playGameState.getPlayer().scoreBonus(this.getActorInfo().m_kill_bonus);
             //CPlayGameState::getPlayer() ->scoreBonus(getActorInfo().m_kill_bonus);
+
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
             //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
         }

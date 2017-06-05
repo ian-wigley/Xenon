@@ -25,7 +25,7 @@ import CApplication = require("Application");
 
 import CDemoRecorder = require("DemoRecorder");
 
-enum m_gameMode {  //m_mode
+enum m_gameMode {
     CREATEPLAYER,
     PLAYERACTIVE,
     PLAYERDEAD,
@@ -35,7 +35,6 @@ enum m_gameMode {  //m_mode
 
 class CPlayGameState extends CGameState {
     private m_ship: CShip;
-
     private m_game_start_timer: gsCTimer;
     private m_game_end_timer: gsCTimer;
 
@@ -58,15 +57,12 @@ class CPlayGameState extends CGameState {
 
     //private m_even: number = 0;
     private even: boolean = true;		//TEMP
-
     private m_boss: CBoss;
     private m_bossControl: CBossControl;
     //private m_options: Options;
 
     private m_mode: m_gameMode;
-
-    m_demo_recorder: CDemoRecorder;
-
+    private m_demo_recorder: CDemoRecorder;
 
     constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
         super(font8x8, font16x16, app, ctx);
@@ -77,11 +73,7 @@ class CPlayGameState extends CGameState {
         //this.m_options = options;
 
         this.m_stateName = "PlayGameState";
-
-
         this.m_mainMenuState = menu;
-
-
         this.m_level = this.m_scene.GetLevel();
 
         // temp!
@@ -93,7 +85,6 @@ class CPlayGameState extends CGameState {
 
         this.m_boss = null;
         this.m_bossControl = null;
-
 
         this.create();
         //this.createPlayer();
@@ -159,16 +150,13 @@ class CPlayGameState extends CGameState {
     public createPlayer() {
 
         this.m_scene.killAllActors();
-
-        this.m_ship = new CShip(this.m_scene, this);//temp);
+        this.m_ship = new CShip(this.m_scene, this);
         this.m_scene.addActor(this.m_ship);
         this.m_ship.activateShip();
 
         var start_position: gsCVector = this.getPlayer().getCheckpoint();
-        //var start_position: gsCVector = new gsCVector(300, 100);
         this.m_ship.setPosition(start_position);
         this.m_scene.clearCheckpoint();
-        //this.setLayerPositions(32704);
         this.setLayerPositions(start_position.Y);
         this.m_level.reset();
         this.m_ship.setWeapon(enums.WeaponType.MISSILE_WEAPON, enums.WeaponGrade.WEAPON_STANDARD);
@@ -186,6 +174,7 @@ class CPlayGameState extends CGameState {
         //#endif
 
         ////    playSample(SAMPLE_PLAYER_CREATED,m_ship->getPosition().getX());
+        this.playSample(enums.GameSampleType.SAMPLE_PLAYER_CREATED);
         this.getPlayer().loseLife();
         this.m_reached_boss = false;
     }
@@ -346,13 +335,10 @@ class CPlayGameState extends CGameState {
             this.displayBossEnergyBar(ctx);
         }
 
-        ////printDebugInfo();
-        ////if (m_demo_mode == DEMO_PLAYBACK) {
-        ////    m_medium_font.setTextCursor(gsCPoint(0, 100));
-        ////    m_medium_font.justifyString("DEMONSTRATION");
-        ////}
-
-
+        if (this.m_demo_mode == enums.DemoMode.DEMO_PLAYBACK) {
+            this.m_medium_font.setTextCursor(new gsCPoint(0, 100));
+            this.m_medium_font.justifyString("DEMONSTRATION");
+        }
 
         this.m_game_start_timer.update(false);
         this.m_game_end_timer.update(false);
@@ -371,8 +357,9 @@ class CPlayGameState extends CGameState {
                                 this.m_medium_font.justifyString("Player Two");
                         }
                     }
-                    else
+                    else {
                         this.m_game_start_timer.reset();
+                    }
                 }
 
                 //-------------------------------------------------------------------------- 09/03/17
@@ -388,7 +375,6 @@ class CPlayGameState extends CGameState {
                     this.getPlayer().loseLife();
                     break;
                 }
-
 
                 if (this.m_ship.getShield() == 0 && this.getPlayer().getLives() == 0) {
                     this.m_game_end_timer.start();
@@ -426,9 +412,7 @@ class CPlayGameState extends CGameState {
                 if (this.m_game_end_timer.getTime() >= 0) { // 1.0) { TEMP !!
                     if (this.m_demo_mode != enums.DemoMode.DEMO_OFF) {
                         //this.setDemoMode(enums.DemoMode.DEMO_OFF);
-
                         this.resetGame();
-
                         //return this.changeState(this.m_mainMenuState);//.instance());// CMainMenuState::instance());this.m_mainMenuState
                         return this.changeState(this.m_app.instance = this.m_mainMenuState);
                     }
@@ -562,10 +546,11 @@ class CPlayGameState extends CGameState {
             life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
         }
 
-        if (this.getPlayer().hasDive()) {
-            var dive_symbol: gsCImage = this.m_scene.getImage("PUDive");
-            dive_symbol.drawImage(new gsCPoint(10, 480 - 104), ctx, dive_symbol.Image);
-        }
+        // Not implemented yet
+        //if (this.getPlayer().hasDive()) {
+        //    var dive_symbol: gsCImage = this.m_scene.getImage("PUDive");
+        //    dive_symbol.drawImage(new gsCPoint(10, 480 - 104), ctx, dive_symbol.Image);
+        //}
     }
 
     //-------------------------------------------------------------
@@ -623,10 +608,7 @@ class CPlayGameState extends CGameState {
 
         this.m_small_font.setTextCursor(new gsCPoint(x + 6, y - 10));
         this.m_small_font.printString("BOSS SHIELD");
-
-        //this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, x + 100, y + 9), "white", ctx);
         this.m_screen.drawRect(new gsCRectangle(x - 1, y - 1, 100, 9), "white", ctx);
-
         var shield: number = this.m_boss.getShield();
 
         if (shield < 0) {
@@ -636,7 +618,6 @@ class CPlayGameState extends CGameState {
             shield = 100;
         }
 
-        //this.m_screen.drawSolidRect(new gsCRectangle(x, y, x + shield, y + 9), "red", ctx);
         this.m_screen.drawSolidRect(new gsCRectangle(x, y, shield, 9), "red", ctx);
     }
 
@@ -682,7 +663,6 @@ class CPlayGameState extends CGameState {
         //                m_ship ->setCloak(1.f);
         //            break;
         //        }
-
         //}
     }
 
@@ -759,14 +739,9 @@ class CPlayGameState extends CGameState {
         this.m_bossControl = value;
     }
 
-    //public set mainMenuState(value: CMainMenuState) {
-    //    this.m_mainMenuState = value;
-    //}
-
     private resetGame(): void {
         this.create();
     }
-
 }
 
 export = CPlayGameState;

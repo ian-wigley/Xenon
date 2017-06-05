@@ -117,6 +117,11 @@ class Xenon {
             this.onKeyUp(event);
             return null;
         });
+
+        //window.addEventListener("touchstart", (event) => {
+        //    this.onPressDown(event <TouchEvent>);
+        //    return null;
+        //});
     }
 
     //-------------------------------------------------------------
@@ -132,8 +137,14 @@ class Xenon {
         event.preventDefault();
         this.onKeyboardRelease(event, false);
     }
-
+    
     //-------------------------------------------------------------
+
+    //onPressDown(event: TouchEvent) {
+    //    event.preventDefault();
+    //    this.onKeyboardRelease(event, false);
+    //}
+
 
     onKeyboardPress(event: Event, touchDevice: boolean) {
         switch (((<number>(<KeyboardEvent>event).keyCode | 0))) {
@@ -159,7 +170,18 @@ class Xenon {
             case 17:
                 this.m_ctrl.lcontrolPressed = true;
                 break;
-
+            case 100:
+                this.m_ctrl.divePressed = true;
+                break;
+            case 112:
+                this.m_ctrl.play = true;
+                break;
+            case 114:
+                this.m_ctrl.record = true;
+                break;
+            case 115:
+                this.m_ctrl.reversePressed = true;
+                break;
         }
     }
 
@@ -188,6 +210,18 @@ class Xenon {
                 break;
             case 17:
                 this.m_ctrl.lcontrolPressed = false;
+                break;
+            case 100:
+                this.m_ctrl.divePressed = false;
+                break;
+            case 112:
+                this.m_ctrl.play = false;
+                break;
+            case 114:
+                this.m_ctrl.record = false;
+                break;
+            case 115:
+                this.m_ctrl.reversePressed = false;
                 break;
         }
     }
