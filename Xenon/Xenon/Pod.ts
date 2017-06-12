@@ -5,12 +5,8 @@ import enums = require("Enums");
 import CSporeGenerator = require("SporeGenerator");
 import CShip = require("Ship");
 import gsCVector = require("Vector");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
-import gsCPoint = require("Point");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 class CPod extends CAlien {
 
@@ -54,8 +50,7 @@ class CPod extends CAlien {
             gen.activate();
             gen.setPosition(this.getPosition());
 
-            //super.explode();
-            this.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }
@@ -82,28 +77,6 @@ class CPod extends CAlien {
         super.animate(enums.AnimationMode.ANIMATE_LOOP);
 
         return true;
-    }
-
-    //-------------------------------------------------------------
-
-    public explode() {
-        var x: CExplosion = null;
-        if (this.m_image != null) {
-            var size: gsCPoint = this.m_image.getTileSize();
-            var area = size.X * size.Y;
-            if (area <= 32 * 32) {
-                x = new CSmallExplosion();
-            }
-            else if (area <= 64 * 64) {
-                x = new CMediumExplosion();
-            }
-            else {
-                x = new CBigExplosion(this.m_playGameState);
-            }
-            this.m_scene.addActor(x);
-            x.setPosition(this.getPosition());
-            x.activate();
-        }
     }
 
     //-------------------------------------------------------------

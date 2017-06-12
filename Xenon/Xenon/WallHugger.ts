@@ -4,6 +4,7 @@ import gsCVector = require("Vector");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CSpinnerWeapon = require("SpinnerWeapon");
+import CExplode = require("Exploder");
 
 enum WallHuggerGrade {
     WALLHUGGER_STATIC,
@@ -31,13 +32,11 @@ class CWallHugger extends CAlien {
     private WALLHUGGER_WALK_TIME: number = 1.0;
     private WALLHUGGER_WALK_SPEED: number = 1.0;
 
-    //private m_weapon: CSpinnerWeapon;
     private m_grade: WallHuggerGrade;
     private m_side: number;
     private m_direction: number;
     private m_fired: boolean;
     private m_state: WallHuggerState;
-    //private m_random: gsCRandom;
     private m_weapon: CSpinnerWeapon;
 
     //-------------------------------------------------------------
@@ -109,9 +108,9 @@ class CWallHugger extends CAlien {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
-        this.gameTime = gameTime;
+        this.m_timer.update(false);
         if (this.m_shield == 0) {
-            //super.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }
@@ -120,30 +119,28 @@ class CWallHugger extends CAlien {
 
         switch (this.m_state) {
             case WallHuggerState.WALLHUGGER_STILL:
-                //{
                 this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
 
-                   /* if (this.m_timer.getTime() >= this.WALLHUGGER_STILL_TIME)*/ {
+                if (this.m_timer.getTime() >= this.WALLHUGGER_STILL_TIME) {
 
-                    if (this.m_grade == WallHuggerGrade.WALLHUGGER_STATIC /*|| m_random.getInt(100) < 50*/) {
+                    if (this.m_grade == WallHuggerGrade.WALLHUGGER_STATIC || ((Math.random() * 100) < 50)) {
                         this.m_state = WallHuggerState.WALLHUGGER_SHOOTING;
                         this.m_fired = false;
                     }
                     else {
                         this.m_state = WallHuggerState.WALLHUGGER_WALKING;
-                        //if (m_random.getInt(100) < 50) {
-                        this.setVelocity(new gsCVector(0.0, -this.WALLHUGGER_WALK_SPEED));
-                        //} else {
-                        this.setVelocity(new gsCVector(0.0, this.WALLHUGGER_WALK_SPEED));
-                        //}
+                        if ((Math.random() * 100) < 50) {
+                            this.setVelocity(new gsCVector(0.0, -this.WALLHUGGER_WALK_SPEED));
+                        }
+                        else {
+                            this.setVelocity(new gsCVector(0.0, this.WALLHUGGER_WALK_SPEED));
+                        }
                     }
 
                     this.m_timer.start();
                 }
-                //}
                 break;
             case WallHuggerState.WALLHUGGER_WALKING:
-                //{
                 var frame: number = Math.floor(this.m_timer.getTime() * this.getActorInfo().m_anim_rate);
                 //var this.frame = (this.frame + 1) % num_frames;
                 this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START + frame % this.WALLHUGGER_WALK_FRAMES);
@@ -162,10 +159,8 @@ class CWallHugger extends CAlien {
                     this.m_state = WallHuggerState.WALLHUGGER_STILL;
                     this.m_timer.start();
                 }
-                //}
                 break;
             case WallHuggerState.WALLHUGGER_SHOOTING:
-                //{
                 var frame: number = Math.floor(this.m_timer.getTime() * this.getActorInfo().m_anim_rate);
                 if (frame >= this.WALLHUGGER_SHOT_FRAMES) {
                     this.m_sprite.setFrame(this.m_side + this.WALLHUGGER_WALK_START);
@@ -179,7 +174,6 @@ class CWallHugger extends CAlien {
                         this.m_fired = true;
                     }
                 }
-                //}
                 break;
         }
         return true;
@@ -201,7 +195,6 @@ class CWallHugger extends CAlien {
     }
 
     //-------------------------------------------------------------
-
 }
 
 export = CWallHugger;

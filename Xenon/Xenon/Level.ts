@@ -617,56 +617,53 @@ class CLevel {
                     switch (id) {
                         case TileId.ID_PICKUP:
                             // pickups
-                            {
-                                var p: Pickup.CPickup = null;
-
-                                switch (type) {
-                                    case PickupType.PICKUP_SHIELD:
-                                        p = new Pickup.CShieldPickup(this.m_playGameState);
-                                        console.log("PICKUP_SHIELD");
-                                        break;
-                                    case PickupType.PICKUP_SPEEDUP:
-                                        p = new Pickup.CSpeedPickup(this.m_playGameState);
-                                        console.log("PICKUP_SPEEDUP");
-                                        break;
-                                    case PickupType.PICKUP_WEAPONUP:
-                                        p = new Pickup.CWeaponPickup(this.m_playGameState);
-                                        console.log("PICKUP_WEAPONUP");
-                                        break;
-                                    case PickupType.PICKUP_CLOAK:
-                                        p = new Pickup.CCloakPickup(this.m_playGameState);
-                                        console.log("PICKUP_CLOAK");
-                                        break;
-                                    case PickupType.PICKUP_DIVE:
-                                        p = new Pickup.CDivePickup(this.m_playGameState);
-                                        console.log("PICKUP_DIVE");
-                                        break;
-                                    case PickupType.PICKUP_SCOREBONUS:
-                                        p = new Pickup.CScorePickup(this.m_playGameState);
-                                        console.log("PICKUP_SCOREBONUS");
-                                        break;
-                                    case PickupType.PICKUP_CLONE:
-                                        p = new Pickup.CClonePickup(this.m_playGameState);
-                                        console.log("PICKUP_CLONE");
-                                        break;
-                                    case PickupType.PICKUP_WINGTIP:
-                                        p = new Pickup.CWingtipPickup(this.m_playGameState);
-                                        console.log("PICKUP_WINGTIP");
-                                        break;
-                                    case PickupType.PICKUP_HOMINGMISSILE:
-                                        p = new Pickup.CHomingMissilePickup(this.m_playGameState);
-                                        console.log("PICKUP_HOMINGMISSILE");
-                                        break;
-                                    case PickupType.PICKUP_LASER:
-                                        p = new Pickup.CLaserPickup(this.m_playGameState);
-                                        console.log("PICKUP_LASER");
-                                        break;
-                                }
-                                if (p != null) {
-                                    scene.addActor(p);
-                                    p.setPosition(pos);
-                                    p.activate();
-                                }
+                            var p: Pickup.CPickup = null;
+                            switch (type) {
+                                case PickupType.PICKUP_SHIELD:
+                                    p = new Pickup.CShieldPickup(this.m_playGameState);
+                                    console.log("PICKUP_SHIELD");
+                                    break;
+                                case PickupType.PICKUP_SPEEDUP:
+                                    p = new Pickup.CSpeedPickup(this.m_playGameState);
+                                    console.log("PICKUP_SPEEDUP");
+                                    break;
+                                case PickupType.PICKUP_WEAPONUP:
+                                    p = new Pickup.CWeaponPickup(this.m_playGameState);
+                                    console.log("PICKUP_WEAPONUP");
+                                    break;
+                                case PickupType.PICKUP_CLOAK:
+                                    p = new Pickup.CCloakPickup(this.m_playGameState);
+                                    console.log("PICKUP_CLOAK");
+                                    break;
+                                case PickupType.PICKUP_DIVE:
+                                    p = new Pickup.CDivePickup(this.m_playGameState);
+                                    console.log("PICKUP_DIVE");
+                                    break;
+                                case PickupType.PICKUP_SCOREBONUS:
+                                    p = new Pickup.CScorePickup(this.m_playGameState);
+                                    console.log("PICKUP_SCOREBONUS");
+                                    break;
+                                case PickupType.PICKUP_CLONE:
+                                    p = new Pickup.CClonePickup(this.m_playGameState);
+                                    console.log("PICKUP_CLONE");
+                                    break;
+                                case PickupType.PICKUP_WINGTIP:
+                                    p = new Pickup.CWingtipPickup(this.m_playGameState);
+                                    console.log("PICKUP_WINGTIP");
+                                    break;
+                                case PickupType.PICKUP_HOMINGMISSILE:
+                                    p = new Pickup.CHomingMissilePickup(this.m_playGameState);
+                                    console.log("PICKUP_HOMINGMISSILE");
+                                    break;
+                                case PickupType.PICKUP_LASER:
+                                    p = new Pickup.CLaserPickup(this.m_playGameState);
+                                    console.log("PICKUP_LASER");
+                                    break;
+                            }
+                            if (p != null) {
+                                scene.addActor(p);
+                                p.setPosition(pos);
+                                p.activate();
                             }
                             break;
                         case TileId.ID_ALIEN:
@@ -842,7 +839,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.ORGANIC_GUN:
-                                    var oG: COrganicGun = new COrganicGun();
+                                    var oG: COrganicGun = new COrganicGun(this.m_playGameState);
                                     console.log("OrganicGun");
                                     scene.addActor(oG);
                                     oG.setPosition(pos);

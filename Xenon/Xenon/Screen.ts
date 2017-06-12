@@ -2,14 +2,16 @@
 import gsCRectangle = require("Rectangle");
 
 class gsCScreen {
-    m_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 580);//480
+
+    m_screenRect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
+    m_clipRect: gsCRectangle = new gsCRectangle(-64, 0, 704, 580);
 
     public contains(actorRect: gsCRectangle) {
 
-        if (actorRect.Left >= this.m_rect.Left &&
-            actorRect.Right <= this.m_rect.Right &&
-            actorRect.Top >= this.m_rect.Top &&
-            actorRect.Bottom <= this.m_rect.Bottom) {
+        if (actorRect.Left >= this.m_clipRect.Left &&
+            actorRect.Right <= this.m_clipRect.Right &&
+            actorRect.Top >= this.m_clipRect.Top &&
+            actorRect.Bottom <= this.m_clipRect.Bottom) {
 
             return true;
         }
@@ -21,22 +23,23 @@ class gsCScreen {
     //-------------------------------------------------------------
 
     public overlaps(rect: gsCRectangle) {
-        return (this.m_rect.Left < rect.Right &&
-            this.m_rect.Right > rect.Left &&
-            this.m_rect.Top < rect.Bottom &&
-            this.m_rect.Bottom > rect.Top);
+        return (this.m_screenRect.Left < rect.Right &&
+            this.m_screenRect.Right > rect.Left &&
+            this.m_screenRect.Top < rect.Bottom &&
+            this.m_screenRect.Bottom > rect.Top);
+
     }
 
     //-------------------------------------------------------------
 
-    public getRect() {
-        return this.m_rect;
-    }
+    //public getRect() {
+    //    return this.m_rect;
+    //}
 
     //-------------------------------------------------------------
 
     public getSize() {
-        return this.m_rect.getSize();
+        return this.m_screenRect.getSize();
     }
 
     //-------------------------------------------------------------
@@ -64,7 +67,7 @@ class gsCScreen {
 
     //-------------------------------------------------------------
 
-   public drawSolidRect(rect: gsCRectangle, colour: string, ctx: CanvasRenderingContext2D): boolean {
+    public drawSolidRect(rect: gsCRectangle, colour: string, ctx: CanvasRenderingContext2D): boolean {
         if (rect != null) {
             ctx.beginPath();
             ctx.fillStyle = colour;
@@ -79,6 +82,11 @@ class gsCScreen {
 
     //-------------------------------------------------------------
 
+    public get screenRectangle(): gsCRectangle {
+        return this.m_screenRect;
+    }
+
+    //-------------------------------------------------------------
 }
 
 export = gsCScreen;

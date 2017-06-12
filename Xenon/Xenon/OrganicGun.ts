@@ -3,6 +3,8 @@ import gsCControls = require("Controls")
 import enums = require("Enums");
 import CSpinnerWeapon = require("SpinnerWeapon");
 import gsCVector = require("Vector");
+import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 //-------------------------------------------------------------
 
@@ -31,11 +33,12 @@ class COrganicGun extends CActor {
 
     //-------------------------------------------------------------
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
         this.m_weapon = null;
         this.m_fired = false;
         this.m_name = "OrganicGun";
+        this.m_playGameState = playGameState;
     }
 
     //-------------------------------------------------------------
@@ -91,38 +94,34 @@ class COrganicGun extends CActor {
 
     public update(controls: gsCControls): boolean {
         if (this.m_shield == 0) {
-            //this.explode();
+            var explode = new CExplode(this);
             this.kill();
             return true;
         }
 
         switch (this.m_state) {
             case OrganicGunState.ORGANICGUN_STILL:
-                {
-                    this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START);
+                this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START);
+                if (this.m_timer.getTime() >= this.ORGANICGUN_STILL_TIME) {
 
-                    if (this.m_timer.getTime() >= this.ORGANICGUN_STILL_TIME) {
-
-                        this.m_state = OrganicGunState.ORGANICGUN_SHOOTING;
-                        this.m_fired = false;
-                        this.m_timer.start();
-                    }
+                    this.m_state = OrganicGunState.ORGANICGUN_SHOOTING;
+                    this.m_fired = false;
+                    this.m_timer.start();
                 }
                 break;
+
             case OrganicGunState.ORGANICGUN_SHOOTING:
-                {
-                    var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
-                    if (frame >= this.ORGANICGUN_SHOT_FRAMES) {
-                        this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START);
-                        this.m_state = OrganicGunState.ORGANICGUN_STILL;
-                        this.m_timer.start();
-                    }
-                    else {
-                        this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START + frame);
-                        if (!this.m_fired && frame >= this.ORGANICGUN_LAUNCH_FRAME) {
-                            this.m_weapon.fire();
-                            this.m_fired = true;
-                        }
+                var frame: number = this.m_timer.getTime() * this.getActorInfo().m_anim_rate;
+                if (frame >= this.ORGANICGUN_SHOT_FRAMES) {
+                    this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START);
+                    this.m_state = OrganicGunState.ORGANICGUN_STILL;
+                    this.m_timer.start();
+                }
+                else {
+                    this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START + frame);
+                    if (!this.m_fired && frame >= this.ORGANICGUN_LAUNCH_FRAME) {
+                        this.m_weapon.fire();
+                        this.m_fired = true;
                     }
                 }
                 break;
@@ -133,8 +132,9 @@ class COrganicGun extends CActor {
     //-------------------------------------------------------------
 
     public onLeavingScreen(): void {
-        //if (!CPlayGameState::reachedBoss())
-        this.kill();
+        if (!this.m_playGameState.reachedBoss()) {
+            this.kill();
+        }
     }
 
     //-------------------------------------------------------------

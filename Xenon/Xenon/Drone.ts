@@ -6,11 +6,7 @@ import Pickup = require("Pickup");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CPlayGameState = require("PlayGameState");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
-import gsCPoint = require("Point");
+import CExplode = require("Exploder");
 
 class CDrone extends CAlien {
 
@@ -63,7 +59,7 @@ class CDrone extends CAlien {
                 this.m_playGameState.getPlayer().scoreBonus(score);
             }
 
-            this.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }
@@ -92,27 +88,6 @@ class CDrone extends CAlien {
     }
 
     //-------------------------------------------------------------
-
-    public explode() {
-        var x: CExplosion = null;
-        if (this.m_image != null) {
-            var size: gsCPoint = this.m_image.getTileSize();
-            var area = size.X * size.Y;
-            if (area <= 32 * 32) {
-                x = new CSmallExplosion();
-            }
-            else if (area <= 64 * 64) {
-                x = new CMediumExplosion();
-            }
-            else {
-                x = new CBigExplosion(this.m_playGameState);
-            }
-
-            this.m_scene.addActor(x);
-            x.setPosition(this.getPosition());
-            x.activate();
-        }
-    }
 }
 
 export = CDrone;

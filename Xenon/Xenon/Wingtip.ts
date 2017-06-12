@@ -3,6 +3,7 @@ import CUpgrade = require("Upgrade");
 import enums = require("Enums");
 import CShip = require("Ship");
 import gsCTimer = require("Timer");
+import CExplode = require("Exploder");
 
 class CWingtip extends CUpgrade {
 
@@ -53,7 +54,7 @@ class CWingtip extends CUpgrade {
         if (this.getShield() == 0) {
             ship.detachWingtip(this);
             this.setOwner(null);
-            //this.explode();
+            var explode = new CExplode(this);
             this.kill();
             return true;
         }

@@ -6,12 +6,8 @@ import CScene = require("Scene");
 import gsCTimer = require("Timer");
 import CShip = require("Ship");
 import enums = require("Enums");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
-import gsCPoint = require("Point");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 class CClone extends CUpgrade {
 
@@ -81,7 +77,7 @@ class CClone extends CUpgrade {
         var ship: CShip = <CShip>this.getOwner();
 
         if (!ship){
-            this.explode();
+            var explode = new CExplode(this);
             this.kill();
             return true;
         }
@@ -89,7 +85,7 @@ class CClone extends CUpgrade {
         if (this.getShield() == 0) {
             ship.detachClone(this);
             this.setOwner(null);
-            this.explode();
+            var explode = new CExplode(this);
             this.kill();
             return true;
         }
@@ -171,28 +167,6 @@ class CClone extends CUpgrade {
             this.m_current_angle = angle;
         }
         this.m_required_angle = angle;
-    }
-
-    //-------------------------------------------------------------
-
-    public explode() {
-        var x: CExplosion = null;
-        if (this.m_image != null) {
-            var size: gsCPoint = this.m_image.getTileSize();
-            var area = size.X * size.Y;
-            if (area <= 32 * 32) {
-                x = new CSmallExplosion();
-            }
-            else if (area <= 64 * 64) {
-                x = new CMediumExplosion();
-            }
-            else {
-                x = new CBigExplosion(this.m_playGameState);
-            }
-            this.m_scene.addActor(x);
-            x.setPosition(this.getPosition());
-            x.activate();
-        }
     }
 
     //-------------------------------------------------------------

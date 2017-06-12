@@ -62,9 +62,6 @@ class COptionsMenuState extends CGameState {
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
 
-        //if (!CGameState::update())
-        //return false;
-
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
             ctx.drawImage(this.backgroundTexture, 0, 0);
         }

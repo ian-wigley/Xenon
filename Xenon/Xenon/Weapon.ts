@@ -68,63 +68,58 @@ class CWeapon extends CActor {
         switch (this.getOwner().getActorInfo().m_type) {
             case enums.ActorType.ACTOR_TYPE_SHIP:
             case enums.ActorType.ACTOR_TYPE_UPGRADE:
-                {
-                    //var do_fire: boolean = false;
-                    this.do_fire = false;
 
-                    if (this.m_autofire) {
-                        if (controls.fire) {
-                            if (this.m_autofire_timer.getTime() >= this.getActorInfo().m_autofire_delay)
-                            {
-                                this.do_fire = true;
-                                this.m_autofire_timer.start();
-                            }
+                //var do_fire: boolean = false;
+                this.do_fire = false;
+
+                if (this.m_autofire) {
+                    if (controls.fire) {
+                        if (this.m_autofire_timer.getTime() >= this.getActorInfo().m_autofire_delay) {
+                            this.do_fire = true;
+                            this.m_autofire_timer.start();
                         }
-                        else {
-                            this.m_autofire = false;
+                    }
+                    else {
+                        this.m_autofire = false;
+                        this.m_delay_fire = false;
+                    }
+                }
+
+                if (controls.firePressed || (controls.fire && !this.m_autofire)) {
+                    if (this.m_delay_fire) {
+                        if (this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay) {
                             this.m_delay_fire = false;
                         }
                     }
-
-                    if (controls.firePressed || (controls.fire && !this.m_autofire)) {
-                        if (this.m_delay_fire) {
-                            if (this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay) {
-                                this.m_delay_fire = false;
-                            }
+                    if (!this.m_delay_fire) {
+                        this.do_fire = true;
+                        this.m_delay_fire = true;
+                        this.m_fire_timer.start();
+                        if (this.getActorInfo().m_autofire_delay == 0.0) {
+                            this.m_autofire = false;
                         }
-                        if (!this.m_delay_fire) {
-                            this.do_fire = true;
-                            this.m_delay_fire = true;
-                            this.m_fire_timer.start();
-                            if (this.getActorInfo().m_autofire_delay == 0.0) {
-                                this.m_autofire = false;
-                            }
-                            else {
-                                this.m_autofire = true;
-                                this.m_autofire_timer.start();
-                            }
+                        else {
+                            this.m_autofire = true;
+                            this.m_autofire_timer.start();
                         }
                     }
-
-                    //if (do_fire) {
-                    //    //var obj = this.getOwner();
-                    //    //this.getOwner();
-                    //    this.fire();                      
-                    //    controls.fire = false;
-                    //}
                 }
+
+                //if (do_fire) {
+                //    //var obj = this.getOwner();
+                //    //this.getOwner();
+                //    this.fire();                      
+                //    controls.fire = false;
+                //}
                 break;
 
             case enums.ActorType.ACTOR_TYPE_ALIEN:
-                {
-                    if (!this.m_delay_fire || this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay)
-                    {
-                        this.m_delay_fire = true;
-                        this.m_fire_timer.start();
-                        // This needs investigating !!! Cause of all the new objects being created !!!
-                        //this.fire();
-                        this.do_fire = true;
-                    }
+                if (!this.m_delay_fire || this.m_fire_timer.getTime() >= this.getActorInfo().m_fire_delay) {
+                    this.m_delay_fire = true;
+                    this.m_fire_timer.start();
+                    // This needs investigating !!! Cause of all the new objects being created !!!
+                    //this.fire();
+                    this.do_fire = true;
                 }
                 break;
         }

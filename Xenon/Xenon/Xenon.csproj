@@ -50,6 +50,7 @@
     <TypeScriptCompile Include="DustEffect.ts" />
     <TypeScriptCompile Include="Engine.ts" />
     <TypeScriptCompile Include="Enums.ts" />
+    <TypeScriptCompile Include="Exploder.ts" />
     <TypeScriptCompile Include="Explosion.ts" />
     <TypeScriptCompile Include="Font.ts" />
     <TypeScriptCompile Include="GameState.ts" />

@@ -92,12 +92,6 @@ class gsCTiledImage extends gsCImage {
             }
 
         }
-		//else {
-        //    var hmmm = 0;
-        //    return false;
-
-        //}
-
     }
 
     //-------------------------------------------------------------

@@ -49,8 +49,7 @@ class CLaserWeapon extends CWeapon {
         l.setVelocity(new gsCVector(0.0, -20));//l.getActorInfo().m_speed));//this.m_grade]));
 
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_LASER);
-            //CGameState::playSample(SAMPLE_FIRE_LASER, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_LASER);//getPosition().getX());
         }
         return true;
     }

@@ -5,6 +5,7 @@ import gsCVector = require("Vector");
 import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
+import CExplode = require("Exploder");
 
 class CRusher extends CAlien {
     private m_weapon: CSpinnerWeapon;
@@ -12,14 +13,12 @@ class CRusher extends CAlien {
     constructor() {
         super();
         this.m_weapon = null;
-        //this.m_timer = new gsCTimer();
         this.m_name = "Rusher";
     }
 
     //-------------------------------------------------------------
 
-    public getActorInfo()
-    {
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_RUSHER);
     }
@@ -28,19 +27,15 @@ class CRusher extends CAlien {
 
     public activate(): boolean {
         if (!this.isActive()) {
-
-            //if (m_random.getInt(100) < 25) 
-            //{
-            this.m_weapon = new CSpinnerWeapon();
-            this.m_scene.addActor(this.m_weapon);
-            this.m_weapon.activate();
-            this.m_weapon.setOwner(this);
-            this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
-            //}
-
+            if ((Math.random() * 100) < 25) {
+                this.m_weapon = new CSpinnerWeapon();
+                this.m_scene.addActor(this.m_weapon);
+                this.m_weapon.activate();
+                this.m_weapon.setOwner(this);
+                this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
+            }
             this.m_timer.start();
         }
-
         return super.activate();
     }
 
@@ -48,7 +43,7 @@ class CRusher extends CAlien {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
         if (this.m_shield == 0) {
-            //super.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }

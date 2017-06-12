@@ -135,7 +135,7 @@ class gsCScoreTable {
             if (i == this.m_current_item) {
                 var size: gsCPoint = this.m_font.getStringSize(buffer);
                 var y = this.m_position.Y + this.m_spacing.Y * i;
-                screen.drawSolidRect(new gsCRect((screen.m_rect.Right - size.X) / 2 - 1, y - 1, size.X + 2, size.Y + 2), "gray", ctx);
+                screen.drawSolidRect(new gsCRect((screen.screenRectangle.Right - size.X) / 2 - 1, y - 1, size.X + 2, size.Y + 2), "gray", ctx);
             }
 
             this.m_font.setTextCursor(new gsCPoint(0, this.m_position.Y + this.m_spacing.Y * i));

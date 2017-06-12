@@ -5,12 +5,8 @@ import gsCTimer = require("Timer");
 import enums = require("Enums");
 import CShip = require("Ship");
 import gsCVector = require("Vector");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
-import gsCPoint = require("Point");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 class CHomer extends CAlien {
     HOMER_MAX_XSPEED: number = 3.0;
@@ -46,8 +42,7 @@ class CHomer extends CAlien {
             weapon.setOwner(this);
             weapon.setOffset(new gsCVector(0.0, 0.0));
             weapon.detonate();
-
-            this.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }
@@ -75,29 +70,6 @@ class CHomer extends CAlien {
     }
 
     //-------------------------------------------------------------
-
-    public explode() {
-        var x: CExplosion = null;
-        if (this.m_image != null) {
-            var size: gsCPoint = this.m_image.getTileSize();
-            var area = size.X * size.Y;
-            if (area <= 32 * 32) {
-                x = new CSmallExplosion();
-            }
-            else if (area <= 64 * 64) {
-                x = new CMediumExplosion();
-            }
-            else {
-                x = new CBigExplosion(this.m_playGameState);
-            }
-            this.m_scene.addActor(x);
-            x.setPosition(this.getPosition());
-            x.activate();
-        }
-    }
-
-    //-------------------------------------------------------------
-
 }
 
 export = CHomer;

@@ -1,10 +1,12 @@
 ﻿import CExplosion = require("Explosion");
 import enums = require("Enums");
+import CPlayGameState = require("PlayGameState");
 
 class CMediumExplosion extends CExplosion {
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_name = "MediumExplosion";
     }
 
@@ -18,7 +20,9 @@ class CMediumExplosion extends CExplosion {
     //-------------------------------------------------------------
 
     public activate() {
-        //CGameState::playSample(SAMPLE_MEDIUM_EXPLOSION,getPosition().getX());
+        if (this.m_playGameState) {
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_MEDIUM_EXPLOSION);//getPosition().getX());
+        }
         return super.activate();
     }
 }

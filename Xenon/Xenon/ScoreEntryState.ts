@@ -48,8 +48,6 @@ class CScoreEntryState extends CGameState {
     //-------------------------------------------------------------
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
-        //if (!CGameState::update())
-        //	return false;
 
         var screen: gsCScreen = new gsCScreen();
 

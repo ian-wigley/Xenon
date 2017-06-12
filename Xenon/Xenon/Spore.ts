@@ -7,6 +7,7 @@ import gsCTimer = require("Timer");
 import Pickup = require("Pickup");
 import CSporeGenerator = require("SporeGenerator");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 class CSpore extends CBullet {
 
@@ -42,7 +43,7 @@ class CSpore extends CBullet {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         this.gameTime = gameTime;
         if (this.m_shield == 0) {
-            //super.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }

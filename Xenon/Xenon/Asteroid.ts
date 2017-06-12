@@ -3,22 +3,18 @@ import gsCTimer = require("Timer");
 import CAlien = require("Alien");
 import enums = require("Enums");
 import gsCVector = require("Vector");
-import CExplosion = require("Explosion");
-import CSmallExplosion = require("SmallExplosion");
-import CMediumExplosion = require("MediumExplosion");
-import CBigExplosion = require("BigExplosion");
-import gsCPoint = require("Point");
 import CDustEffect = require("DustEffect");
 import CStandardDustEffect = require("StandardDustEffect");
 import CHighDensityDustEffect = require("HighDensityDustEffect");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 export = Asteroid;
 module Asteroid {
 
     export class CAsteroid extends CAlien {
 
-        constructor(playGameState: CPlayGameState) { /// Need the gamestate & Options ref's
+        constructor(playGameState: CPlayGameState) { /// Need the Options ref's
             super();
             this.m_playGameState = playGameState;
             this.m_name = "Asteroid";
@@ -51,32 +47,6 @@ module Asteroid {
 
         public fragment(): void {
         }
-
-        //-------------------------------------------------------------
-
-        public explode() {
-
-            var x: CExplosion = null;
-
-            if (this.m_image != null) {
-                var size: gsCPoint = this.m_image.getTileSize();
-                var area = size.X * size.Y;
-
-                if (area <= 32 * 32) {
-                    x = new CSmallExplosion();
-                }
-                else if (area <= 64 * 64) {
-                    x = new CMediumExplosion();
-                }
-                else {
-                    x = new CBigExplosion(this.m_playGameState);
-                }
-
-                this.m_scene.addActor(x);
-                x.setPosition(this.getPosition());
-                x.activate();
-            }
-        }
     }
 
     //-------------------------------------------------------------
@@ -93,10 +63,9 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            super.explode();
+            var explode = new CExplode(this);
             this.kill();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
-            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
     }
 
@@ -114,10 +83,9 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            super.explode();
+            var explode = new CExplode(this);
             this.kill();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
-            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP,getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
     }
 
@@ -218,8 +186,7 @@ module Asteroid {
             //}
 
             this.kill();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
-            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
     }
 
@@ -284,8 +251,7 @@ module Asteroid {
             //}
 
             this.kill();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
-            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
     }
 
@@ -335,8 +301,7 @@ module Asteroid {
             //}
 
             this.kill();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);
-            //CGameState::playSample(SAMPLE_ASTEROID_BREAKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
     }
 
@@ -350,7 +315,9 @@ module Asteroid {
             this.m_actorInfo = this.m_scene.GetlistOfActors();
             return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_BIG_INDESTRUCTIBLE_ASTEROID);
         }
+
         //-------------------------------------------------------------
+
         public fragment(): void {
         }
     }

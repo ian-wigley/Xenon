@@ -5,8 +5,6 @@ import CPlayGameState = require("PlayGameState");
 
 class CBigExplosion extends CExplosion {
 
-    private m_application: CApplication;
-
     constructor(playGameState: CPlayGameState) {
         super();
         this.m_playGameState = playGameState;
@@ -23,8 +21,7 @@ class CBigExplosion extends CExplosion {
     //-------------------------------------------------------------
 
     public activate() {
-        this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BIG_EXPLOSION);
-        //CGameState::playSample(SAMPLE_BIG_EXPLOSION,getPosition().getX());
+        this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BIG_EXPLOSION);//getPosition().getX());
         return super.activate();
     }
 }

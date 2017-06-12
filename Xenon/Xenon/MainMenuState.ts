@@ -94,8 +94,6 @@ class CMainMenuState extends CGameState {
     //-------------------------------------------------------------
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
-        //	if (!CGameState::update())
-        //		return false;
 
         //	if (m_attract_mode == UNKNOWN) {
         //		m_attract_mode = ON;

@@ -63,8 +63,7 @@ class CMissileWeapon extends CWeapon {
         }
 
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);
-            //   CGameState::playSample(SAMPLE_FIRE_MISSILE,getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);//getPosition().getX());
         }
         return true;
     }

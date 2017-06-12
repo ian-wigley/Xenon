@@ -95,7 +95,7 @@ class gsCSprite {
     //-------------------------------------------------------------
 
     public move(offset: gsCVector) {
-        this.m_position.plusEquals(offset);        //this.m_position = new gsCVector(this.m_position.x + offset.x, this.m_position.y + offset.y);
+        this.m_position.plusEquals(offset);
         this.m_rect_valid = false;
     }
 

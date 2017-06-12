@@ -63,6 +63,8 @@ class CPlayGameState extends CGameState {
 
     private m_mode: m_gameMode;
     private m_demo_recorder: CDemoRecorder;
+    private m_scoreEntryState: CScoreEntryState;
+    private m_viewScoresState: CViewScoresState;
 
     constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D, menu?) {
         super(font8x8, font16x16, app, ctx);
@@ -78,13 +80,15 @@ class CPlayGameState extends CGameState {
 
         // temp!
         this.m_screen = new gsCScreen();
-        //this.m_score_table = new gsCScoreTable();
 
         this.m_game_start_timer = new gsCTimer();
         this.m_game_end_timer = new gsCTimer();
 
         this.m_boss = null;
         this.m_bossControl = null;
+
+        this.m_scoreEntryState = new CScoreEntryState(scene, starfield, font8x8, font16x16, app, ctx, menu);
+        this.m_viewScoresState = new CViewScoresState(scene, starfield, font8x8, font16x16, app, ctx, menu);
 
         this.create();
         //this.createPlayer();
@@ -110,14 +114,12 @@ class CPlayGameState extends CGameState {
         }
 
         //m_active_player = null;
-
         this.m_mode = m_gameMode.CREATEPLAYER;
 
         //if (m_demo_mode == DEMO_RECORD)
         //    m_demo_recorder.setLevel(m_level_filename);
 
         this.m_fast_forward = false;
-
         this.m_state = this;
 
         // Reset the number of lives
@@ -173,8 +175,7 @@ class CPlayGameState extends CGameState {
         //this.m_ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
         //#endif
 
-        ////    playSample(SAMPLE_PLAYER_CREATED,m_ship->getPosition().getX());
-        this.playSample(enums.GameSampleType.SAMPLE_PLAYER_CREATED);
+        this.playSample(enums.GameSampleType.SAMPLE_PLAYER_CREATED); //m_ship->getPosition().getX());
         this.getPlayer().loseLife();
         this.m_reached_boss = false;
     }
@@ -273,7 +274,6 @@ class CPlayGameState extends CGameState {
                 this.m_level.m_back_layer.setPosition(new gsCVector(0, 0));
             }
 
-            //------------------------------------------------------------- Added 03/03/2017 -------------------------------------------------------------
             if (!this.m_reached_boss) {
                 if (this.m_bossControl != null) {
                     if (this.m_bossControl.isStarted()) {
@@ -291,8 +291,6 @@ class CPlayGameState extends CGameState {
                     this.m_yscroll = 1;
                 }
             }
-
-            //------------------------------------------------------------- Added 03/03/2017 -------------------------------------------------------------
 
             this.m_level.m_front_layer.move(new gsCPoint(0, this.m_yscroll));
 
@@ -313,8 +311,6 @@ class CPlayGameState extends CGameState {
             this.m_scene.checkActorCollisions();
             //this.m_scene.checkMapCollisions(this.m_level.m_front_layer);           // Turned off for now 2/3/17 ! 
             this.m_scene.removeDeadActors();
-
-
         }
 
         ////testDebugKeys(key);
@@ -383,7 +379,7 @@ class CPlayGameState extends CGameState {
                     this.m_ship.kill();
                     this.m_scene.removeDeadActors();
                     this.m_ship = null;
-                    this.m_mode = m_gameMode.PLAYERDEAD;
+                    this.m_mode = m_gameMode.PLAYERDEAD;// m_gameMode.GAMEOVER;//m_gameMode.PLAYERDEAD;
                     break;
                 }
 
@@ -412,9 +408,8 @@ class CPlayGameState extends CGameState {
                 if (this.m_game_end_timer.getTime() >= 0) { // 1.0) { TEMP !!
                     if (this.m_demo_mode != enums.DemoMode.DEMO_OFF) {
                         //this.setDemoMode(enums.DemoMode.DEMO_OFF);
-                        this.resetGame();
-                        //return this.changeState(this.m_mainMenuState);//.instance());// CMainMenuState::instance());this.m_mainMenuState
-                        return this.changeState(this.m_app.instance = this.m_mainMenuState);
+                        //this.resetGame();
+                        //return this.changeState(this.m_app.instance = this.m_mainMenuState);
                     }
                     this.swapPlayer();
                     if (this.getPlayer().getLives() > 0)
@@ -433,12 +428,13 @@ class CPlayGameState extends CGameState {
                     //        #ifdef _PROFILING
                     //        return false;
                     //        #endif
+                    this.resetGame();
 
                     if (this.addNewScore(this.getPlayer().getScore())) {
-                        //return this.changeState(CScoreEntryState::instance());
+                        return this.changeState(this.m_app.instance = this.m_scoreEntryState);
                     }
                     else {
-                        //return changeState(CViewScoresState::instance());
+                        return this.changeState(this.m_app.instance = this.m_viewScoresState);
                     }
                 }
                 break;
@@ -452,10 +448,10 @@ class CPlayGameState extends CGameState {
                 if (this.m_game_end_timer.getTime() >= 6.0) {
                     this.stopSamples();
                     if (this.addNewScore(this.getPlayer().getScore())) {
-                        // return changeState(CScoreEntryState::instance());
+                        return this.changeState(this.m_app.instance = this.m_scoreEntryState);
                     }
                     else {
-                        //   return changeState(CViewScoresState::instance());
+                        return this.changeState(this.m_app.instance = this.m_viewScoresState);
                     }
                 }
                 break;
@@ -546,7 +542,7 @@ class CPlayGameState extends CGameState {
             life_symbol.drawImage(new gsCPoint(10 + i * 32, 480 - 64), ctx, life_symbol.Image);
         }
 
-        // Not implemented yet
+        // NYI
         //if (this.getPlayer().hasDive()) {
         //    var dive_symbol: gsCImage = this.m_scene.getImage("PUDive");
         //    dive_symbol.drawImage(new gsCPoint(10, 480 - 104), ctx, dive_symbol.Image);

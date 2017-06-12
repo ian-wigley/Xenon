@@ -75,7 +75,6 @@ class CIntroState extends CGameState {
             this.m_state.update(ctx, controls);
         }
 
-
         if (this.m_options.getOption(enums.OptionType.OPTION_BACKDROP)) {
 //            ctx.drawImage(this.backgroundTexture, 0, 0);
         }

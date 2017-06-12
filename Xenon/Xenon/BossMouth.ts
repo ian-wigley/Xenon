@@ -5,6 +5,7 @@ import enums = require("Enums");
 import gsCTimer = require("Timer");
 import CSpinner = require("Spinner");
 import gsCVector = require("Vector");
+import CExplode = require("Exploder");
 
 class CBossMouth extends CBoss {
 
@@ -37,7 +38,7 @@ class CBossMouth extends CBoss {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         if (this.m_shield == 0) {
-            //this.explode();
+            var explode = new CExplode(this);
             this.kill();
             return true;
         }

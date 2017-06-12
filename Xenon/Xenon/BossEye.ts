@@ -7,6 +7,7 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CActor = require("Actor");
 import CPlayGameState = require("PlayGameState");
+import CExplode = require("Exploder");
 
 class CBossEye extends CBoss {
 
@@ -57,7 +58,7 @@ class CBossEye extends CBoss {
             this.m_is_hit = false;
         }
         if (this.m_shield == 0) {
-            //super.explode();
+            var explode = new CExplode(this);
             super.kill();
             return true;
         }

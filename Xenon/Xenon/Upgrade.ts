@@ -75,7 +75,7 @@ class CUpgrade extends CActor {
 
         switch (actor.getActorInfo().m_type) {
             case enums.ActorType.ACTOR_TYPE_PICKUP:
-                var act = <Pickup.CPickup>actor; //(<Pickup.CPickup> actor).collect();
+                var act = <Pickup.CPickup>actor;
                 act.collect();
                 actor.kill();
                 break;
@@ -98,7 +98,6 @@ class CUpgrade extends CActor {
 
     //-------------------------------------------------------------
 
-    //public setWeapon(type: enums.WeaponType, grade: enums.WeaponGrade = enums.WeaponGrade.WEAPON_STANDARD) {
     public setWeapon(type: enums.WeaponType, grade?: enums.WeaponGrade) {
         if (this.m_weapon) {
             this.m_weapon.kill();

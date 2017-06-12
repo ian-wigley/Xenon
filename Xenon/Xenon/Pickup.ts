@@ -74,8 +74,7 @@ module Pickups {
             else
                 ship.attachClone(1);
 
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);
-            //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_FIRE_MISSILE);//getPosition().getX());
         }
 
         //-------------------------------------------------------------
@@ -108,9 +107,7 @@ module Pickups {
 
             this.m_scene.createLabel(this.getPosition(), "DIVE");
             this.m_playGameState.getPlayer().diveBonus();
-            //CPlayGameState::getPlayer().diveBonus();
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BONUS);
-            //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_BONUS);//getPosition().getX());
         }
     }
 
@@ -135,9 +132,8 @@ module Pickups {
             }
 
             this.m_scene.createLabel(this.getPosition(), "HOMING MISSILE");
-            ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON);
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
+            ship.addWeapon(enums.WeaponType.HOMING_MISSILE_WEAPON, enums.WeaponGrade.WEAPON_MEDIUM);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
 
@@ -161,8 +157,7 @@ module Pickups {
             }
             this.m_scene.createLabel(this.getPosition(), "CLOAK");
             ship.setCloak(this.CLOAK_TIME);
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
 
@@ -186,9 +181,8 @@ module Pickups {
                 return;
 
             this.m_scene.createLabel(this.getPosition(), "LASER");
-            ship.addWeapon(enums.WeaponType.LASER_WEAPON);
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP,getPosition().getX());
+            ship.addWeapon(enums.WeaponType.LASER_WEAPON, enums.WeaponGrade.WEAPON_BEST);
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
 
@@ -213,10 +207,8 @@ module Pickups {
 
             this.m_scene.createLabel(this.getPosition(), this.getActorInfo().m_kill_bonus.toString());
             this.m_playGameState.getPlayer().scoreBonus(this.getActorInfo().m_kill_bonus);
-            //CPlayGameState::getPlayer() ->scoreBonus(getActorInfo().m_kill_bonus);
 
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_BONUS, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
 
@@ -247,8 +239,7 @@ module Pickups {
                 new_shield = max;
 
             ship.setShield(new_shield);
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
 
@@ -281,8 +272,7 @@ module Pickups {
                     this.m_scene.createLabel(this.getPosition(), "SPEED UP");
                     break;
             }
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX()
         }
     }
 
@@ -310,8 +300,7 @@ module Pickups {
             } else {
                 this.m_scene.createLabel(this.getPosition(), "WEAPON FULL");
             }
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX()
         }
     }
 
@@ -341,8 +330,7 @@ module Pickups {
             } else {
                 ship.attachWingtip(1);
             }
-            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);
-            //CGameState::playSample(SAMPLE_PICKUP, getPosition().getX());
+            this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
 
         //-------------------------------------------------------------

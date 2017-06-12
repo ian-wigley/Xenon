@@ -42,7 +42,8 @@ class CRusherGenerator extends CActor {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer) {
-        this.gameTime = gameTime;
+        //this.gameTime = gameTime;
+        this.m_delay_timer.update(false);
         if (this.m_delay_timer.getTime() < this.RUSHER_DELAY) {
             return true;
         }
