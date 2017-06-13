@@ -35,10 +35,10 @@ class COrganicGun extends CActor {
 
     constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_weapon = null;
         this.m_fired = false;
         this.m_name = "OrganicGun";
-        this.m_playGameState = playGameState;
     }
 
     //-------------------------------------------------------------
@@ -52,7 +52,7 @@ class COrganicGun extends CActor {
 
     public activate(): boolean {
         if (!this.isActive()) {
-            this.m_weapon = new CSpinnerWeapon();
+            this.m_weapon = new CSpinnerWeapon(this.m_playGameState);
             this.m_scene.addActor(this.m_weapon);
             this.m_weapon.activate();
             this.m_weapon.setOwner(this);

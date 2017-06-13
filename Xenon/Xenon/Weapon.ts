@@ -19,9 +19,7 @@ class CWeapon extends CActor {
     WEAPON_ONSCREEN_RADIUS: number;
 
     protected m_playGameState: CPlayGameState;
-
     protected do_fire: boolean = false;
-
 
     constructor(scene?: CScene) {
         super(scene);
@@ -121,6 +119,11 @@ class CWeapon extends CActor {
                     //this.fire();
                     this.do_fire = true;
                 }
+
+                else {
+                    this.do_fire = false;  /// 13/06/17
+                }
+
                 break;
         }
 

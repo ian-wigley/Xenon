@@ -6,12 +6,14 @@ import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CExplode = require("Exploder");
+import CPlayGameState = require("PlayGameState");
 
 class CRusher extends CAlien {
     private m_weapon: CSpinnerWeapon;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_weapon = null;
         this.m_name = "Rusher";
     }
@@ -28,7 +30,7 @@ class CRusher extends CAlien {
     public activate(): boolean {
         if (!this.isActive()) {
             if ((Math.random() * 100) < 25) {
-                this.m_weapon = new CSpinnerWeapon();
+                this.m_weapon = new CSpinnerWeapon(this.m_playGameState);
                 this.m_scene.addActor(this.m_weapon);
                 this.m_weapon.activate();
                 this.m_weapon.setOwner(this);

@@ -61,7 +61,6 @@ class CUpgrade extends CActor {
         if (this.getOwner() && (<CShip>this.getOwner()).getDiveLevel() > 0) {
             return;
         }
-        //this.registerHit(energy, hitter);
         super.registerHit(energy, hitter);
     }
 
@@ -98,7 +97,7 @@ class CUpgrade extends CActor {
 
     //-------------------------------------------------------------
 
-    public setWeapon(type: enums.WeaponType, grade?: enums.WeaponGrade) {
+    public setWeapon(type: enums.WeaponType, grade: enums.WeaponGrade) {
         if (this.m_weapon) {
             this.m_weapon.kill();
             this.m_weapon = null;

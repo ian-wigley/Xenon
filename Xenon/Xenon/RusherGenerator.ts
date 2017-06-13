@@ -3,6 +3,7 @@ import CRusher = require("Rusher");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import enums = require("Enums");
+import CPlayGameState = require("PlayGameState");
 
 class CRusherGenerator extends CActor {
 
@@ -14,8 +15,9 @@ class CRusherGenerator extends CActor {
     private m_rushers_created: number;
     private m_delay_timer: gsCTimer;
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_rushers_created = 0;
         //this.m_timer = new gsCTimer();
         this.m_delay_timer = new gsCTimer();
@@ -49,7 +51,7 @@ class CRusherGenerator extends CActor {
         }
         this.m_delay_timer.start();
 
-        var r: CRusher = new CRusher();
+        var r: CRusher = new CRusher(this.m_playGameState);
         this.m_scene.addActor(r);
         r.setPosition(this.getPosition());
         r.setVelocity(this.getVelocity());

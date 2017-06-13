@@ -26,7 +26,7 @@ module Loner {
 
         public activate(): boolean {
             if (!this.isActive()) {
-                this.m_weapon = new CSpinnerWeapon();
+                this.m_weapon = new CSpinnerWeapon(this.m_playGameState);
                 this.m_scene.addActor(this.m_weapon);
                 this.m_weapon.activate();
                 this.m_weapon.setOwner(this);
@@ -61,7 +61,7 @@ module Loner {
             if (ship != null) {
                 var dir: gsCVector = ship.getPosition().minus(this.getPosition());
                 dir.normalize();
-                //this.m_weapon.setDirection(dir);
+                this.m_weapon.setDirectionS(dir);
             }
 
             this.m_position.plusEquals(this.m_velocity);

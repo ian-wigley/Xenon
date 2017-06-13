@@ -18,11 +18,8 @@ class CLaser extends CBullet {
     private m_length: number;
     private m_dying: boolean;
 
-    //gsCList < CActor *> m_actor_collider_list;
     private m_actor_collider_list: Array<CActor>;
-    //gsCList < gsCPoint > m_map_collider_list;
     private m_map_collider_list: Array<gsCPoint>;
-    //gsCRandom m_random;
 
     constructor(playGameState: CPlayGameState) {
         super(playGameState);
@@ -33,7 +30,6 @@ class CLaser extends CBullet {
         this.m_map_collider_list = [];
         
         this.m_grade = 2; //TEMP!
-
     }
 
     //-------------------------------------------------------------
@@ -61,7 +57,7 @@ class CLaser extends CBullet {
             return;
 
         // save colliders for later
-        this.m_actor_collider_list.push(actor);//.addItem(actor);
+        this.m_actor_collider_list.push(actor);
     }
 
     //-------------------------------------------------------------
@@ -73,10 +69,9 @@ class CLaser extends CBullet {
         // save colliders for later
         this.m_hit_map = map;
 
-        this.m_map_collider_list = new Array<gsCPoint>(hits);//.setSize(hits);
+        this.m_map_collider_list = new Array<gsCPoint>(hits);
 
         for (var i = 0; i < hits; i++) {
-            //this.m_map_collider_list.setItem(i, map.getHitPosition(i));
             this.m_map_collider_list[i] = map.getHitPosition(i);
         }
     }
@@ -137,9 +132,7 @@ class CLaser extends CBullet {
                 this.m_scene.createMapExplosion(this.m_hit_map, pos);
 
                 this.m_playGameState.getPlayer().scoreBonus(5);
-                //CPlayGameState::getPlayer()->scoreBonus(5);
             }
-
             this.m_length = map_d;
         }
 
@@ -169,7 +162,7 @@ class CLaser extends CBullet {
     //-------------------------------------------------------------
 
     public Draw(ctx: CanvasRenderingContext2D): boolean {
-        var screen: gsCScreen = new gsCScreen(); //gsCApplication::getScreen();
+        var screen: gsCScreen = new gsCScreen();
 
         if (!screen)
             return false;
@@ -177,6 +170,8 @@ class CLaser extends CBullet {
         var colour: string; //gsCColour 
 
         //	int flash = m_random.getInt(256);
+        var flash = Math.random() * 256;
+         
         this.m_grade = 2
         switch (this.m_grade) {
             case enums.BulletGrade.BULLET_STANDARD:

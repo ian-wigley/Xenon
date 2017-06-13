@@ -5,6 +5,7 @@ import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import CSpinnerWeapon = require("SpinnerWeapon");
 import CExplode = require("Exploder");
+import CPlayGameState = require("PlayGameState");
 
 enum WallHuggerGrade {
     WALLHUGGER_STATIC,
@@ -41,8 +42,9 @@ class CWallHugger extends CAlien {
 
     //-------------------------------------------------------------
 
-    constructor() {
+    constructor(playGameState: CPlayGameState) {
         super();
+        this.m_playGameState = playGameState;
         this.m_grade = WallHuggerGrade.WALLHUGGER_STATIC;
         this.m_weapon = null;
         this.m_fired = false;
@@ -81,7 +83,7 @@ class CWallHugger extends CAlien {
 
     public activate(): boolean {
         if (!this.isActive()) {
-            this.m_weapon = new CSpinnerWeapon();
+            this.m_weapon = new CSpinnerWeapon(this.m_playGameState);
             this.m_scene.addActor(this.m_weapon);
             this.m_weapon.activate();
             this.m_weapon.setOwner(this);

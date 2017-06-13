@@ -777,7 +777,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.RUSHER:
-                                    var r: CRusher = new CRusher();
+                                    var r: CRusher = new CRusher(this.m_playGameState);
                                     console.log("RUSHER");
                                     scene.addActor(r);
                                     r.setPosition(pos);
@@ -786,7 +786,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.WALLHUGGER:
-                                    var w: CWallHugger = new CWallHugger();
+                                    var w: CWallHugger = new CWallHugger(this.m_playGameState);
                                     console.log("WallHugger");
                                     scene.addActor(w);
                                     w.setPosition(pos);
@@ -812,7 +812,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.REVERSE_RUSHER:
-                                    var r: CRusher = new CRusher();
+                                    var r: CRusher = new CRusher(this.m_playGameState);
                                     console.log("REVERSE_RUSHER");
                                     scene.addActor(r);
                                     r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
@@ -821,7 +821,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_LEFT:
-                                    var rG: CRusherGenerator = new CRusherGenerator();
+                                    var rG: CRusherGenerator = new CRusherGenerator(this.m_playGameState);
                                     console.log("RusherGenerator");
                                     scene.addActor(rG);
                                     rG.setPosition(pos);
@@ -830,7 +830,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_RIGHT:
-                                    rG = new CRusherGenerator();
+                                    rG = new CRusherGenerator(this.m_playGameState);
                                     console.log("RusherGenerator");
                                     scene.addActor(rG);
                                     rG.setPosition(pos);

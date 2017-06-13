@@ -12,20 +12,18 @@ class CDrone extends CAlien {
 
     private m_generator: CDroneGenerator;
     private m_phase: number;
-    //private m_timer:number = 0.0;
 
     constructor(playGameState: CPlayGameState, generator?: CDroneGenerator) {
         super();
         this.m_playGameState = playGameState;
         this.m_generator = generator;
         this.m_phase = 0.0;
-        this.m_name = "Drone";       
+        this.m_name = "Drone";
     }
 
     //-------------------------------------------------------------
 
-    public getActorInfo()
-    {
+    public getActorInfo() {
         this.m_actorInfo = this.m_scene.GetlistOfActors();
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_DRONE);
     }
@@ -64,9 +62,7 @@ class CDrone extends CAlien {
             return true;
         }
 
-
-        this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin((/*this.m_timer*/ 0 + this.m_phase) * 180.0);
-        //this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin(((this.m_timer.getTime()*10) + this.m_phase) * 180.0);
+        this.m_position.X = this.m_generator.getPosition().X + 32.0 * Math.sin(((this.m_timer.getTime() / 60) + this.m_phase) * 180.0);
         this.m_position.Y = (this.m_position.Y + this.m_velocity.Y);
 
         super.animate(enums.AnimationMode.ANIMATE_LOOP);
