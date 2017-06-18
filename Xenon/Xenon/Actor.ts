@@ -78,7 +78,6 @@ class CActor {
     //-------------------------------------------------------------
 
     public setPosition(position: gsCVector) {
-        //this.m_position = position;
         this.m_position = new gsCVector(position.x, position.y);
     }
 
@@ -227,7 +226,7 @@ class CActor {
         return true;
     }
 
-        //-------------------------------------------------------------
+    //-------------------------------------------------------------
 
     public Draw(ctx: CanvasRenderingContext2D): boolean {
 
@@ -282,14 +281,13 @@ class CActor {
             //frame = (m_timer.getTime() * getActorInfo().m_anim_rate);
             switch (mode) {
                 case enums.AnimationMode.ANIMATE_LOOP:
-                    //this.frame = this.frame % (num_frames - 1);	// cycle repeatedly
                     this.frame = (this.frame + 1) % num_frames;
-
                     break;
                 case enums.AnimationMode.ANIMATE_ONESHOT:
-                    if (this.frame >= num_frames) {
+                    if (this.frame >= num_frames - 1) {
                         this.frame = num_frames - 1;	// stay on last frame
                         finished = true;				// flag that we've finished
+                        break;
                     }
                     this.frame++;
                     break;
