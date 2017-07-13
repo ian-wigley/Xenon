@@ -212,10 +212,9 @@ class CActor {
 
     public onKilled(): void {
         var bonus = this.getActorInfo().m_kill_bonus;
-
-        if (bonus > 0) {
+        if (bonus > 0 && this.m_name != "Drone") {
             var score = bonus * this.m_score_multiplier;
-            this.m_scene.App.playStateInstance.getPlayer().scoreBonus(score);  //TEMP!
+            this.m_scene.App.playStateInstance.getPlayer().scoreBonus(score);
             this.m_scene.createLabel(this.getPosition(), score.toString());
         }
     }
