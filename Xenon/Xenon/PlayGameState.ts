@@ -301,9 +301,9 @@ class CPlayGameState extends CGameState {
             var sprite_hits: number = 0;
             var map_hits: number = 0;
 
-            ////#ifdef _PROFILING
-            ////	controls.firePressed = controls.fire = true;
-            ////#endif
+            //#ifdef _PROFILING
+            //	controls.firePressed = controls.fire = true;
+            //#endif
 
             this.m_scene.updateAllActors(controls, null);
             this.m_level.m_back_layer.drawMap(ctx);

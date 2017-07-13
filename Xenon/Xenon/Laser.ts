@@ -17,7 +17,7 @@ class CLaser extends CBullet {
     private m_hit_map: gsCMap;
     private m_length: number;
     private m_dying: boolean;
-
+    private m_laserRect: gsCRectangle;
     private m_actor_collider_list: Array<CActor>;
     private m_map_collider_list: Array<gsCPoint>;
 
@@ -139,7 +139,6 @@ class CLaser extends CBullet {
         this.m_actor_collider_list = [];
         this.m_map_collider_list = [];
         this.m_hit_map = null;
-
         this.m_dying = true;
     }
 
@@ -168,8 +167,6 @@ class CLaser extends CBullet {
             return false;
 
         var colour: string; //gsCColour 
-
-        //	int flash = m_random.getInt(256);
         var flash = Math.random() * 256;
          
         this.m_grade = 2
@@ -186,8 +183,7 @@ class CLaser extends CBullet {
         }
 
         var rect: gsCRectangle = this.getCollisionRect();
-
-        var on_screen: boolean = screen.drawSolidRect(rect, colour, ctx);
+        var on_screen: boolean = screen.drawSolidRect(this.m_laserRect, colour, ctx);
 
         if (this.m_is_on_screen && !on_screen)
             this.onLeavingScreen();
@@ -203,13 +199,12 @@ class CLaser extends CBullet {
     //-------------------------------------------------------------
 
     public getCollisionRect(): gsCRectangle {
-
         var pos: gsCPoint = this.getPosition().plus1(this.m_scene.getMap().getPosition());
-        return new gsCRectangle(pos.X, pos.Y - 300, 3, this.m_length);
+        this.m_laserRect = new gsCRectangle(pos.X, pos.Y - 300, 3, this.m_length);
+        return new gsCRectangle(pos.X, pos.Y - 300, pos.X + 3, this.m_length);
     }
 
     //-------------------------------------------------------------
-
 }
 
 export = CLaser;

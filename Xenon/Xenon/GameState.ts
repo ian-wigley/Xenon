@@ -135,13 +135,6 @@ class CGameState {
 
         this.backgroundTexture = <HTMLImageElement>document.getElementById("galaxy2");
 
-        //    #ifdef _PROFILING
-        //    strcpy(m_level_filename, "test.fmp");
-        //    m_xenon ->changeState(CPlayGameState::instance());
-        //    #else
-        //m_xenon->changeState(CMainMenuState::instance());
-        //#endif
-
         return true;
     }
 
