@@ -30,12 +30,13 @@ class CSpinner extends CBullet {
     //-------------------------------------------------------------
 
     public update(controls: gsCControls, gameTime: gsCTimer) {
-        super.update(controls, gameTime);
+        //super.update(controls, gameTime);
         if (this.m_shield == 0) {
             this.kill();
             return true;
         }
         this.m_position.plusEquals(this.m_velocity);
+        //console.log("pos x = " + this.m_position.x + " pos y = " + this.m_position.y);
         this.animations(enums.AnimationMode.ANIMATE_LOOP, this.m_grade * this.SPINNER_FRAMES, this.SPINNER_FRAMES);
         return true;
     }

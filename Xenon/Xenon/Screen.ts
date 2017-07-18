@@ -4,7 +4,7 @@ import gsCRectangle = require("Rectangle");
 class gsCScreen {
 
     m_screenRect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
-    m_clipRect: gsCRectangle = new gsCRectangle(-64, 0, 704, 580);
+    m_clipRect: gsCRectangle = new gsCRectangle(-64, -40, 704, 580);
 
     public contains(actorRect: gsCRectangle) {
 

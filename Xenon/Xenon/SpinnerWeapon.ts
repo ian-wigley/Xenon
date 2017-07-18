@@ -14,6 +14,7 @@ class CSpinnerWeapon extends CWeapon {
         this.m_playGameState = playGameState;
         this.m_directionS = new gsCVector(0.0, 1.0);
         this.m_name = "SpinnerWeapon";
+        this.do_fire = true;
     }
 
     //-------------------------------------------------------------
@@ -30,6 +31,7 @@ class CSpinnerWeapon extends CWeapon {
         if (this.do_fire) {
             this.fire();
             //controls.fire = false;
+            this.do_fire = false;
         }
         return true;
     }
@@ -43,14 +45,15 @@ class CSpinnerWeapon extends CWeapon {
 
         var m: CSpinner = new CSpinner(this.m_playGameState);
         this.m_scene.addActor(m);
-
-        m.activate();
-        var grade: number = this.m_grade;
-        m.setGrade(grade);//m.setGrade(<enums.BulletGrade>this.m_grade);//  (BulletGrade)m_grade);
         m.setPosition(this.getPosition());
-        var p: gsCVector = m.getActorInfo().m_speed;//[this.m_grade];
+        m.activate();
+        //var grade: number = 0; //this.m_grade;
+        ////m.setGrade(grade);//<number>this.m_grade);
+        m.setGrade(<number>this.m_grade);
+        m.setPosition(this.getPosition());
+        var p: gsCVector = new gsCVector(5, 5);
         var t: gsCVector = p.multVec(this.m_directionS);
-        m.setVelocity(t); //m.setVelocity(m.getActorInfo().m_speed[this.m_grade]);// * this.m_direction);
+        m.setVelocity(t);
 
         return true;
     }

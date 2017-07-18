@@ -87,6 +87,7 @@ class CWallHugger extends CAlien {
             this.m_scene.addActor(this.m_weapon);
             this.m_weapon.activate();
             this.m_weapon.setOwner(this);
+            this.m_weapon.setPosition(this.getPosition());
             this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
             this.m_weapon.setFiringMode(enums.WeaponFiringMode.WEAPON_MANUAL);
             this.m_state = WallHuggerState.WALLHUGGER_STILL;

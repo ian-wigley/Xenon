@@ -29,13 +29,14 @@ class CRusher extends CAlien {
 
     public activate(): boolean {
         if (!this.isActive()) {
-            if ((Math.random() * 100) < 25) {
+ //           if ((Math.random() * 100) < 25) {
                 this.m_weapon = new CSpinnerWeapon(this.m_playGameState);
                 this.m_scene.addActor(this.m_weapon);
                 this.m_weapon.activate();
                 this.m_weapon.setOwner(this);
                 this.m_weapon.setOffset(new gsCVector(0.0, 0.0));
-            }
+                this.m_weapon.setPosition(this.m_position);
+ //           }
             this.m_timer.start();
         }
         return super.activate();
