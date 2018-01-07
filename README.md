@@ -1,7 +1,7 @@
 # Xenon
 
-[[https://github.com/ian-wigley/Xenon/blob/master/Xenon/Xenon.jpg|alt=Screen-Shot]]
+![](Xenon/Xenon.jpg)
 
 A typescript coversion of the Bitmap Bothers Xenon PCF project.
 This version contains all of the original graphics & map given away on the cover disc.
-To view this game running on the web, check out http://ianwigley.co.uk/Xenon/Xenon.html.
+To play the game running inside a browser, check out http://ianwigley.co.uk/Xenon/Xenon.html.
