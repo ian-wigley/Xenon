@@ -1,0 +1,83 @@
+//-------------------------------------------------------------
+//
+// Class:	CExplosion
+//
+// Author:	John M Phillips
+//
+// Started:	06/05/00
+//
+// Base:	CAlien
+//
+// Derived:	CSmallExplosion
+//			CMediumExplosion
+//			CBigExplosion
+//
+//-------------------------------------------------------------
+
+#include "demo5.h"
+
+//-------------------------------------------------------------
+
+CExplosion::CExplosion()
+{
+}
+
+//-------------------------------------------------------------
+
+CExplosion::~CExplosion()
+{
+//	CActor::~CActor();
+}
+
+//-------------------------------------------------------------
+
+bool CExplosion::activate()
+{
+	if (!isActive()) {
+		m_timer.start();
+		}
+
+	return CActor::activate();
+}
+
+//-------------------------------------------------------------
+
+bool CExplosion::update(Controls *controls)
+{
+	m_position += m_velocity;
+
+	if (animate(ANIMATE_ONESHOT))
+		kill();
+	
+	return true;
+}
+
+//-------------------------------------------------------------
+
+void CExplosion::onLeavingScreen()
+{
+	kill();
+}
+
+//-------------------------------------------------------------
+
+bool CSmallExplosion::activate()
+{
+	return CExplosion::activate();
+}
+
+//-------------------------------------------------------------
+
+bool CMediumExplosion::activate()
+{
+	return CExplosion::activate();
+}
+
+//-------------------------------------------------------------
+
+bool CBigExplosion::activate()
+{
+	return CExplosion::activate();
+}
+
+//-------------------------------------------------------------
