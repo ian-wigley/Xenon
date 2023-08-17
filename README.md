@@ -2,11 +2,10 @@
 
 ![](Xenon.jpg)
 
-A Manual Typescript coversion of the Bitmap Bothers Xenon PCF project.
+The repo contains the original C++ source code and graphics of the Bitmap Brothers Xenon. This version was a Personal Computer Format (PC Format) magazine project game, from the year 2000. It was featured in the magazine and given away on a number of cover discs.
 <br>
-This version contains all of the original graphics & map given away on the cover disc.
-<br>
-This repo now includes an slightly updated version using VSCode.
+Also you will find two Typescript conversions of the game, the original conversion from C++ to Typescript was written using Visual Studio, whilst a slightly updated version that builds & runs using VSCode and a newer version of Typescript, was added in 2023.
 <br>
 <br>
-To play the game running inside a browser, check out http://ianwigley.co.uk/Xenon/Xenon.html.
+<br>
+To play the Typescript conversion of the game running inside a browser, check out http://ianwigley.co.uk/Xenon/Xenon.html.
