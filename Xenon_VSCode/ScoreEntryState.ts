@@ -5,7 +5,6 @@ import CApplication = require("Application");
 import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import enums = require("Enums");
-import Options = require("Options");
 import gsCPoint = require("Point");
 
 class CScoreEntryState extends CGameState {
