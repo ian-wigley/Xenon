@@ -37,4 +37,5 @@ class CExplosion extends CActor {
     }
 
 }
+
 export = CExplosion;
