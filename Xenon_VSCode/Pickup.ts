@@ -99,7 +99,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect() {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship) {
                 return;
@@ -125,7 +125,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect() {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship) {
                 return;
@@ -151,7 +151,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect() {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
             if (!ship) {
                 return;
             }
@@ -175,7 +175,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect() {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship)
                 return;
@@ -200,14 +200,13 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect() {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship)
                 return;
 
             this.m_scene.createLabel(this.getPosition(), this.getActorInfo().m_kill_bonus.toString());
             this.m_playGameState.getPlayer().scoreBonus(this.getActorInfo().m_kill_bonus);
-
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_PICKUP);//getPosition().getX());
         }
     }
@@ -232,8 +231,8 @@ module Pickups {
                 return;
 
             this.m_scene.createLabel(this.getPosition(), "SHIELD UP");
-            var max: number = ship.getActorInfo().m_initial_shield;
-            var new_shield: number = ship.getShield() + max / 2;
+            const max: number = ship.getActorInfo().m_initial_shield;
+            let new_shield: number = ship.getShield() + max / 2;
 
             if (new_shield > max)
                 new_shield = max;
@@ -257,7 +256,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect(): void {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship)
                 return;
@@ -290,7 +289,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect(): void {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship)
                 return;
@@ -307,7 +306,6 @@ module Pickups {
     //-------------------------------------------------------------
 
     export class CWingtipPickup extends CPickup {
-
         m_name = "PICKUP_WINGTIP";
         WINGTIP_FRAMES: number = 8;
 
@@ -319,7 +317,7 @@ module Pickups {
         //-------------------------------------------------------------
 
         public collect(): void {
-            var ship: CShip = this.m_scene.findShip();
+            const ship: CShip = this.m_scene.findShip();
 
             if (!ship)
                 return;
