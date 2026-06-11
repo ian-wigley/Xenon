@@ -4,9 +4,7 @@ import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import gsCControls = require("Controls");
 import enums = require("Enums");
-import Options = require("Options");
 import gsCPoint = require("Point");
-import gsCMenu = require("Menu");
 import COptionsMenuState = require("OptionsMenuState");
 
 class CVideoMenuState extends CGameState {
@@ -38,10 +36,18 @@ class CVideoMenuState extends CGameState {
         this.m_menu.setValue(enums.VideoMenuItem.OM_WINDOWED, this.m_options.getOption(enums.OptionType.OPTION_WINDOWED));
 
         switch (this.m_options.getOption(enums.OptionType.OPTION_COLOURDEPTH)) {
-            case 8: this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 0); break;
-            case 24: this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 2); break;
-            case 32: this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 3); break;
-            default: this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 1); break;
+            case 8:
+                this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 0);
+                break;
+            case 24:
+                this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 2);
+                break;
+            case 32:
+                this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 3);
+                break;
+            default:
+                this.m_menu.setValue(enums.VideoMenuItem.OM_COLOURDEPTH, 1);
+                break;
         }
 
         this.m_menu.setValue(enums.VideoMenuItem.OM_PARTICLEFX, this.m_options.getOption(enums.OptionType.OPTION_PARTICLEFX));
@@ -55,10 +61,18 @@ class CVideoMenuState extends CGameState {
         this.m_options.setOption(enums.OptionType.OPTION_WINDOWED, this.m_menu.getValue(enums.VideoMenuItem.OM_WINDOWED));
 
         switch (this.m_menu.getValue(enums.VideoMenuItem.OM_COLOURDEPTH)) {
-            case 0: this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 8); break;
-            case 1: this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 16); break;
-            case 2: this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 24); break;
-            case 3: this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 32); break;
+            case 0:
+                this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 8);
+                break;
+            case 1:
+                this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 16);
+                break;
+            case 2:
+                this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 24);
+                break;
+            case 3:
+                this.m_options.setOption(enums.OptionType.OPTION_COLOURDEPTH, 32);
+                break;
         }
 
         this.m_options.setOption(enums.OptionType.OPTION_PARTICLEFX, this.m_menu.getValue(enums.VideoMenuItem.OM_PARTICLEFX));
@@ -128,18 +142,15 @@ class CVideoMenuState extends CGameState {
                         //						"No",COptionsMenuState::instance(),
                         //						true);
                         return;//this.changeState(CMessageBoxState::instance());
-                    }
-                    else {
+                    } else {
                         this.m_optionState.create();
                         return this.changeState(this.m_app.instance = this.m_optionState);
                     }
-                }
-                else {
+                } else {
                     this.m_optionState.create();
                     return this.changeState(this.m_app.instance = this.m_optionState);
                 }
-            }
-            else if (item == enums.VideoMenuItem.OM_CANCEL) {
+            } else if (item == enums.VideoMenuItem.OM_CANCEL) {
                 super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                 this.m_optionState.create();
                 return this.changeState(this.m_app.instance = this.m_optionState);
@@ -175,4 +186,5 @@ class CVideoMenuState extends CGameState {
     //-------------------------------------------------------------
 
 }
+
 export = CVideoMenuState;
