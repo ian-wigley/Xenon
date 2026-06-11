@@ -31,12 +31,11 @@ class CPlayer {
     //-------------------------------------------------------------
 
     public scoreBonus(bonus: number): void {
-        var old_score: number = this.m_score;
-
+        const old_score: number = this.m_score;
         this.m_score += bonus;
-        var score_level = this.m_extra_life_scores;
+        const score_level = this.m_extra_life_scores;
 
-        var count: number = 0;
+        let count: number = 0;
         while (score_level[count] != 0) {
             if (old_score < score_level[count] &&
                 this.m_score >= score_level[count]) {
@@ -108,4 +107,5 @@ class CPlayer {
     //-------------------------------------------------------------
 
 }
+
 export = CPlayer;
