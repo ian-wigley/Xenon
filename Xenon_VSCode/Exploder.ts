@@ -14,19 +14,17 @@ class CExploder {
 
     private explode(parent) {
 
-        var x: CExplosion = null;
+        let x: CExplosion = null;
 
         if (parent.m_image != null) {
-            var size: gsCPoint = parent.m_image.getTileSize();
-            var area = size.X * size.Y;
+            const size: gsCPoint = parent.m_image.getTileSize();
+            const area = size.X * size.Y;
 
             if (area <= 32 * 32) {
                 x = new CSmallExplosion(parent.m_playGameState);
-            }
-            else if (area <= 64 * 64) {
+            } else if (area <= 64 * 64) {
                 x = new CMediumExplosion(parent.m_playGameState);
-            }
-            else {
+            } else {
                 x = new CBigExplosion(parent.m_playGameState);
             }
 
@@ -39,4 +37,5 @@ class CExploder {
     //-------------------------------------------------------------
 
 }
-export = CExploder; 
+
+export = CExploder;
