@@ -2,11 +2,9 @@
 import CApplication = require("Application");
 import CScene = require("Scene");
 import CStarfield = require("Starfield");
-import Options = require("Options");
 import gsCControls = require("Controls");
 import enums = require("Enums");
 import gsCPoint = require("Point");
-import CMainMenuState = require("MainMenuState");
 
 class CViewScoresState extends CGameState {
 
