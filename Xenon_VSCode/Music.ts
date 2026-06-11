@@ -8,15 +8,11 @@
 
     public load(filename: string): boolean {
         this.music = <HTMLAudioElement>document.getElementById(filename);
-        if (this.music) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return !!this.music;
     }
 
     //-------------------------------------------------------------
 
 }
+
 export = gsCMusic;
