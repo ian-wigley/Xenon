@@ -2,7 +2,6 @@
 import GameTime = require("Timer");
 import enums = require("Enums");
 import CBullet = require("Bullet");
-import gsCVector = require("Vector");
 import CExplode = require("Exploder");
 
 class CHomerProjectile extends CBullet {
@@ -17,14 +16,14 @@ class CHomerProjectile extends CBullet {
     //-------------------------------------------------------------
     public update(controls: Controls, gametime: GameTime): boolean {
         if (this.m_shield == 0) {
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             this.kill();
             return true;
         }
 
         this.m_position.plusEquals(this.m_velocity);
-        var num_frames = this.m_image.getNumTiles();
-        var frame = (this.getDirection(num_frames) + 3) & (num_frames - 1);
+        const num_frames = this.m_image.getNumTiles();
+        const frame = (this.getDirection(num_frames) + 3) & (num_frames - 1);
         this.m_sprite.setFrame((this.getDirection(num_frames) + 3) & (num_frames - 1));
         return true;
     }
