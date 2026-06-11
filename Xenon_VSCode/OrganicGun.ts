@@ -83,8 +83,7 @@ class COrganicGun extends CActor {
         if (dir > 0) {
             this.m_side = this.ORGANICGUN_LEFT;
             this.m_weapon.setDirectionS(new gsCVector(1.0, 0.0));
-        }
-        else {
+        } else {
             this.m_side = this.ORGANICGUN_RIGHT;
             this.m_weapon.setDirectionS(new gsCVector(-1.0, 0.0));
         }
@@ -116,8 +115,7 @@ class COrganicGun extends CActor {
                     this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START);
                     this.m_state = OrganicGunState.ORGANICGUN_STILL;
                     this.m_timer.start();
-                }
-                else {
+                } else {
                     this.m_sprite.setFrame(this.m_side + this.ORGANICGUN_SHOT_START + frame);
                     if (!this.m_fired && frame >= this.ORGANICGUN_LAUNCH_FRAME) {
                         this.m_weapon.fire();
@@ -140,4 +138,5 @@ class COrganicGun extends CActor {
     //-------------------------------------------------------------
 
 }
+
 export = COrganicGun;
