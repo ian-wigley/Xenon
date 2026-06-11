@@ -1,5 +1,4 @@
-﻿import gsCVector = require("Vector");
-import CActor = require("Actor");
+﻿import CActor = require("Actor");
 import CEngine = require("Engine");
 import CActorInfoList = require("ActorInfoList");
 import enums = require("Enums");
