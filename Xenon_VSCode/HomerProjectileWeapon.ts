@@ -1,6 +1,4 @@
 ﻿import CWeapon = require("Weapon");
-import Controls = require("Controls");
-import GameTime = require("Timer");
 import enums = require("Enums");
 import gsCVector = require("Vector");
 import CHomerProjectile = require("HomerProjectile");
@@ -44,7 +42,7 @@ class CHomerProjectileWeapon extends CWeapon {
             return false;
         }
 
-        var direction = [];
+        const direction = [];
         direction.push(new gsCVector(0.0, -1.0));
         direction.push(new gsCVector(1.0, -1.0));
         direction.push(new gsCVector(1.0, 0.0));
@@ -55,16 +53,16 @@ class CHomerProjectileWeapon extends CWeapon {
         direction.push(new gsCVector(-1.0, -1.0));
 
         // fire 8 projectiles
-        var hp: CHomerProjectile;
+        let hp: CHomerProjectile;
 
-        for (var i = 0; i < 8; i++) {
+        for (let i = 0; i < 8; i++) {
             hp = new CHomerProjectile(this.m_playGameState);
             this.m_scene.addActor(hp);
             hp.activate();
-            var grade: number = this.m_grade;
+            const grade: number = this.m_grade;
             hp.setGrade(grade);
             hp.setPosition(this.getPosition());
-            var d: gsCVector = direction[i];
+            const d: gsCVector = direction[i];
             d.normalize();
             hp.setVelocity(d.multVec(hp.getActorInfo().m_speed));
         }
