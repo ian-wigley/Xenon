@@ -15,4 +15,5 @@ class CHighDensityDustEffect extends CDustEffect {
         return this.m_actorInfo.GetActorInfoListItem(enums.ActorInfoType.INFO_HIGHDENSITY_DUST_EFFECT);
     }
 }
+
 export = CHighDensityDustEffect;
