@@ -22,7 +22,7 @@ class Xenon {
     private m_listOfActors: CActorInfoList;
     private m_state: CGameState;
     private m_app: CApplication;
-    private m_ctrl: gsCControls = new gsCControls();
+    private readonly m_ctrl: gsCControls = new gsCControls();
 
     constructor() {
         this.m_ctrl = new gsCControls();
