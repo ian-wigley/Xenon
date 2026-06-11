@@ -271,7 +271,7 @@ class CScene {
 
     public checkActorCollisions(): void {
         this.m_collision_list.scan(this.actorCollisionCallback);
-        for (var i = 0; i < this.m_actor_list.length; i++) {
+        for (let i = 0; i < this.m_actor_list.length; i++) {
             if (this.m_actor_list[i].isActive()) {
                 this.m_actor_list[i].postProcessCollision();
             }
@@ -281,9 +281,11 @@ class CScene {
     //-------------------------------------------------------------
 
     public checkMapCollisions(map: gsCMap): void {
-        // check for collisions between actors and map
-        for (var i = 0; i < this.m_actor_list.length; i++) {
-            var actor: CActor = this.m_actor_list[i];
+        let hits: number;
+        let rect: gsCRectangle;
+// check for collisions between actors and map
+        for (let i = 0; i < this.m_actor_list.length; i++) {
+            const actor: CActor = this.m_actor_list[i];
             if (actor.isActive()) {
                 switch (actor.getActorInfo().m_type) {
                     case enums.ActorType.ACTOR_TYPE_SHIP:
@@ -291,9 +293,9 @@ class CScene {
                         if (this.m_ship_is_cloaked)
                             break;
                         {
-                            var rect: gsCRectangle = actor.getCollisionRect();
+                            rect = actor.getCollisionRect();
                             //rect.move(-map.getPosition());
-                            var hits = map.hitBy(rect, this.COLLIDE_WITH_SHIP);
+                            hits = map.hitBy(rect, this.COLLIDE_WITH_SHIP);
                             if (hits > 0) {
                                 actor.onCollisionWithMap(map, hits);
                             }
@@ -303,9 +305,9 @@ class CScene {
                     case enums.ActorType.ACTOR_TYPE_BULLET:
                     case enums.ActorType.ACTOR_TYPE_ALIENBULLET:
                         {
-                            var rect: gsCRectangle = actor.getCollisionRect();
+                            rect = actor.getCollisionRect();
                             //rect.move(-map.getPosition());
-                            var hits = map.hitBy(rect, this.COLLIDE_WITH_BULLETS);
+                            hits = map.hitBy(rect, this.COLLIDE_WITH_BULLETS);
                             if (hits > 0) {
                                 actor.onCollisionWithMap(map, hits);
                             }
@@ -319,9 +321,9 @@ class CScene {
     //-------------------------------------------------------------
 
     public removeDeadActors(): void {
-        var temp_actor_list = [];
+        const temp_actor_list = [];
         //for (var i = this.m_actor_list.length - 1; i >= 0; i--) {
-        for (var i = 0; i < this.m_actor_list.length; i++) {
+        for (let i = 0; i < this.m_actor_list.length; i++) {
             if (this.m_actor_list[i].isActive()) {
                 temp_actor_list.push(this.m_actor_list[i]);
             }
@@ -334,7 +336,8 @@ class CScene {
 
     public killAllActors(): void {
 
-        for (var i = 0; i < this.m_actor_list.length; i++) {
+        let i;
+        for (i = 0; i < this.m_actor_list.length; i++) {
             this.m_actor_list[i].kill();
         }
 
@@ -368,7 +371,7 @@ class CScene {
     //-------------------------------------------------------------
 
     public findShip() {
-        for (var i = 0; i < this.m_actor_list.length; i++) {
+        for (let i = 0; i < this.m_actor_list.length; i++) {
             if (this.m_actor_list[i].getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
                 return <CShip>this.m_actor_list[i];
             }
@@ -379,7 +382,7 @@ class CScene {
     //-------------------------------------------------------------
 
     public createLabel(position: gsCVector, text: string /*, num?: number*/): void {
-        var label: CLabel = new CLabel();
+        const label: CLabel = new CLabel();
         this.addActor(label);
 
         label.activate();
@@ -393,13 +396,11 @@ class CScene {
     //-------------------------------------------------------------
 
     public createMapExplosion(map: gsCMap, position: gsCPoint) {
-        var exp: CSmallExplosion = new CSmallExplosion();
+        const exp: CSmallExplosion = new CSmallExplosion();
         this.addActor(exp);
-
-        var tile_size: gsCPoint = map.getImage().getTileSize();
-        var tile_centre: gsCPoint = new gsCPoint(tile_size.X / 2, tile_size.Y / 2);
-
-        var pos: gsCPoint = new gsCPoint(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
+        const tile_size: gsCPoint = map.getImage().getTileSize();
+        const tile_centre: gsCPoint = new gsCPoint(tile_size.X / 2, tile_size.Y / 2);
+        const pos: gsCPoint = new gsCPoint(position.X * tile_size.X + tile_centre.X, position.Y * tile_size.Y + tile_centre.Y);
         exp.setPosition(new gsCVector(pos.X, pos.Y));
         exp.activate();
     }
@@ -413,23 +414,23 @@ class CScene {
     //-------------------------------------------------------------
 
     public findNearestActor(type: enums.ActorType, position: gsCVector, dir: number): CActor {
-        var nearest_actor: CActor = null;
-        var nearest_distance: number = 99999.0;
+        let nearest_actor: CActor = null;
+        let nearest_distance: number = 99999.0;
 
-        for (var i = 0; i < this.m_actor_list.length; i++) {
-            var actor: CActor = this.m_actor_list[i];
+        for (let i = 0; i < this.m_actor_list.length; i++) {
+            const actor: CActor = this.m_actor_list[i];
             if (actor.isActive() &&
                 actor.getActorInfo().m_type == type) {
                 if (dir != 0) {
-                    var sy: number = position.Y;
-                    var ay: number = actor.getPosition().Y;
+                    const sy: number = position.Y;
+                    const ay: number = actor.getPosition().Y;
                     if (dir < 0 && sy < ay)
                         continue;
                     if (dir > 0 && sy > ay)
                         continue;
                 }
 
-                var d: number = actor.getPosition().minus(position).length;
+                const d: number = actor.getPosition().minus(position).length;
                 if (nearest_actor == null || d < nearest_distance) {
                     nearest_actor = actor;
                     nearest_distance = d;
@@ -476,7 +477,7 @@ class CScene {
     public addActor(actor: CActor) {
         actor.setScene(this);
         this.m_actor_list.push(actor);
-        console.log("Actor List Size : " + this.m_actor_list.length);
+        // console.log("Actor List Size : " + this.m_actor_list.length);
     }
 
     //-------------------------------------------------------------
