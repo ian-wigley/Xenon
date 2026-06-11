@@ -4,7 +4,6 @@ import gsCVector = require("Vector");
 import gsCTimer = require("Timer");
 import gsCControls = require("Controls");
 import CDustEffect = require("DustEffect");
-import Point = require("Point");
 
 class CParticleEffect extends CActor {
 
@@ -75,8 +74,7 @@ class CParticleEffect extends CActor {
         // update effect global position
         if (this.getOwner()) {
             this.m_position = this.getOwner().getPosition().plus1(this.m_offset);
-        }
-        else {
+        } else {
             this.m_position.plusEquals(this.m_velocity);
         }
 
@@ -86,8 +84,7 @@ class CParticleEffect extends CActor {
             if (p) {
                 this.m_particle_list.push(p);
             }
-        }
-        else {
+        } else {
             if (this.m_particle_list.length == 0) {//.isEmpty()) {
                 this.kill();
                 return true;
@@ -105,8 +102,7 @@ class CParticleEffect extends CActor {
                     // kill particle
                     this.m_particle_list[i] = null;
                 }
-            }
-            else {
+            } else {
                 p.m_position.plusEquals(p.m_velocity);
                 //            console.log("particle position x: " + p.m_position.X + " y:" + p.m_position.Y);
                 //            console.log("particle velocity x: " + p.m_velocity.X + " y:" + p.m_velocity.Y);
@@ -147,8 +143,7 @@ class CParticleEffect extends CActor {
                     // kill particle
                     //delete m_particle_list[i];
                     // this.m_particle_list[i] = null;//.removeIndex(i);
-                }
-                else {
+                } else {
                     temp.push(p);
                 }
             }
