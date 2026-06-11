@@ -234,7 +234,7 @@ class CGameState {
     //-------------------------------------------------------------
 
     public addNewScore(score: number): boolean {
-        var pos = this.m_score_table.insertScore(score, "A");
+        const pos = this.m_score_table.insertScore(score, "A");
 
         if (pos == -1) {
             return false;
@@ -424,4 +424,5 @@ class CGameState {
     //-------------------------------------------------------------
 
 }
+
 export = CGameState;
