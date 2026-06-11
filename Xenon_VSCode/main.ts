@@ -1,6 +1,6 @@
 ﻿require(["out\\Xenon.js"], function (Xenon) {
 
-    var xenon = new Xenon();
+    const xenon = new Xenon();
     xenon.Run();
 });
 
