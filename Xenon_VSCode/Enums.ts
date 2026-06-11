@@ -4,7 +4,7 @@ module enu {
         gsTIMER_RESET,
         gsTIMER_ACTIVE,
         gsTIMER_PAUSED
-    };
+    }
 
     //-------------------------------------------------------------
     // Actor Types
@@ -27,7 +27,6 @@ module enu {
         ACTOR_TYPE_LABEL,		// floating text labels
         ACTOR_TYPE_EFFECT,		// special effects
         ACTOR_TYPE_BOSS,		// boss
-
         ACTOR_TYPE_RETROENGINE,
         ACTOR_TYPE_TOTAL
     };
@@ -116,7 +115,7 @@ module enu {
         // Note: add new actors before this line
         INFO_TOTAL
 
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -142,7 +141,7 @@ module enu {
         MISSILE_WEAPON,
         HOMING_MISSILE_WEAPON,
         LASER_WEAPON
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -150,29 +149,28 @@ module enu {
         WEAPON_STANDARD,
         WEAPON_MEDIUM,
         WEAPON_BEST
-    };
+    }
 
     //-------------------------------------------------------------
 
     export enum WeaponFiringMode {
         WEAPON_AUTOMATIC,
         WEAPON_MANUAL,
-    };
+    }
 
     //-------------------------------------------------------------
 
     export enum WeaponDirection {
         WEAPON_FORWARD,
         WEAPON_REVERSE,
-    };
+    }
 
     //-------------------------------------------------------------
 
     export enum AnimationMode {
         ANIMATE_LOOP,				    // cycle repeatedly through frames
         ANIMATE_ONESHOT,			    // cycle once then flag as finished
-    };
-
+    }
 
 
     export enum RetroDirection {
@@ -180,20 +178,20 @@ module enu {
         RETRO_NE,
         RETRO_SW,
         RETRO_SE
-    };
+    }
 
     export enum ShipHandling {
         HANDLING_BAD,
         HANDLING_NORMAL,
         HANDLING_GOOD,
-    };
+    }
 
     export enum DiveMode {
         DIVE_OFF,
         DIVING_DOWN,
         DIVE_ACTIVE,
         DIVING_UP
-    };
+    }
 
     export enum AlienType {
         WALLHUGGER,				// 0
@@ -207,7 +205,7 @@ module enu {
         RUSHER_GENERATOR_RIGHT,	// 8
         RUSHER_GENERATOR_LEFT,	// 9
         ORGANIC_GUN,			// 10
-    };
+    }
 
     export enum PickupType {
         PICKUP_SHIELD,			// 0
@@ -220,7 +218,7 @@ module enu {
         PICKUP_WINGTIP,			// 7
         PICKUP_HOMINGMISSILE,	// 8
         PICKUP_LASER,			// 9
-    };
+    }
 
     export enum TileId {
         ID_NORMAL_TILE,			// 0
@@ -233,53 +231,41 @@ module enu {
         ID_BOSS_MOUTH,			// 7
         ID_BOSS_EYE,			// 8
         ID_BOSS_CONTROL = 9		// 9
-    };
+    }
 
     export enum m_mode {
         CREATEPLAYER,
         PLAYERACTIVE,
-    };
-
+    }
 
     export enum WallHuggerGrade {
         WALLHUGGER_STATIC,
         WALLHUGGER_MOVING,
-    };
-
+    }
 
     export enum GameSampleType {
         SAMPLE_MENU_SELECTION,
         SAMPLE_MENU_OPTION,
         SAMPLE_MENU_CLICK,
         SAMPLE_MENU_BACK,
-
         SAMPLE_PLAYER_CREATED,
         SAMPLE_PLAYER_DESTROYED,
-
         SAMPLE_FIRE_MISSILE,
         SAMPLE_FIRE_HOMING_MISSILE,
         SAMPLE_FIRE_LASER,
-
         SAMPLE_SMALL_EXPLOSION,
         SAMPLE_MEDIUM_EXPLOSION,
         SAMPLE_BIG_EXPLOSION,
-
         SAMPLE_ASTEROID_BREAKUP,
-
         SAMPLE_PICKUP,
         SAMPLE_BONUS,
-
         SAMPLE_DIVE_DOWN,
         SAMPLE_DIVE_UP,
-
         SAMPLE_HIT_BACKGROUND,
-
         SAMPLE_ROAR,
         SAMPLE_SNORT,
-
         SAMPLE_CHECKPOINT,
     }
-
 
     export enum GameMusicType {
         MUSIC_TITLE,
@@ -288,7 +274,7 @@ module enu {
         MUSIC_HISCORE,
         MUSIC_BOSS,
         MUSIC_OUTRO,
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -296,7 +282,7 @@ module enu {
         DEMO_OFF,
         DEMO_RECORD,
         DEMO_PLAYBACK
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -305,7 +291,7 @@ module enu {
         KEYBOARD_LAYOUT_2,
         JOYSTICK_1,
         JOYSTICK_2,
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -324,7 +310,7 @@ module enu {
         OPTION_CONTROL1,
         OPTION_CONTROL2,
         TOTAL_OPTIONS
-    };
+    }
 
     //-------------------------------------------------------------
 
@@ -363,7 +349,7 @@ module enu {
     export enum AudioMenuItem {
         OM_MUSIC,
         OM_SOUNDFX,
-       // OM_SEPERATOR,
+        //OM_SEPERATOR,
         OM_APPLY,
         OM_CANCEL
     }
@@ -374,5 +360,5 @@ module enu {
         //CM_SEPERATOR,
         CM_APPLY,
         CM_CANCEL
-    } 
+    }
 } 
