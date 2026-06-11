@@ -153,4 +153,5 @@ class COptions {
 
     //-------------------------------------------------------------
 }
-export = COptions; 
+
+export = COptions;
