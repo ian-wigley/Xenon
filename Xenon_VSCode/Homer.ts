@@ -36,19 +36,19 @@ class CHomer extends CAlien {
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
         if (this.m_shield == 0) {
-            var weapon: CHomerProjectileWeapon = new CHomerProjectileWeapon(this.m_playGameState);
+            const weapon: CHomerProjectileWeapon = new CHomerProjectileWeapon(this.m_playGameState);
             this.m_scene.addActor(weapon);
             weapon.activate();
             weapon.setOwner(this);
             weapon.setOffset(new gsCVector(0.0, 0.0));
             weapon.detonate();
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             super.kill();
             return true;
         }
 
-        var ship: CShip = this.m_scene.findShip();
-        var dx: number = 0.0;
+        const ship: CShip = this.m_scene.findShip();
+        let dx: number = 0.0;
 
         if (ship != null) {
             dx = ship.getPosition().X - this.m_position.X;
