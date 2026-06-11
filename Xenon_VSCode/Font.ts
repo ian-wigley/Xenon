@@ -52,10 +52,10 @@ class gsCFont extends gsCTiledImage {
 
     public printString(message: string): boolean {
 
-        var length: number = message.length;
+        let length: number = message.length;
 
-            if (length == 0)
-                return false;
+        if (length == 0)
+            return false;
         //    gsCScreen *screen = gsCApplication::getScreen();
         //    if (!screen)
         //        return false;
@@ -64,16 +64,15 @@ class gsCFont extends gsCTiledImage {
         //    if (screen_rect.contains(extents)) {
         //        char *str = message;
 
-        var count: number = 0;
+        let count: number = 0;
         while (length-- > 0) {
-            var c = message.charCodeAt(count++);
+            let c = message.charCodeAt(count++);
             if (c >= 0x20 && c <= 0x7F) {
                 c -= 0x20;
                 if (c < this.m_num_tiles) {
                     if (this.m_use_tint) {
                         this.drawTinted(c, this.m_text_cursor, this.m_tint, this.m_ctx);
-                    }
-                    else {
+                    } else {
                         this.drawFast(c, this.m_text_cursor, this.m_ctx);
                         this.m_text_cursor.add(new gsCPoint(this.m_tile_size.X, 0));
                     }
@@ -110,8 +109,8 @@ class gsCFont extends gsCTiledImage {
         //    if (!screen)
         //        return false;
 
-        var size: gsCPoint = this.getStringSize(message);
-        var old_x: number = this.m_text_cursor.X;
+        const size: gsCPoint = this.getStringSize(message);
+        const old_x: number = this.m_text_cursor.X;
 
         //m_text_cursor.setX((screen->getSize().getX() - size.getX()) / 2);
         this.m_text_cursor.X = ((640 - size.X) / 2);
@@ -122,4 +121,5 @@ class gsCFont extends gsCTiledImage {
 
     //-------------------------------------------------------------
 }
+
 export = gsCFont;
