@@ -1,6 +1,5 @@
 ﻿import CScene = require("Scene");
 import CStarfield = require("Starfield");
-import CActorInfoList = require("ActorInfoList");
 import CGameState = require("GameState");
 import CShip = require("Ship");
 import gsCPoint = require("Point");
@@ -12,11 +11,8 @@ import CPlayer = require("Player");
 import gsCImage = require("Image");
 import gsCRectangle = require("Rectangle");
 import gsCScreen = require("Screen");
-import gsCScoreTable = require("ScoreTable");
-import CMainMenuState = require("MainMenuState");
 import CBoss = require("Boss");
 import CBossControl = require("BossControl");
-import Options = require("Options");
 import gsCControls = require("Controls");
 
 import CViewScoresState = require("ViewScoresState");
@@ -286,8 +282,7 @@ class CPlayGameState extends CGameState {
             if (this.m_bossControl != null) {
                 if (this.m_bossControl.isStarted()) {
                     this.m_yscroll = this.m_bossControl.getYScroll();
-                }
-                else {
+                } else {
                     this.m_yscroll = 1;
                 }
             }
@@ -352,8 +347,7 @@ class CPlayGameState extends CGameState {
                             else
                                 this.m_medium_font.justifyString("Player Two");
                         }
-                    }
-                    else {
+                    } else {
                         this.m_game_start_timer.reset();
                     }
                 }
@@ -432,8 +426,7 @@ class CPlayGameState extends CGameState {
 
                     if (this.addNewScore(this.getPlayer().getScore())) {
                         return this.changeState(this.m_app.instance = this.m_scoreEntryState);
-                    }
-                    else {
+                    } else {
                         return this.changeState(this.m_app.instance = this.m_viewScoresState);
                     }
                 }
@@ -449,8 +442,7 @@ class CPlayGameState extends CGameState {
                     this.stopSamples();
                     if (this.addNewScore(this.getPlayer().getScore())) {
                         return this.changeState(this.m_app.instance = this.m_scoreEntryState);
-                    }
-                    else {
+                    } else {
                         return this.changeState(this.m_app.instance = this.m_viewScoresState);
                     }
                 }
@@ -510,8 +502,7 @@ class CPlayGameState extends CGameState {
 
             this.m_medium_font.setTextCursor(new gsCPoint(10, 20));
             this.m_medium_font.printString(String("00000" + this.m_player_list[0].getScore()).slice(-10));
-        }
-        else {
+        } else {
             this.m_small_font.setTextCursor(new gsCPoint(10, 10));
             this.m_small_font.printString("Player One");
 
@@ -523,8 +514,7 @@ class CPlayGameState extends CGameState {
                 this.m_medium_font.printString("%010i" + this.m_player_list[0].getScore());
                 this.m_small_font.setTextCursor(new gsCPoint(640 - 10 - 10 * 8, 20));
                 this.m_small_font.printString("%010i" + this.m_player_list[1].getScore());
-            }
-            else {
+            } else {
                 this.m_small_font.setTextCursor(new gsCPoint(10, 20));
                 this.m_small_font.printString("%010i" + this.m_player_list[0].getScore());
                 this.m_medium_font.setTextCursor(new gsCPoint(640 - 10 - 10 * 16, 20));
@@ -574,15 +564,12 @@ class CPlayGameState extends CGameState {
 
         if (this.m_ship && this.m_ship.isCloaked()) {
             shield_colour = "blue";
-        }
-        else {
+        } else {
             if (shield < this.ENERGYBAR_WIDTH / 3) {
                 shield_colour = "red";
-            }
-            else if (shield < this.ENERGYBAR_WIDTH * 2 / 3) {
+            } else if (shield < this.ENERGYBAR_WIDTH * 2 / 3) {
                 shield_colour = "yellow";
-            }
-            else {
+            } else {
                 shield_colour = "green";
             }
         }
