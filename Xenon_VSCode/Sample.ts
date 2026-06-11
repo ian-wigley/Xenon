@@ -8,12 +8,7 @@
 
     public load(filename: string): boolean {
         this.sample = <HTMLAudioElement>document.getElementById(filename);
-        if (this.sample) {
-            return true;
-        }
-        else {
-            return false;
-        }
+        return !!this.sample;
     }
 
     //-------------------------------------------------------------
