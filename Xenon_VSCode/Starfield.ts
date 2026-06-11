@@ -1,15 +1,15 @@
 ﻿import gsCVector = require("Vector");
 
 class CStarfield {
-    private m_star: HTMLImageElement;
+    private readonly m_star: HTMLImageElement;
     private m_position: number;
-    private m_layers: number;
+    private readonly m_layers: number;
     private m_point: Array<gsCVector>;
     //private Color[]m_colour;
-    private m_layer: Array<number>;
-    private m_offset: Array<number>;
-    private m_width: number;
-    private m_height: number;
+    private readonly m_layer: Array<number>;
+    private readonly m_offset: Array<number>;
+    private readonly m_width: number;
+    private readonly m_height: number;
 
     constructor(star: HTMLImageElement) {
         this.m_star = star;
@@ -60,4 +60,5 @@ class CStarfield {
     //-------------------------------------------------------------
 
 }
+
 export = CStarfield;
