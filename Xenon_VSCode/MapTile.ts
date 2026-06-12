@@ -1,23 +1,20 @@
-﻿import Point = require("Point");
-
-class gsCMapTile {
+﻿class gsCMapTile {
 
     private gsMAPTILE_USERDATA: number = 4;
 
     private m_tile: number = 0;
     private m_empty: number = 0;
     private m_hidden: number = 0;
-    private m_data: number[];   // user data
+    private readonly m_data: number[];   // user data
     private m_collision_flags: number;
 
-    constructor(tile?: number, empty?: boolean, hidden?: boolean)
-    {
+    constructor(tile?: number, empty?: boolean, hidden?: boolean) {
         this.m_tile = tile;
         this.m_empty = empty ? 1 : 0;
         this.m_hidden = hidden ? 1 : 0;
         this.m_data = new Array(this.gsMAPTILE_USERDATA);
 
-        for (var i = 0; i < this.gsMAPTILE_USERDATA; i++) {
+        for (let i = 0; i < this.gsMAPTILE_USERDATA; i++) {
             this.m_data[i] = 0;
         }
     }
