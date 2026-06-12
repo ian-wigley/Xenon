@@ -37,4 +37,5 @@ class CMissile extends CBullet {
         return true;
     }
 }
+
 export = CMissile;
