@@ -4,9 +4,7 @@ import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import gsCControls = require("Controls");
 import enums = require("Enums");
-import Options = require("Options");
 import gsCPoint = require("Point");
-import gsCMenu = require("Menu");
 import COptionsMenuState = require("OptionsMenuState");
 
 class CControlmenustate extends CGameState {
@@ -73,10 +71,10 @@ class CControlmenustate extends CGameState {
     //-------------------------------------------------------------
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
-        var move_names = ["Cursor Keys", "Cursor Keys", "Joystick 1", "Joystick 2"];
-        var fire_names = ["Left Control", "A", "Button 0", "Button 0"];
-        var rev_names = ["Left Alt", "S", "Button 1", "Button 1"];
-        var dive_names = ["Left Shift", "D", "Button 2", "Button 2"];
+        const move_names = ["Cursor Keys", "Cursor Keys", "Joystick 1", "Joystick 2"];
+        const fire_names = ["Left Control", "A", "Button 0", "Button 0"];
+        const rev_names = ["Left Alt", "S", "Button 1", "Button 1"];
+        const dive_names = ["Left Shift", "D", "Button 2", "Button 2"];
 
         //	if (!CGameState::update())
         //		return false;
@@ -86,7 +84,8 @@ class CControlmenustate extends CGameState {
         }
 
         this.m_starfield.Update(4);
-        this.m_starfield.Draw(ctx);;
+        this.m_starfield.Draw(ctx);
+        ;
 
         this.m_medium_font.setTextCursor(new gsCPoint(0, 50));
         this.m_medium_font.justifyString("Control Options");
@@ -107,7 +106,7 @@ class CControlmenustate extends CGameState {
         this.m_small_font.setTextCursor(new gsCPoint(50, 390));
         this.m_small_font.printString("Dive:");
 
-        var control1 = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL1);
+        const control1 = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL1);
         this.m_small_font.setTextCursor(new gsCPoint(200, 330));
         this.m_small_font.printString(move_names[control1]);
         this.m_small_font.setTextCursor(new gsCPoint(200, 350));
@@ -117,7 +116,7 @@ class CControlmenustate extends CGameState {
         this.m_small_font.setTextCursor(new gsCPoint(200, 390));
         this.m_small_font.printString(dive_names[control1]);
 
-        var control2: number = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL2);
+        const control2: number = this.m_menu.getValue(enums.ControlMenuItem.CM_CONTROL2);
         this.m_small_font.setTextCursor(new gsCPoint(400, 330));
         this.m_small_font.printString(move_names[control2]);
         this.m_small_font.setTextCursor(new gsCPoint(400, 350));
@@ -127,7 +126,7 @@ class CControlmenustate extends CGameState {
         this.m_small_font.setTextCursor(new gsCPoint(400, 390));
         this.m_small_font.printString(dive_names[control2]);
 
-        var item: enums.ControlMenuItem = <enums.ControlMenuItem>this.m_menu.getCurrentItem();
+        const item: enums.ControlMenuItem = <enums.ControlMenuItem>this.m_menu.getCurrentItem();
 
         if (controls.returnPressed || controls.enterPressed || controls.lcontrolPressed) {
             controls.returnPressed = false;
@@ -148,16 +147,13 @@ class CControlmenustate extends CGameState {
                         //												"No",COptionsMenuState::instance(),
                         //												true);
                         //						return;// changeState(CMessageBoxState::instance());
-                    }
-                    else {
+                    } else {
                         return this.changeState(this.m_app.instance = this.m_optionState);
                     }
-                }
-                else {
+                } else {
                     return this.changeState(this.m_app.instance = this.m_optionState);
                 }
-            }
-            else if (item == enums.ControlMenuItem.CM_CANCEL) {
+            } else if (item == enums.ControlMenuItem.CM_CANCEL) {
                 super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                 this.m_optionState.create();
                 return this.changeState(this.m_app.instance = this.m_optionState);
