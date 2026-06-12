@@ -70,7 +70,7 @@ class gsCCollisionList {
 
         // create a collider list for each zone
         this.m_zone = new Array<gsCCollider>();//this.m_zones.X * this.m_zones.Y);
-        for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
+        for (let i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
             this.m_zone.push(new gsCCollider());
 
         }
@@ -81,7 +81,7 @@ class gsCCollisionList {
     public clear(): void {
         // clear out the zone lists
         if (this.m_zone) {
-            for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
+            for (let i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
                 //this.m_zone[i].clear();
                 this.m_zone[i].blobject = [];
             }
@@ -94,13 +94,12 @@ class gsCCollisionList {
 
     //-------------------------------------------------------------
 
-    public addObject(object: Object, rect: gsCRectangle, object_mask, target_mask)
-    {
+    public addObject(object: Object, rect: gsCRectangle, object_mask, target_mask) {
         // get range of zones which object overlaps
-        var left_zone: number = Math.floor(rect.Left / this.m_zone_size.X);
-        var right_zone: number = Math.floor((rect.Right - 1) / this.m_zone_size.X);
-        var top_zone: number = Math.floor(rect.Top / this.m_zone_size.Y);
-        var bottom_zone: number = Math.floor((rect.Bottom - 1) / this.m_zone_size.Y);
+        let left_zone: number = Math.floor(rect.Left / this.m_zone_size.X);
+        let right_zone: number = Math.floor((rect.Right - 1) / this.m_zone_size.X);
+        let top_zone: number = Math.floor(rect.Top / this.m_zone_size.Y);
+        let bottom_zone: number = Math.floor((rect.Bottom - 1) / this.m_zone_size.Y);
 
         // skip if outside collision map
         if (left_zone >= this.m_zones.X ||
@@ -120,9 +119,9 @@ class gsCCollisionList {
             bottom_zone = this.m_zones.Y - 1;
 
         // make a record of the collider
-        var uid = this.m_collider_list.length;
+        const uid: number = this.m_collider_list.length;
 
-        var collider: gsCCollider = new gsCCollider(object, rect, object_mask, target_mask, uid);
+        const collider: gsCCollider = new gsCCollider(object, rect, object_mask, target_mask, uid);
 
         this.m_collider_list.push(collider);
 
@@ -130,8 +129,8 @@ class gsCCollisionList {
         //console.log("Zone List size : " + this.m_zone.length);
 
         // add to EACH zone which it overlaps
-        for (var y = top_zone; y <= bottom_zone; y++) {
-            for (var x = left_zone; x <= right_zone; x++) {
+        for (let y = top_zone; y <= bottom_zone; y++) {
+            for (let x = left_zone; x <= right_zone; x++) {
                 //// this.m_zone[y * this.m_zones.X + x] = collider;//.addItem(collider);
                 //var hmmm = y * this.m_zones.X + x;
                 //// this.m_zone[y * this.m_zones.X + x].blobject.push(collider);
@@ -145,7 +144,7 @@ class gsCCollisionList {
 
     public scan( /*gsCollisionCallback*/callback): void {
 
-        var num_objects: number = this.m_collider_list.length;
+        const num_objects: number = this.m_collider_list.length;
 
         // scan the zones
         //for (var i = 0; i < this.m_zones.X * this.m_zones.Y; i++) {
@@ -154,14 +153,14 @@ class gsCCollisionList {
         if (this.m_collider_list.length > 1) {
             //    // we've found a zone with at least 2 objects in it
             //    // test all combinations of pairs of objects
-            for (var a = 0; a < this.m_collider_list.length; a++) {
+            for (let a = 0; a < this.m_collider_list.length; a++) {
 
                 // Ship !
-                var obj_a: gsCCollider = this.m_collider_list[a];
+                const obj_a: gsCCollider = this.m_collider_list[a];
 
-                for (var b = a + 1; b < this.m_collider_list.length; b++) {
+                for (let b = a + 1; b < this.m_collider_list.length; b++) {
 
-                    var obj_b: gsCCollider = this.m_collider_list[b];
+                    const obj_b: gsCCollider = this.m_collider_list[b];
 
                     // skip pairs we've already tested
                     //if (tp[obj_b.m_uid] == 0) {
@@ -186,4 +185,5 @@ class gsCCollisionList {
 
     //-------------------------------------------------------------
 }
+
 export = gsCCollisionList;
