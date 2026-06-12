@@ -37,7 +37,7 @@ class gsCMenuItem {
 
         if (this.m_name) {
             if (highlight) {
-                var size: gsCPoint = font.getStringSize(this.m_name);
+                const size: gsCPoint = font.getStringSize(this.m_name);
                 screen.drawSolidRect(new gsCRect((screen.screenRectangle.Right - size.X) / 2 - 1, y - 1, size.X + 2, size.Y + 2), "gray", ctx);
             }
             font.setTextCursor(new gsCPoint(0, y));
