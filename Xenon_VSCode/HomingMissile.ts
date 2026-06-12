@@ -39,8 +39,7 @@ class CHomingMissile extends CBullet {
         if (!this.isActive()) {
             if (this.m_velocity.Y < 0.0) {
                 this.m_angle = 0.0;
-            }
-            else {
+            } else {
                 this.m_angle = 180.0;
             }
             this.m_timer.start();
@@ -52,22 +51,21 @@ class CHomingMissile extends CBullet {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
-        var direction: number = 0;
+        let direction: number = 0;
         this.m_position.plusEquals(this.m_velocity);
 
         if (this.m_has_target && this.m_timer.getTime() >= this.HOMING_MISSILE_STARTUP) {
 
-            var relpos: gsCVector = this.m_target.minus(this.m_position);
+            const relpos: gsCVector = this.m_target.minus(this.m_position);
 
             if (relpos.length > this.HOMING_MISSILE_THRESHOLD) {
 
-                var a: number = relpos.direction();
-                var da: number = a - this.m_angle;
+                const a: number = relpos.direction();
+                let da: number = a - this.m_angle;
 
                 if (this.gsAbs(da) < this.HOMING_MISSILE_TURNRATE) {
                     this.m_angle = a;
-                }
-                else {
+                } else {
                     while (da < 0.0) {
                         da += 360.0;
                     }
@@ -76,8 +74,7 @@ class CHomingMissile extends CBullet {
                     }
                     if (da < 180.0) {
                         this.m_angle += this.HOMING_MISSILE_TURNRATE;
-                    }
-                    else {
+                    } else {
                         this.m_angle -= this.HOMING_MISSILE_TURNRATE;
                     }
                 }
@@ -89,12 +86,11 @@ class CHomingMissile extends CBullet {
                     this.m_angle -= 360.0;
                 }
 
-                var temp: gsCVector = new gsCVector(0, 0);
+                const temp: gsCVector = new gsCVector(0, 0);
                 //var temp2: gsCVector = temp.polar(this.getActorInfo().m_speed[this.m_grade], this.m_angle);
-                var temp2: gsCVector = temp.polar(5, this.m_angle);
+                const temp2: gsCVector = temp.polar(5, this.m_angle);
                 this.setVelocity(temp2);
-            }
-            else
+            } else
                 this.m_has_target = false;
         }
 
