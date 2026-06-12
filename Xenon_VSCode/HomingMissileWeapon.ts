@@ -41,18 +41,17 @@ class CHomingMissileWeapon extends CWeapon {
         if (!this.isValidFiringPosition())
             return false;
 
-        var h: CHomingMissile = new CHomingMissile(this.m_playGameState);
+        const h: CHomingMissile = new CHomingMissile(this.m_playGameState);
         this.m_scene.addActor(h);
 
-        var alien: CAlien = null;
+        let alien: CAlien = null;
         switch (this.m_direction) {
             case enums.WeaponDirection.WEAPON_FORWARD:
                 alien = <CAlien>this.m_scene.findNearestActor(enums.ActorType.ACTOR_TYPE_ALIEN, this.getPosition(), -1);
 
                 if (alien) {
                     h.setTarget(alien.getPosition());
-                }
-                else {
+                } else {
                     h.setTarget(new gsCVector(320.0, this.getPosition().Y - 480.0));
                 }
                 h.setPosition(this.getPosition().minus(new gsCVector(0.0, 24.0)));
@@ -64,8 +63,7 @@ class CHomingMissileWeapon extends CWeapon {
 
                 if (alien) {
                     h.setTarget(alien.getPosition());
-                }
-                else {
+                } else {
                     h.setTarget(new gsCVector(320.0, this.getPosition().Y + 480.0));
                 }
                 h.setPosition(this.getPosition().plus1(new gsCVector(0.0, 24.0)));
@@ -75,7 +73,7 @@ class CHomingMissileWeapon extends CWeapon {
         }
 
         h.activate();
-        var grade: number = this.m_grade;
+        const grade: number = this.m_grade;
         h.setGrade(grade);
 
         if (this.getOwner() && this.getOwner().getActorInfo().m_type == enums.ActorType.ACTOR_TYPE_SHIP) {
