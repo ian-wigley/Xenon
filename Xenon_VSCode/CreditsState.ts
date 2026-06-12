@@ -2,7 +2,6 @@
 import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import CGameState = require("GameState");
-import Options = require("Options");
 import gsCControls = require("Controls");
 import enums = require("Enums");
 import gsCPoint = require("Point");
@@ -46,7 +45,7 @@ class CCreditsState extends CGameState {
         this.m_starfield.Update(4);
         this.m_starfield.Draw(ctx);
 
-        this.m_medium_font.setTextCursor(new gsCPoint(0, 0 + this.m_scroll_pos));
+        this.m_medium_font.setTextCursor(new gsCPoint(0, this.m_scroll_pos));
         this.m_medium_font.justifyString("Xenon 2000 : Project PCF");
 
         this.m_medium_font.setTextCursor(new gsCPoint(0, 50 + this.m_scroll_pos));
@@ -96,12 +95,12 @@ class CCreditsState extends CGameState {
 
     //-------------------------------------------------------------
 
-    public destroy(): boolean
-    {
-    	return true;
+    public destroy(): boolean {
+        return true;
     }
 
     //-------------------------------------------------------------
 
 }
+
 export = CCreditsState;
