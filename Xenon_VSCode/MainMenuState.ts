@@ -8,7 +8,6 @@ import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import gsCMenu = require("Menu");
 import gsCImage = require("Image");
-import COptions = require("Options");
 import gsCControls = require("Controls");
 import enums = require("Enums");
 import CApplication = require("Application");
@@ -25,6 +24,7 @@ class CMainMenuState extends CGameState {
     m_title: gsCImage;
     m_starfield: CStarfield;//
     m_menu: gsCMenu;
+
     //-------------------------------------------------------------
 
     constructor(scene?: CScene, starfield?: CStarfield, font8x8?: HTMLImageElement, font16x16?: HTMLImageElement, app?: CApplication, ctx?: CanvasRenderingContext2D) {
@@ -234,5 +234,6 @@ class CMainMenuState extends CGameState {
     //-------------------------------------------------------------
 
 }
+
 export = CMainMenuState;
 
