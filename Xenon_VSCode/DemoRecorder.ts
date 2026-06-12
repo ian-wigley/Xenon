@@ -47,9 +47,7 @@ class DemoRecorder {
             this.m_event_list.push(controls);
             this.m_event_index++;
             return true;
-        }
-
-        else {
+        } else {
             return false;
         }
     }
@@ -77,4 +75,5 @@ class DemoRecorder {
     //-------------------------------------------------------------
 
 }
+
 export = DemoRecorder;
