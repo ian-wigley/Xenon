@@ -4,6 +4,7 @@ import gsCPoint = require("Point");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
 import enums = require("Enums");
+import Point = require("./Point");
 
 class CLabel extends CActor {
 
@@ -52,7 +53,7 @@ class CLabel extends CActor {
     public setText(format: string): void {
         this.m_text = format;
         if (this.m_font) {
-            var stringLength = this.m_font.getStringSize(this.m_text);
+            const stringLength: Point = this.m_font.getStringSize(this.m_text);
             this.m_offset = new gsCPoint((stringLength.X / -2), stringLength.X / -2);
         } else {
             this.m_offset = new gsCPoint(0, 0);
@@ -94,4 +95,5 @@ class CLabel extends CActor {
 
     //-------------------------------------------------------------
 }
+
 export = CLabel;
