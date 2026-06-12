@@ -55,8 +55,7 @@ class gsCMenuSlider extends gsCMenuItem {
         for (var i = this.m_min; i <= this.m_max; i++) {
             if (this.m_value == i) {
                 //            strcat(buffer, control);
-            }
-            else {
+            } else {
                 //           strcat(buffer, slider);
             }
         }
@@ -68,15 +67,16 @@ class gsCMenuSlider extends gsCMenuItem {
         if (highlight) {
             var size: gsCPoint = font.getStringSize(buffer);
             screen.drawSolidRect(new gsCRectangle((screen.getSize().X - size.X) / 2 - 1,
-                y - 1,
-                (screen.getSize().X + size.X) / 2 + 1,
-                y + size.Y + 1),
-									   /*gsCColour(128, 128, 128)*/"gray", ctx);
+                    y - 1,
+                    (screen.getSize().X + size.X) / 2 + 1,
+                    y + size.Y + 1),
+                /*gsCColour(128, 128, 128)*/"gray", ctx);
         }
 
         font.setTextCursor(new gsCPoint(0, y));
         font.justifyString(buffer);
     }
+
     //-------------------------------------------------------------
 }
 
@@ -213,8 +213,7 @@ class gsCMenu {
                 if (this.m_current_item >= this.m_item_list.length) {
                     this.m_current_item = 0;
                 }
-            }
-            else {
+            } else {
                 if (this.m_current_item < 0) {
                     this.m_current_item = 0;
                 }
