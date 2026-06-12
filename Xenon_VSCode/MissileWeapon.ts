@@ -5,7 +5,6 @@ import CMissile = require("Missile");
 import enums = require("Enums");
 import gsCControls = require("Controls");
 import gsCTimer = require("Timer");
-import CApplication = require("Application");
 
 import CPlayGameState = require("PlayGameState");
 
@@ -42,10 +41,10 @@ class CMissileWeapon extends CWeapon {
             return false;
         }
 
-        var m: CMissile = new CMissile(this.m_scene, this.m_playGameState);
+        const m: CMissile = new CMissile(this.m_scene, this.m_playGameState);
         this.m_scene.addActor(m);
         m.activate();
-        var grade: number = this.m_grade;
+        const grade: number = this.m_grade;
         m.setGrade(grade);
 
         switch (this.m_direction) {
@@ -69,4 +68,5 @@ class CMissileWeapon extends CWeapon {
     }
 
 }
+
 export = CMissileWeapon;
