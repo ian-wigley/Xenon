@@ -1,5 +1,4 @@
-﻿import CApplication = require("Application");
-import CActor = require("Actor")
+﻿import CActor = require("Actor")
 import enums = require("Enums");
 import CDrone = require("Drone");
 import gsCControls = require("Controls");
@@ -47,7 +46,7 @@ class CDroneGenerator extends CActor {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
         if (this.m_drones_created < this.DRONE_TOTAL) {
-            var d: CDrone = new CDrone(this.m_playGameState, this);
+            const d: CDrone = new CDrone(this.m_playGameState, this);
             this.m_scene.addActor(d);
             d.setPosition(this.getPosition().plus1(new gsCVector(0.0, this.m_drones_created * this.DRONE_SPACING)));
             d.setVelocity(new gsCVector(0.0, this.DRONE_SPEED));
