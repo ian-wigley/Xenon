@@ -1,5 +1,4 @@
-﻿import CApplication = require("Application");
-import CAlien = require("Alien");
+﻿import CAlien = require("Alien");
 import CDroneGenerator = require("DroneGenerator");
 import enums = require("Enums");
 import Pickup = require("Pickup");
@@ -44,20 +43,19 @@ class CDrone extends CAlien {
         this.m_timer.update(false);
 
         if (this.m_shield == 0) {
-            var score: number = this.m_generator.droneKilled(true);
+            const score: number = this.m_generator.droneKilled(true);
 
             if (score == 0) {
-                var s: Pickup.CScorePickup = new Pickup.CScorePickup(this.m_playGameState);
+                const s: Pickup.CScorePickup = new Pickup.CScorePickup(this.m_playGameState);
                 this.m_scene.addActor(s);
                 s.setPosition(this.getPosition());
                 s.activate();
-            }
-            else {
+            } else {
                 this.m_scene.createLabel(this.getPosition(), score.toString());
                 this.m_playGameState.getPlayer().scoreBonus(score);
             }
 
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             super.kill();
             return true;
         }
