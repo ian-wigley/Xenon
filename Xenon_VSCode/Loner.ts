@@ -51,7 +51,7 @@ module Loner {
 
         public update(controls: gsCControls, gameTime: gsCTimer): boolean {
             if (this.m_shield == 0) {
-                var explode = new CExplode(this);
+                const explode = new CExplode(this);
                 super.kill();
                 return true;
             }
@@ -60,7 +60,7 @@ module Loner {
 
             //fire weapon towards ship
             if (ship != null) {
-                var dir: gsCVector = ship.getPosition().minus(this.getPosition());
+                const dir: gsCVector = ship.getPosition().minus(this.getPosition());
                 dir.normalize();
                 this.m_weapon.setDirectionS(dir);
             }
