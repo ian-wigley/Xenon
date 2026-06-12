@@ -39,10 +39,10 @@ class CLaserWeapon extends CWeapon {
             return false;
         }
 
-        var l: CLaser = new CLaser(this.m_playGameState);
+        const l: CLaser = new CLaser(this.m_playGameState);
         this.m_scene.addActor(l);
         l.activate();
-        var grade: number = this.m_grade;
+        const grade: number = this.m_grade;
         l.setGrade(grade);
         l.setPosition(this.getPosition());
         l.setVelocity(new gsCVector(0.0, -20));//l.getActorInfo().m_speed));//this.m_grade]));
