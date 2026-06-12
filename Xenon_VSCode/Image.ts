@@ -1,16 +1,12 @@
 ﻿import gsCRectangle = require("Rectangle");
 import gsCVector = require("Vector");
-import gsCPoint = require("Point");
-import gsCScreen = require("Screen");
 import Point = require("Point");
-
 
 class gsCImage {
 
-    m_rect: gsCRectangle;
+    private m_rect: gsCRectangle;
     private m_image: HTMLImageElement;
-
-    m_imageTiles: HTMLImageElement;
+    protected m_imageTiles: HTMLImageElement;
 
     constructor() {
     }
