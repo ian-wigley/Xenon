@@ -32,4 +32,5 @@ class CCloneEngine extends CEngine {
         return true;
     }
 }
+
 export = CCloneEngine;
