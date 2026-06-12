@@ -2,7 +2,7 @@
 import CBullet = require("Bullet");
 import gsCPoint = require("Point");
 import gsCMap = require("Map");
-import gsCMapTile = require("Maptile");
+import gsCMapTile = require("MapTile");
 import gsCVector = require("Vector");
 import enums = require("Enums");
 import gsCControls = require("Controls");
@@ -29,7 +29,8 @@ class CLaser extends CBullet {
         this.m_actor_collider_list = [];
         this.m_map_collider_list = [];
 
-        this.m_grade = 2; //TEMP!
+        // TODO - why is this a constant ?
+        this.m_grade = 2;
     }
 
     //-------------------------------------------------------------
@@ -71,7 +72,7 @@ class CLaser extends CBullet {
 
         this.m_map_collider_list = new Array<gsCPoint>(hits);
 
-        for (var i = 0; i < hits; i++) {
+        for (let i = 0; i < hits; i++) {
             this.m_map_collider_list[i] = map.getHitPosition(i);
         }
     }
@@ -79,32 +80,33 @@ class CLaser extends CBullet {
     //-------------------------------------------------------------
 
     public postProcessCollision(): void {
-        // only hit NEAREST actor or map tile
+        let i;
+// only hit NEAREST actor or map tile
         if (this.m_actor_collider_list.length == 0 && this.m_map_collider_list.length == 0)
             return;
 
-        var actor_i: number = -1;
-        var actor_d: number = 99999.0;
+        let actor_i: number = -1;
+        let actor_d: number = 99999.0;
 
-        var pos: gsCVector = this.getPosition();
+        const pos: gsCVector = this.getPosition();
 
-        for (var i = 0; i < this.m_actor_collider_list.length; i++) {
-            var cpos: gsCVector = this.m_actor_collider_list[i].getPosition();
-            var d: number = cpos.minus(pos).length;
+        for (i = 0; i < this.m_actor_collider_list.length; i++) {
+            const cpos: gsCVector = this.m_actor_collider_list[i].getPosition();
+            const d: number = cpos.minus(pos).length;
             if (actor_i == -1 || d < actor_d) {
                 actor_i = i;
                 actor_d = d;
             }
         }
 
-        var map_i: number = -1;
-        var map_d: number = 99999.0;
+        const map_i: number = -1;
+        const map_d: number = 99999.0;
 
         if (this.m_hit_map) {
-            var tile_size: gsCPoint = this.m_hit_map.getImage().getTileSize();
-            var tile_centre: gsCPoint = new gsCPoint(tile_size.X / 2, tile_size.Y / 2);
+            const tile_size: gsCPoint = this.m_hit_map.getImage().getTileSize();
+            const tile_centre: gsCPoint = new gsCPoint(tile_size.X / 2, tile_size.Y / 2);
 
-            for (var i = 0; i < this.m_map_collider_list.length; i++) {
+            for (i = 0; i < this.m_map_collider_list.length; i++) {
                 // convert map tile coords to world coords
 
                 //    var p: gsCPoint = this.m_map_collider_list[i] * tile_size + tile_centre;
@@ -119,14 +121,14 @@ class CLaser extends CBullet {
         }
 
         if (actor_d < map_d) {
-            var actor: CActor = this.m_actor_collider_list[actor_i];
+            const actor: CActor = this.m_actor_collider_list[actor_i];
             actor.registerHit(this.getActorInfo().m_energy[this.m_grade], this);
             this.m_length = actor_d;
         }
         else {
-            var poss: gsCPoint = this.m_map_collider_list[map_i];
+            const poss: gsCPoint = this.m_map_collider_list[map_i];
 
-            var mt: gsCMapTile = this.m_hit_map.getMapTile(poss);
+            const mt: gsCMapTile = this.m_hit_map.getMapTile(poss);
             if (mt && mt.getUserData(0) == enums.TileId.ID_DESTROYABLE_TILE) {
                 mt.setHidden(true);
                 this.m_scene.createMapExplosion(this.m_hit_map, pos);
@@ -161,20 +163,21 @@ class CLaser extends CBullet {
     //-------------------------------------------------------------
 
     public Draw(ctx: CanvasRenderingContext2D): boolean {
-        var screen: gsCScreen = new gsCScreen();
+        const screen: gsCScreen = new gsCScreen();
 
         if (!screen)
             return false;
 
-        var colour: string;
-        this.m_grade = 2
+        let colour: string;
+
+        // this.m_grade = 2;
         switch (this.m_grade) {
-            case enums.BulletGrade.BULLET_STANDARD:
-                colour = "red";
-                break;
-            case enums.BulletGrade.BULLET_MEDIUM:
-                colour = "green";
-                break;
+            // case enums.BulletGrade.BULLET_STANDARD:
+            //     colour = "red";
+            //     break;
+            // case enums.BulletGrade.BULLET_MEDIUM:
+            //     colour = "green";
+            //     break;
             case enums.BulletGrade.BULLET_BEST:
                 colour = "blue";
                 break;
