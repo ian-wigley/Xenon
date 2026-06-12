@@ -13,7 +13,7 @@
     public blockstrsize;//ushort 	/* size of a block data structure */
     public numblockstr; //ushort 	/* Number of block structures in BKDT */
     public numblockgfx; //ushort 	/* Number of 'blocks' in graphics (BGFX) */
-};
+}
 
 class BLKSTR {						/* Structure for data blocks */
     public bgoff;
@@ -35,7 +35,7 @@ class BLKSTR {						/* Structure for data blocks */
     public unused1;// : 1;
     public unused2;// : 1;
     public unused3;// : 1;
-};
+}
 
 import gsCMap = require("Map");
 import Point = require("Point");
@@ -74,7 +74,7 @@ enum AlienType {
     RUSHER_GENERATOR_RIGHT,	// 8
     RUSHER_GENERATOR_LEFT,	// 9
     ORGANIC_GUN,			// 10
-};
+}
 
 enum PickupType {
     PICKUP_SHIELD,			// 0
@@ -105,7 +105,6 @@ enum TileId {
 class CLevel {
 
     levelData: Array<Uint8Array> = [];
-
     decodedData: string;
     LevelBytes: string;
 
@@ -120,7 +119,7 @@ class CLevel {
     private LevelCounter: number = 0;
     private m_header: MPHD;
     private m_blocks: BLKSTR[];
-    private m_imageTiles: HTMLImageElement;
+    private readonly m_imageTiles: HTMLImageElement;
     private m_image: gsCTiledImage;
     private m_playGameState: CPlayGameState;
 
@@ -140,16 +139,16 @@ class CLevel {
         this.m_back_layer = new gsCMap();
         this.m_front_layer = new gsCMap();
 
-        var done = false;
-        var levelBytes;
-        var _this = this;
+        let done = false;
+        let levelBytes;
+        const _this = this;
 
-        var xhr = new XMLHttpRequest();
+        const xhr = new XMLHttpRequest();
         xhr.open('GET', 'xenon2000.png', true);
         xhr.responseType = 'arraybuffer';
 
         xhr.onload = function (e) {
-            var uInt8Array = new Uint8Array(this.response);
+            // const uInt8Array = new Uint8Array(this.response);
             levelBytes = new Uint8Array(this.response);
             done = true;
         };
@@ -165,7 +164,7 @@ class CLevel {
 
     private parseLevel(): void {
 
-        var id = this.readUDWORD();
+        let id = this.readUDWORD();
 
         //if (id != CHUNK_FORM)
         //{
@@ -179,16 +178,16 @@ class CLevel {
         //  error();
         //}
 
-        var loaded_back_layer = false;
-        var loaded_front_layer = false;
-        var loaded_tiles = false;
+        let loaded_back_layer = false;
+        let loaded_front_layer = false;
+        let loaded_tiles = false;
 
         for (; ;) {
 
             id = this.readUDWORD();
-            var chunk_length = 0;
+            let chunk_length = 0;
             chunk_length = this.readUDWORD();
-            var currentFilePos = this.LevelCounter;
+            const currentFilePos = this.LevelCounter;
             var chunk_end = currentFilePos + chunk_length;
 
             switch (id) {
@@ -205,19 +204,18 @@ class CLevel {
                     this.m_front_layer.setSize(new Point(this.m_header.mapwidth, this.m_header.mapheight));
                     break;
 
-                case this.CHUNK_BKDT:
-                    {
-                        var m_blocks = new Array<BLKSTR>(this.m_header.numblockstr);
+                case this.CHUNK_BKDT: {
+                    var m_blocks = new Array<BLKSTR>(this.m_header.numblockstr);
 
-                        for (var i = 0; i < this.m_header.numblockstr; i++) {
-                            size = this.m_header.blockstrsize;
-                            m_blocks[i] = this.FileRead2(m_blocks[i], size);
+                    for (var i = 0; i < this.m_header.numblockstr; i++) {
+                        size = this.m_header.blockstrsize;
+                        m_blocks[i] = this.FileRead2(m_blocks[i], size);
 
-                            //    gsUDWORD size = (gsUDWORD) m_header.blockstrsize;
-                            //    if (m_file.read(&m_blocks[i],size) != size)
-                            //        return error();
-                        }
+                        //    gsUDWORD size = (gsUDWORD) m_header.blockstrsize;
+                        //    if (m_file.read(&m_blocks[i],size) != size)
+                        //        return error();
                     }
+                }
                     break;
 
                 case this.CHUNK_BGFX:
@@ -232,80 +230,76 @@ class CLevel {
                     loaded_tiles = true;
                     break;
                 case this.CHUNK_BODY:
-                case this.CHUNK_LYR1:
-                    {
-                        var tile = 0;
+                case this.CHUNK_LYR1: {
+                    var tile = 0;
 
-                        // Create a new tile
-                        //var mt: gsCMapTile = new gsCMapTile();
-                        //gsCMapTile[] mt = m_back_layer.getListOfMapTiles();
+                    // Create a new tile
+                    //var mt: gsCMapTile = new gsCMapTile();
+                    //gsCMapTile[] mt = m_back_layer.getListOfMapTiles();
 
-                        var count = 0;
+                    var count = 0;
 
-                        for (var y = 0; y < this.m_header.mapheight; y++) {
-                            for (var x = 0; x < this.m_header.mapwidth; x++) {
+                    for (var y = 0; y < this.m_header.mapheight; y++) {
+                        for (var x = 0; x < this.m_header.mapwidth; x++) {
 
-                                // Create a new tile
-                                var mt: gsCMapTile = new gsCMapTile();
-                                //if (m_file.read(&tile,2) != 2)
-                                //return error();
-                                var bytes = new Array<string>(2);
+                            // Create a new tile
+                            const mt: gsCMapTile = new gsCMapTile();
+                            //if (m_file.read(&tile,2) != 2)
+                            //return error();
+                            const bytes = new Array<string>(2);
 
-                                if (count == 0) {
-                                    bytes[0] = this.LevelBytes[this.LevelCounter++];
-                                    bytes[1] = this.LevelBytes[this.LevelCounter++];
-                                    tile = this.ByteConverterToUInt16(bytes);
+                            if (count == 0) {
+                                bytes[0] = this.LevelBytes[this.LevelCounter++];
+                                bytes[1] = this.LevelBytes[this.LevelCounter++];
+                                tile = this.ByteConverterToUInt16(bytes);
+                            }
+
+                            if (count == 1) {
+                                bytes[0] = this.LevelBytes[this.LevelCounter++];
+                                bytes[1] = this.LevelBytes[this.LevelCounter++];
+                                tile = this.ByteConverterToUInt16(bytes);
+                                count = -1;
+                            }
+
+                            count += 1;
+
+                            var sizeBLKSTR = 32;  //sizeBLKSTR /= 2;
+                            var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
+                            var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
+                            tile = block.bgoff / tilesize;
+                            mt.setTile(tile);
+
+                            if (tile == 0) {
+                                mt.setEmpty(true);
+                                mt.setHidden(true);
+                            } else {
+                                mt.setEmpty(false);
+                                mt.setUserData(0, (block.user1 & 0xFF));
+                                mt.setUserData(1, (block.user2 & 0xFF));
+                                mt.setUserData(2, (block.user3 & 0xFF));
+                                mt.setUserData(3, (block.user4 & 0xFF));
+                                var cflags: number = 0;
+                                if (block.tl != 0) {
+                                    cflags |= this.COLLIDE_WITH_SHIP;
+                                }
+                                if (block.tr != 0) {
+                                    cflags |= this.COLLIDE_WITH_BULLETS;
                                 }
 
-                                if (count == 1) {
-                                    bytes[0] = this.LevelBytes[this.LevelCounter++];
-                                    bytes[1] = this.LevelBytes[this.LevelCounter++];
-                                    tile = this.ByteConverterToUInt16(bytes);
-                                    count = -1;
-                                }
-
-                                count += 1;
-
-                                var sizeBLKSTR = 32;  //sizeBLKSTR /= 2;
-                                var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
-                                var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
-                                tile = block.bgoff / tilesize;
-                                mt.setTile(tile);
-
-                                if (tile == 0) {
-                                    mt.setEmpty(true);
-                                    mt.setHidden(true);
-                                }
-                                else {
-                                    mt.setEmpty(false);
-                                    mt.setUserData(0, (block.user1 & 0xFF));
-                                    mt.setUserData(1, (block.user2 & 0xFF));
-                                    mt.setUserData(2, (block.user3 & 0xFF));
-                                    mt.setUserData(3, (block.user4 & 0xFF));
-                                    var cflags: number = 0;
-                                    if (block.tl != 0) {
-                                        cflags |= this.COLLIDE_WITH_SHIP;
-                                    }
-                                    if (block.tr != 0) {
-                                        cflags |= this.COLLIDE_WITH_BULLETS;
-                                    }
-
-                                    mt.setCollisionFlags(cflags);
-                                }
-                                if (id == this.CHUNK_BODY) {
-                                    this.m_back_layer.setMapTile(new Point(x, y), mt, 0);
-                                }
-                                else {
-                                    this.m_front_layer.setMapTile(new Point(x, y), mt, 0);
-                                }
+                                mt.setCollisionFlags(cflags);
+                            }
+                            if (id == this.CHUNK_BODY) {
+                                this.m_back_layer.setMapTile(new Point(x, y), mt, 0);
+                            } else {
+                                this.m_front_layer.setMapTile(new Point(x, y), mt, 0);
                             }
                         }
                     }
+                }
 
                     if (id == this.CHUNK_BODY) {
                         loaded_back_layer = true;
-                    }
-                    else {
+                    } else {
                         loaded_front_layer = true;
                     }
                     break;
@@ -331,15 +325,14 @@ class CLevel {
     //-------------------------------------------------------------
 
     private readUDWORD() {
-        var bytes = this.GetFourBytes();
-        var d = (parseInt(bytes[0]) << 24) + (parseInt(bytes[1]) << 16) + (parseInt(bytes[2]) << 8) + (parseInt(bytes[3]));
-        return d;
+        const bytes = this.GetFourBytes();
+        return (parseInt(bytes[0]) << 24) + (parseInt(bytes[1]) << 16) + (parseInt(bytes[2]) << 8) + (parseInt(bytes[3]));
     }
 
     //-------------------------------------------------------------
 
     private GetTwoBytes() {
-        var bytes = new Array<string>(2);
+        const bytes = new Array<string>(2);
         bytes[0] = this.LevelBytes[this.LevelCounter++];
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         return bytes;
@@ -348,7 +341,7 @@ class CLevel {
     //-------------------------------------------------------------
 
     private GetFourBytes() {
-        var bytes = new Array<string>(4);
+        const bytes = new Array<string>(4);
         bytes[0] = this.LevelBytes[this.LevelCounter++];
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         bytes[2] = this.LevelBytes[this.LevelCounter++];
@@ -364,7 +357,7 @@ class CLevel {
         m_header.lsb = parseInt(this.LevelBytes[this.LevelCounter++]);
         m_header.reserved = parseInt(this.LevelBytes[this.LevelCounter++]);
 
-        var bytes = Array<string>(2);
+        const bytes = Array<string>(2);
         bytes[0] = this.LevelBytes[this.LevelCounter++];
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         m_header.mapwidth = this.ByteConverterToUInt16(bytes);
@@ -478,33 +471,30 @@ class CLevel {
 
     private ByteConverterToUInt16(bytes) {
 
-        var t1 = parseInt(bytes[0]);
-        var t2 = parseInt(bytes[1]);
+        const t1 = parseInt(bytes[0]);
+        const t2 = parseInt(bytes[1]);
 
         //http://stackoverflow.com/questions/7993840/how-does-bitconverter-toint32-work
-        var va = (t1 * (1 << 0)) +    // Bottom 8 bits
-            (t2 * (1 << 8));          // Add the remaining 8 bits
-
-        return va;
+        // Add the remaining 8 bits
+        return (t1 * (1 << 0)) + (t2 * (1 << 8));
     }
 
     //-------------------------------------------------------------
 
     private ByteConverterToUInt32(bytes) {
 
-        var t1 = parseInt(bytes[0]);
-        var t2 = parseInt(bytes[1]);
-        var t3 = parseInt(bytes[2]);
-        var t4 = parseInt(bytes[3]);
+        const t1 = parseInt(bytes[0]);
+        const t2 = parseInt(bytes[1]);
+        const t3 = parseInt(bytes[2]);
+        const t4 = parseInt(bytes[3]);
 
         //http://stackoverflow.com/questions/7993840/how-does-bitconverter-toint32-work
 
-        var va = (t1 * (1 << 0)) +  // Bottom 8 bits
+        // Top 7 bits and sign bit, multiply by 16,777,216
+        return (t1 * (1 << 0)) +  // Bottom 8 bits
             (t2 * (1 << 8)) +       // Next 8 bits, i.e. multiply by 256
             (t3 * (1 << 16)) +      // Next 8 bits, i.e. multiply by 65,536
-            (t4 * (1 << 24));       // Top 7 bits and sign bit, multiply by 16,777,216
-
-        return va;
+            (t4 * (1 << 24));
     }
 
     //-------------------------------------------------------------
@@ -526,9 +516,9 @@ class CLevel {
         this.m_scan_y = Math.floor((-this.m_front_layer.getPosition().Y - 1 + 480) / this.m_image.getTileSize().Y);	//TEMP
 
         // hide special tiles, unhide everything else
-        for (var x = 0; x < this.m_front_layer.getSize().X; x++) {
-            for (var y = 0; y < this.m_front_layer.getSize().Y; y++) {
-                var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, y));
+        for (let x = 0; x < this.m_front_layer.getSize().X; x++) {
+            for (let y = 0; y < this.m_front_layer.getSize().Y; y++) {
+                const mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, y));
                 switch (mt.getUserData(0)) {
                     case TileId.ID_PICKUP:
                     case TileId.ID_ALIEN:
@@ -591,7 +581,7 @@ class CLevel {
         //    return;
 
         // convert back to tile coords
-        var top = source_rect.Top / this.m_image.getTileSize().Y;
+        let top = source_rect.Top / this.m_image.getTileSize().Y;
 
         // get row above screen
         top--;
@@ -601,14 +591,14 @@ class CLevel {
 
         while (this.m_scan_y >= top) {
 
-            for (var x = 0; x < this.m_front_layer.getSize().X; x++) {
+            for (let x = 0; x < this.m_front_layer.getSize().X; x++) {
 
-                var mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, this.m_scan_y));
+                const mt: gsCMapTile = this.m_front_layer.getMapTile(new Point(x, this.m_scan_y));
 
                 if (!mt.isEmpty()) {
-                    var id = mt.getUserData(0);
-                    var type = mt.getUserData(1);
-                    var grade = mt.getUserData(2);
+                    const id = mt.getUserData(0);
+                    const type = mt.getUserData(1);
+                    const grade = mt.getUserData(2);
                     var size = mt.getUserData(3);
 
                     var pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
@@ -617,47 +607,47 @@ class CLevel {
                     switch (id) {
                         case TileId.ID_PICKUP:
                             // pickups
-                            var p: Pickup.CPickup = null;
+                            let p: Pickup.CPickup = null;
                             switch (type) {
                                 case PickupType.PICKUP_SHIELD:
                                     p = new Pickup.CShieldPickup(this.m_playGameState);
-                                    console.log("PICKUP_SHIELD");
+                                    // console.log("PICKUP_SHIELD");
                                     break;
                                 case PickupType.PICKUP_SPEEDUP:
                                     p = new Pickup.CSpeedPickup(this.m_playGameState);
-                                    console.log("PICKUP_SPEEDUP");
+                                    // console.log("PICKUP_SPEEDUP");
                                     break;
                                 case PickupType.PICKUP_WEAPONUP:
                                     p = new Pickup.CWeaponPickup(this.m_playGameState);
-                                    console.log("PICKUP_WEAPONUP");
+                                    // console.log("PICKUP_WEAPONUP");
                                     break;
                                 case PickupType.PICKUP_CLOAK:
                                     p = new Pickup.CCloakPickup(this.m_playGameState);
-                                    console.log("PICKUP_CLOAK");
+                                    // console.log("PICKUP_CLOAK");
                                     break;
                                 case PickupType.PICKUP_DIVE:
                                     p = new Pickup.CDivePickup(this.m_playGameState);
-                                    console.log("PICKUP_DIVE");
+                                    // console.log("PICKUP_DIVE");
                                     break;
                                 case PickupType.PICKUP_SCOREBONUS:
                                     p = new Pickup.CScorePickup(this.m_playGameState);
-                                    console.log("PICKUP_SCOREBONUS");
+                                    // console.log("PICKUP_SCOREBONUS");
                                     break;
                                 case PickupType.PICKUP_CLONE:
                                     p = new Pickup.CClonePickup(this.m_playGameState);
-                                    console.log("PICKUP_CLONE");
+                                    // console.log("PICKUP_CLONE");
                                     break;
                                 case PickupType.PICKUP_WINGTIP:
                                     p = new Pickup.CWingtipPickup(this.m_playGameState);
-                                    console.log("PICKUP_WINGTIP");
+                                    // console.log("PICKUP_WINGTIP");
                                     break;
                                 case PickupType.PICKUP_HOMINGMISSILE:
                                     p = new Pickup.CHomingMissilePickup(this.m_playGameState);
-                                    console.log("PICKUP_HOMINGMISSILE");
+                                    // console.log("PICKUP_HOMINGMISSILE");
                                     break;
                                 case PickupType.PICKUP_LASER:
                                     p = new Pickup.CLaserPickup(this.m_playGameState);
-                                    console.log("PICKUP_LASER");
+                                    // console.log("PICKUP_LASER");
                                     break;
                             }
                             if (p != null) {
@@ -669,84 +659,83 @@ class CLevel {
                         case TileId.ID_ALIEN:
                             // aliens
                             switch (type) {
-                                case AlienType.ASTEROID:
-                                    {
-                                        var a: Asteroid.CAsteroid = null;
-                                        switch (size) {
-                                            case 0:
-                                                switch (grade) {
-                                                    case 0:
-                                                        a = new Asteroid.CSmallStandardAsteroid(this.m_playGameState);
-                                                        console.log("CSmallStandardAsteroid");
-                                                        break;
-                                                    case 1:
-                                                        a = new Asteroid.CSmallHighDensityAsteroid(this.m_playGameState);
-                                                        console.log("CSmallHighDensityAsteroid");
-                                                        break;
-                                                    case 2:
-                                                        a = new Asteroid.CSmallIndestructibleAsteroid(this.m_playGameState);
-                                                        console.log("CSmallIndestructibleAsteroid");
-                                                        break;
-                                                }
-                                                break;
-                                            case 1:
-                                                switch (grade) {
-                                                    case 0:
-                                                        a = new Asteroid.CMediumStandardAsteroid(this.m_playGameState);
-                                                        console.log("CMediumStandardAsteroid");
-                                                        break;
-                                                    case 1:
-                                                        a = new Asteroid.CMediumHighDensityAsteroid(this.m_playGameState);
-                                                        console.log("CMediumHighDensityAsteroid");
-                                                        break;
-                                                    case 2:
-                                                        a = new Asteroid.CMediumIndestructibleAsteroid(this.m_playGameState);
-                                                        console.log("CMediumIndestructibleAsteroid");
-                                                        break;
-                                                }
-                                                break;
-                                            case 2:
-                                                switch (grade) {
-                                                    case 0:
-                                                        a = new Asteroid.CBigStandardAsteroid(this.m_playGameState);
-                                                        console.log("CBigStandardAsteroid");
-                                                        break;
-                                                    case 1:
-                                                        a = new Asteroid.CBigHighDensityAsteroid(this.m_playGameState);
-                                                        console.log("CBigHighDensityAsteroid");
-                                                        break;
-                                                    case 2:
-                                                        a = new Asteroid.CBigIndestructibleAsteroid(this.m_playGameState);
-                                                        console.log("CBigIndestructibleAsteroid");
-                                                        break;
-                                                }
-                                                break;
-                                        }
-
-                                        if (a != null) {
-                                            scene.addActor(a);
-                                            a.setPosition(pos);
-                                            a.setVelocity(new gsCVector(0.0, 0.5));
-                                            a.activate();
-                                        }
+                                case AlienType.ASTEROID: {
+                                    let a: Asteroid.CAsteroid = null;
+                                    switch (size) {
+                                        case 0:
+                                            switch (grade) {
+                                                case 0:
+                                                    a = new Asteroid.CSmallStandardAsteroid(this.m_playGameState);
+                                                    // console.log("CSmallStandardAsteroid");
+                                                    break;
+                                                case 1:
+                                                    a = new Asteroid.CSmallHighDensityAsteroid(this.m_playGameState);
+                                                    // console.log("CSmallHighDensityAsteroid");
+                                                    break;
+                                                case 2:
+                                                    a = new Asteroid.CSmallIndestructibleAsteroid(this.m_playGameState);
+                                                    // console.log("CSmallIndestructibleAsteroid");
+                                                    break;
+                                            }
+                                            break;
+                                        case 1:
+                                            switch (grade) {
+                                                case 0:
+                                                    a = new Asteroid.CMediumStandardAsteroid(this.m_playGameState);
+                                                    // console.log("CMediumStandardAsteroid");
+                                                    break;
+                                                case 1:
+                                                    a = new Asteroid.CMediumHighDensityAsteroid(this.m_playGameState);
+                                                    // console.log("CMediumHighDensityAsteroid");
+                                                    break;
+                                                case 2:
+                                                    a = new Asteroid.CMediumIndestructibleAsteroid(this.m_playGameState);
+                                                    // console.log("CMediumIndestructibleAsteroid");
+                                                    break;
+                                            }
+                                            break;
+                                        case 2:
+                                            switch (grade) {
+                                                case 0:
+                                                    a = new Asteroid.CBigStandardAsteroid(this.m_playGameState);
+                                                    // console.log("CBigStandardAsteroid");
+                                                    break;
+                                                case 1:
+                                                    a = new Asteroid.CBigHighDensityAsteroid(this.m_playGameState);
+                                                    // console.log("CBigHighDensityAsteroid");
+                                                    break;
+                                                case 2:
+                                                    a = new Asteroid.CBigIndestructibleAsteroid(this.m_playGameState);
+                                                    // console.log("CBigIndestructibleAsteroid");
+                                                    break;
+                                            }
+                                            break;
                                     }
+
+                                    if (a != null) {
+                                        scene.addActor(a);
+                                        a.setPosition(pos);
+                                        a.setVelocity(new gsCVector(0.0, 0.5));
+                                        a.activate();
+                                    }
+                                }
                                     break;
 
                                 case AlienType.LONER:
-                                    var l: Loner.CLoner = null;
+                                    let l: Loner.CLoner = null;
 
                                     switch (grade) {
                                         case 0:
                                             l = new Loner.CStandardLoner(this.m_playGameState);
-                                            console.log("CStandardLoner");
+                                            // console.log("CStandardLoner");
                                             break;
                                         case 1:
                                             l = new Loner.CMediumLoner(this.m_playGameState);
-                                            console.log("CMediumLoner");
+                                            // console.log("CMediumLoner");
                                             break;
                                         case 2:
                                             l = new Loner.CArmouredLoner(this.m_playGameState);
-                                            console.log("CArmouredLoner");
+                                            // console.log("CArmouredLoner");
                                             break;
                                     }
 
@@ -759,8 +748,8 @@ class CLevel {
                                     break;
 
                                 case AlienType.HOMER:
-                                    var h: CHomer = new CHomer(this.m_playGameState);
-                                    console.log("HOMER");
+                                    const h: CHomer = new CHomer(this.m_playGameState);
+                                    // console.log("HOMER");
                                     scene.addActor(h);
                                     h.setPosition(pos);
                                     h.setVelocity(new gsCVector(0.0, 0.5));
@@ -768,8 +757,8 @@ class CLevel {
                                     break;
 
                                 case AlienType.POD:
-                                    var pO: CPod = new CPod(this.m_playGameState);
-                                    console.log("POD");
+                                    const pO: CPod = new CPod(this.m_playGameState);
+                                    // console.log("POD");
                                     scene.addActor(pO);
                                     pO.setPosition(pos);
                                     pO.setVelocity(new gsCVector(0.0, 0.0));
@@ -777,8 +766,8 @@ class CLevel {
                                     break;
 
                                 case AlienType.RUSHER:
-                                    var r: CRusher = new CRusher(this.m_playGameState);
-                                    console.log("RUSHER");
+                                    let r: CRusher = new CRusher(this.m_playGameState);
+                                    // console.log("RUSHER");
                                     scene.addActor(r);
                                     r.setPosition(pos);
                                     r.setVelocity(new gsCVector(0.0, 2.0));
@@ -786,8 +775,8 @@ class CLevel {
                                     break;
 
                                 case AlienType.WALLHUGGER:
-                                    var w: CWallHugger = new CWallHugger(this.m_playGameState);
-                                    console.log("WallHugger");
+                                    const w: CWallHugger = new CWallHugger(this.m_playGameState);
+                                    // console.log("WallHugger");
                                     scene.addActor(w);
                                     w.setPosition(pos);
                                     w.setVelocity(new gsCVector(0.0, 0.0));
@@ -804,15 +793,15 @@ class CLevel {
                                     break;
 
                                 case AlienType.DRONE_GENERATOR:
-                                    var d: CDroneGenerator = new CDroneGenerator(this.m_playGameState);
-                                    console.log("DroneGenerator");
+                                    const d: CDroneGenerator = new CDroneGenerator(this.m_playGameState);
+                                    // console.log("DroneGenerator");
                                     scene.addActor(d);
                                     d.setPosition(pos);
                                     d.activate();
                                     break;
 
                                 case AlienType.REVERSE_RUSHER:
-                                    var r: CRusher = new CRusher(this.m_playGameState);
+                                    r = new CRusher(this.m_playGameState);
                                     console.log("REVERSE_RUSHER");
                                     scene.addActor(r);
                                     r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
@@ -821,7 +810,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_LEFT:
-                                    var rG: CRusherGenerator = new CRusherGenerator(this.m_playGameState);
+                                    let rG: CRusherGenerator = new CRusherGenerator(this.m_playGameState);
                                     console.log("RusherGenerator");
                                     scene.addActor(rG);
                                     rG.setPosition(pos);
@@ -839,7 +828,7 @@ class CLevel {
                                     break;
 
                                 case AlienType.ORGANIC_GUN:
-                                    var oG: COrganicGun = new COrganicGun(this.m_playGameState);
+                                    const oG: COrganicGun = new COrganicGun(this.m_playGameState);
                                     console.log("OrganicGun");
                                     scene.addActor(oG);
                                     oG.setPosition(pos);
@@ -847,14 +836,13 @@ class CLevel {
                                     oG.activate();
                                     if (grade == 0) {
                                         oG.setDirection(1);
-                                    }
-                                    else {
+                                    } else {
                                         oG.setDirection(-1);
                                     }
                                     break;
 
                                 default:
-                                    var xp: CBigExplosion = new CBigExplosion(this.m_playGameState);
+                                    const xp: CBigExplosion = new CBigExplosion(this.m_playGameState);
                                     console.log("BigExplosion");
                                     scene.addActor(xp);
                                     xp.setPosition(pos);
@@ -876,7 +864,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_MOUTH:
-                            var m: CBossMouth = new CBossMouth();
+                            const m: CBossMouth = new CBossMouth();
                             console.log("BossMouth");
                             scene.addActor(m);
                             m.setPosition(pos);
@@ -885,7 +873,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_EYE:
-                            var e: CBossEye = new CBossEye(this.m_playGameState);
+                            const e: CBossEye = new CBossEye(this.m_playGameState);
                             console.log("BossEye");
                             e.setEyeNumber(type);
                             scene.addActor(e);
@@ -908,7 +896,7 @@ class CLevel {
                             break;
 
                         case TileId.ID_BOSS_CONTROL:
-                            var bC: CBossControl = new CBossControl(this.m_playGameState);
+                            const bC: CBossControl = new CBossControl(this.m_playGameState);
                             console.log("BossControl");
                             scene.addActor(bC);
                             bC.setPosition(pos);
