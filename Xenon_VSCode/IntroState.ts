@@ -32,14 +32,14 @@ class CIntroState extends CGameState {
         this.playMusic(enums.GameMusicType.MUSIC_INTRO);
         this.m_state = this;
         this.m_originalState = this;
-    	return true;
+        return true;
     }
 
     //-------------------------------------------------------------
 
     public update(ctx: CanvasRenderingContext2D, controls: gsCControls): boolean {
-    	if (!super.update(ctx, controls)){
-    		return false;
+        if (!super.update(ctx, controls)) {
+            return false;
         }
 
         if (this.m_state != this.m_originalState) {
