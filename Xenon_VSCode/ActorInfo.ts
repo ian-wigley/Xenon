@@ -36,10 +36,10 @@ class ActorInfo {
         //m_fire_delay 	=	fire_delay;
         //m_autofire_delay 	=	autofire_delay;
         this.m_speed = speed;
-
         this.m_energy.push(1);
         this.m_energy.push(2);
         this.m_energy.push(3);
     }
 }
+
 export = ActorInfo;
