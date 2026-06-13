@@ -5,7 +5,7 @@ import enums = require("Enums");
 class CActorInfoList {
 
     private INFINITE_SHIELD: number = -1;
-    private m_info_list: Array<ActorInfo>;
+    private readonly m_info_list: Array<ActorInfo>;
 
     constructor() {
         this.m_info_list = [];
@@ -28,9 +28,9 @@ class CActorInfoList {
         this.m_info_list.push(new ActorInfo("SmallHighDensityAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "GAster32", 32, 32, 16, 16, 16, 2, 20, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("MediumHighDensityAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "GAster64", 64, 64, 32, 32, 12, 4, 40, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("BigHighDensityAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "GAster96", 96, 96, 48, 48, 8, 4, 80, new gsCVector(0, 0)));
-        this.m_info_list.push(new ActorInfo("SmallIndestuctibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster32", 32, 32, 16, 16, 16, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
-        this.m_info_list.push(new ActorInfo("MediumIndestuctibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster64", 64, 64, 32, 32, 12, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
-        this.m_info_list.push(new ActorInfo("BigIndestuctibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster96", 96, 96, 48, 48, 8, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("SmallIndestructibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster32", 32, 32, 16, 16, 16, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("MediumIndestructibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster64", 64, 64, 32, 32, 12, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
+        this.m_info_list.push(new ActorInfo("BigIndestructibleAsteroid", enums.ActorType.ACTOR_TYPE_ALIEN, "MAster96", 96, 96, 48, 48, 8, this.INFINITE_SHIELD, 0, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("Rusher", enums.ActorType.ACTOR_TYPE_ALIEN, "rusher", 64, 32, 32, 16, 16, 5, 30, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("Pod", enums.ActorType.ACTOR_TYPE_ALIEN, "pod", 96, 96, 48, 48, 8, 10, 100, new gsCVector(0, 0)));
         this.m_info_list.push(new ActorInfo("Homer", enums.ActorType.ACTOR_TYPE_ALIEN, "Homing", 64, 64, 32, 32, 16, 5, 100, new gsCVector(0, 0)));
@@ -107,12 +107,12 @@ class CActorInfoList {
 
     // Method to return the Actor Image File Names
     public GetActorTextureName() {
-        var names = [];
+        const names = [];
 
-        for (var i = 0; i < this.m_info_list.length; i++) {
-            var split: ActorInfo = this.m_info_list[i];
-            var fname: string = split.m_filename;
-            names.push(fname);
+        for (let i = 0; i < this.m_info_list.length; i++) {
+            const split: ActorInfo = this.m_info_list[i];
+            const filename: string = split.m_filename;
+            names.push(filename);
         }
         return names;
     }
@@ -126,4 +126,5 @@ class CActorInfoList {
         return temp;
     }
 }
+
 export = CActorInfoList;
