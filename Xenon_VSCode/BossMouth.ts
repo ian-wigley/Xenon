@@ -21,7 +21,7 @@ class CBossMouth extends CBoss {
         this.m_mode = -1;
         this.m_timer = new gsCTimer();
         this.m_firing_timer = new gsCTimer();
-		this.m_name = "Boss Mouth";
+        this.m_name = "Boss Mouth";
     }
 
     //-------------------------------------------------------------
@@ -38,10 +38,12 @@ class CBossMouth extends CBoss {
 
     public update(controls: gsCControls, gameTime: gsCTimer): boolean {
 
+        //   this.getPosition());
+        let x;
         this.m_firing_timer.update(false);
 
         if (this.m_shield == 0) {
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             this.kill();
             return true;
         }
@@ -50,48 +52,45 @@ class CBossMouth extends CBoss {
             if (this.m_firing_timer.getTime() >= this.m_shot_delay) {
 
                 this.m_firing_timer.start();
-                var s: CSpinner = null;
+                let s: CSpinner = null;
 
                 if (this.m_mode == 0) {
                     s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
-                    s.setPosition(new gsCVector(300, 200));//   this.getPosition());
+                    s.setPosition(new gsCVector(300, 200));
 
-                    var x = -2.0 + 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
+                    x = -2.0 + 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
 
                     s.setVelocity(new gsCVector(x, 1.0));
                     s.setGrade(enums.BulletGrade.BULLET_STANDARD);
-                }
-                else if (this.m_mode == 1) {
+                } else if (this.m_mode == 1) {
                     s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
 
-                    var x = 2.0 - 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
+                    x = 2.0 - 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
 
                     s.setVelocity(new gsCVector(x, 2.0));
                     s.setGrade(enums.BulletGrade.BULLET_MEDIUM);
-                }
-                else if (this.m_mode == 2) {
+                } else if (this.m_mode == 2) {
                     s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
 
-                    var x = -2.0 + 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
+                    x = -2.0 + 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
 
                     s.setVelocity(new gsCVector(x, 1.0));
                     s.setGrade(enums.BulletGrade.BULLET_BEST);
-                }
-                else {
+                } else {
                     s = new CSpinner(this.m_playGameState);
                     this.m_scene.addActor(s);
                     s.activate();
                     s.setPosition(this.getPosition());
 
-                    var x = 2.0 - 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
+                    x = 2.0 - 4.0 * this.m_shots_fired / (this.m_shots_total - 1);
 
                     s.setVelocity(new gsCVector(x, 2.0));
                     s.setGrade(enums.BulletGrade.BULLET_BEST);
