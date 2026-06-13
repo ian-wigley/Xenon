@@ -45,13 +45,13 @@ class CBullet extends CActor {
     //-------------------------------------------------------------
 
     public onCollisionWithMap(map: gsCMap, hits: number): void {
-        for (var i = 0; i < hits; i++) {
-            var pos: gsCPoint = map.getHitPosition(i);
-            var mt: gsCMapTile = map.getMapTile(pos);
+        for (let i = 0; i < hits; i++) {
+            const pos: gsCPoint = map.getHitPosition(i);
+            const mt: gsCMapTile = map.getMapTile(pos);
             if (mt && mt.getUserData(0) == enums.TileId.ID_DESTROYABLE_TILE) {
 
-                var hits_required: number = mt.getUserData(1);
-                var hits_taken: number = mt.getUserData(3);
+                const hits_required: number = mt.getUserData(1);
+                let hits_taken: number = mt.getUserData(3);
 
                 hits_taken++;
 
