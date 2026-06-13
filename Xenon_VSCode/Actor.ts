@@ -8,7 +8,6 @@ import CScene = require("Scene");
 import CActorInfoList = require("ActorInfoList");
 import ActorInfo = require("ActorInfo");
 import enums = require("Enums");
-import Point = require("Point");
 import CApplication = require("Application");
 import CPlayGameState = require("PlayGameState");
 
@@ -25,7 +24,7 @@ class CActor {
     protected m_scene!: CScene;			        // scene containing this actor
     protected m_position: gsCVector;		    // relative to map
     protected m_velocity: gsCVector;
-    protected m_shield!: number;				    // shield strength
+    protected m_shield!: number;				// shield strength
     protected m_sprite!: gsCSprite;
     protected m_image!: gsCTiledImage;
     protected m_timer: gsCTimer;			    // for animation
@@ -35,7 +34,6 @@ class CActor {
     protected m_actorInfo!: CActorInfoList;
     protected gameTime!: gsCTimer;
     protected timerTest: number = 0.0;
-
     protected m_name: string = "";
     protected m_app!: CApplication;
     protected m_playGameState!: CPlayGameState;
@@ -169,8 +167,7 @@ class CActor {
             var info: ActorInfo = this.getActorInfo();
             if (info.m_filename != "") {
                 this.m_image = this.m_scene.getImage(info.m_filename);
-            }
-            else {
+            } else {
                 this.m_image = null;
             }
             this.m_sprite = new gsCSprite();
@@ -211,9 +208,9 @@ class CActor {
     //-------------------------------------------------------------
 
     public onKilled(): void {
-        var bonus = this.getActorInfo().m_kill_bonus;
+        const bonus = this.getActorInfo().m_kill_bonus;
         if (bonus > 0 && this.m_name != "Drone") {
-            var score = bonus * this.m_score_multiplier;
+            const score = bonus * this.m_score_multiplier;
             this.m_scene.App.playStateInstance.getPlayer().scoreBonus(score);
             this.m_scene.createLabel(this.getPosition(), score.toString());
         }
@@ -240,14 +237,13 @@ class CActor {
             }
 
             if (this.m_is_hit) {
-                var level = 255.0 * (1.0 - this.m_hit_timer.getTime() / this.ACTOR_HIT_TIME);
+                const level = 255.0 * (1.0 - this.m_hit_timer.getTime() / this.ACTOR_HIT_TIME);
                 //this.m_sprite.enableFillColour(Color(level, level, level));
-            }
-            else {
+            } else {
                 this.m_sprite.disableFillColour();
             }
 
-            var was_on_screen: boolean = this.m_is_on_screen;
+            const was_on_screen: boolean = this.m_is_on_screen;
 
             // ---> draw the Actor in the gsCSprite class
             this.m_is_on_screen = this.m_sprite.draw(ctx);
@@ -275,8 +271,7 @@ class CActor {
 
         if (num_frames <= 1) {
             this.frame = 0;
-        }
-        else {
+        } else {
             //frame = (m_timer.getTime() * getActorInfo().m_anim_rate);
             switch (mode) {
                 case enums.AnimationMode.ANIMATE_LOOP:
@@ -310,8 +305,8 @@ class CActor {
             return 0;
         }
 
-        var angle = this.m_velocity.direction();
-        var step = 360.0 / num_dir;
+        const angle = this.m_velocity.direction();
+        const step = 360.0 / num_dir;
         return (((angle - step / 2.0 + 360.0) / step)) & (num_dir - 1);
     }
 
