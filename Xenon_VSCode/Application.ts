@@ -6,7 +6,7 @@ import gsCPoint = require("Point");
 class CApplication {
 
     private m_instance: CGameState;
-    private m_small_font: gsCFont;
+    private readonly m_small_font: gsCFont;
 
     constructor(font8x8: HTMLImageElement, ctx: CanvasRenderingContext2D) {
         this.m_small_font = new gsCFont(font8x8, ctx);
