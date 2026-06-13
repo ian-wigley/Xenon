@@ -74,10 +74,11 @@ class CClone extends CUpgrade {
 
     public update(controls: gsCControls, gametime: gsCTimer) {
 
-        var ship: CShip = <CShip>this.getOwner();
+        let explode;
+        const ship: CShip = <CShip>this.getOwner();
 
-        if (!ship){
-            var explode = new CExplode(this);
+        if (!ship) {
+            explode = new CExplode(this);
             this.kill();
             return true;
         }
@@ -85,7 +86,7 @@ class CClone extends CUpgrade {
         if (this.getShield() == 0) {
             ship.detachClone(this);
             this.setOwner(null);
-            var explode = new CExplode(this);
+            explode = new CExplode(this);
             this.kill();
             return true;
         }
@@ -96,24 +97,22 @@ class CClone extends CUpgrade {
         if (controls.down) {
             this.m_required_angle = this.m_min_angle;
         }
-        var thrust: number = 0;
+        let thrust: number = 0;
 
         if (this.m_current_angle != this.m_required_angle) {
 
-            var delta = this.m_required_angle - this.m_current_angle;
+            const delta = this.m_required_angle - this.m_current_angle;
 
             if (this.gsAbs(delta) < this.CLONE_ANGLE_STEP) {
                 this.m_current_angle = this.m_required_angle;
-            }
-            else {
-                if(delta > 0) {
+            } else {
+                if (delta > 0) {
                     this.m_current_angle += this.CLONE_ANGLE_STEP;
                     if (this.m_min_angle > this.m_max_angle)
                         thrust = 1;
-                }
-                else {
+                } else {
                     this.m_current_angle -= this.CLONE_ANGLE_STEP;
-                    if (this.m_min_angle < this. m_max_angle)
+                    if (this.m_min_angle < this.m_max_angle)
                         thrust = 1;
                 }
             }
@@ -123,10 +122,10 @@ class CClone extends CUpgrade {
             this.m_engine.applyThrust(thrust);
         }
 
-        var temp: gsCVector = new gsCVector(0, 0);
+        const temp: gsCVector = new gsCVector(0, 0);
         this.m_offset = temp.polar(this.CLONE_RADIUS, this.m_current_angle);
 
-        var d:number = ship.getDiveLevel();
+        const d: number = ship.getDiveLevel();
 
         if (d == 0) {
             this.m_position.x = ship.getPosition().x + this.m_offset.x;
@@ -135,16 +134,13 @@ class CClone extends CUpgrade {
             if (ship.isCloaked()) {
                 if (!ship.isCloakFlashing()) {
                     this.m_sprite.setFrame(this.CLONE_CLOAK_FRAME);
-                }
-                else {
+                } else {
                     this.m_sprite.setFrame(0);
                 }
-            }
-            else {
+            } else {
                 this.animations(enums.AnimationMode.ANIMATE_LOOP, 0, this.CLONE_FRAMES);
             }
-        }
-        else {
+        } else {
             this.m_position = ship.getPosition().plus1(this.m_offset).times1(ship.getDiveScale());
             this.m_sprite.setFrame(this.CLONE_DIVE_OFFSET + this.CLONE_DIVE_FRAMES * d / this.SHIP_DIVE_FRAMES);
         }
@@ -154,7 +150,7 @@ class CClone extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    public setAngleRange(min: number, max: number):void {
+    public setAngleRange(min: number, max: number): void {
         this.m_min_angle = min;
         this.m_max_angle = max;
         this.setAngle(this.m_min_angle, true);
@@ -162,7 +158,7 @@ class CClone extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    public setAngle(angle: number, set: boolean):void {
+    public setAngle(angle: number, set: boolean): void {
         if (set) {
             this.m_current_angle = angle;
         }
@@ -171,11 +167,12 @@ class CClone extends CUpgrade {
 
     //-------------------------------------------------------------
 
-    private gsAbs(v:number) :number{
+    private gsAbs(v: number): number {
         return v >= 0.0 ? v : -v;
     }
 
     //-------------------------------------------------------------
 
 }
+
 export = CClone;
