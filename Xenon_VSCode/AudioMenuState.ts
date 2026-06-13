@@ -4,9 +4,7 @@ import CScene = require("Scene");
 import CStarfield = require("Starfield");
 import gsCControls = require("Controls");
 import enums = require("Enums");
-import Options = require("Options");
 import gsCPoint = require("Point");
-import gsCMenu = require("Menu");
 import COptionsMenuState = require("OptionsMenuState");
 
 class CAudioMenuState extends CGameState {
@@ -92,12 +90,10 @@ class CAudioMenuState extends CGameState {
                 this.copyMenuToOptions();
                 if (this.m_options.areChanged()) {
                     return;
-                }
-                else {
+                } else {
                     return this.changeState(this.m_app.instance = this.m_optionState);
                 }
-            }
-            else if (item == enums.AudioMenuItem.OM_CANCEL) {
+            } else if (item == enums.AudioMenuItem.OM_CANCEL) {
                 super.playSample(enums.GameSampleType.SAMPLE_MENU_BACK);
                 return this.changeState(this.m_app.instance = this.m_optionState);
             }
