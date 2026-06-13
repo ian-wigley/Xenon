@@ -1,6 +1,5 @@
 ﻿import CExplosion = require("Explosion");
 import enums = require("Enums");
-import CApplication = require("Application");
 import CPlayGameState = require("PlayGameState");
 
 class CBigExplosion extends CExplosion {
