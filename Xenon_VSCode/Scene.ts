@@ -21,8 +21,10 @@ import CApplication = require("Application");
 
 class CScene {
 
-    private m_textures: Array<HTMLImageElement>;
-    private m_listOfActors: CActorInfoList;
+    private readonly m_textures: Array<HTMLImageElement>;
+    private readonly m_listOfActors: CActorInfoList;
+    private readonly m_application: CApplication;
+    private readonly lev: CLevel;
 
     //gsCList<CActor *> m_actor_list;
     //gsCList<ImageEntry *> m_image_list;
@@ -30,7 +32,7 @@ class CScene {
     private m_frame_count: number;
     private m_map: gsCMap;
     private m_screen: gsCScreen;
-    private lev: CLevel;
+
     private m_checkpoint_active: boolean;
     private m_checkpoint: gsCVector;
     private m_is_warping: boolean;
@@ -41,7 +43,7 @@ class CScene {
 
     //temp!
     private m_font: HTMLImageElement;
-    private m_application: CApplication;
+
 
     private COLLIDE_WITH_SHIP: number = 1;
     private COLLIDE_WITH_BULLETS: number = 2;
