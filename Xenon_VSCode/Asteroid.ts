@@ -63,7 +63,7 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             this.kill();
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
@@ -83,7 +83,7 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             this.kill();
             this.m_playGameState.playSample(enums.GameSampleType.SAMPLE_ASTEROID_BREAKUP);//getPosition().getX());
         }
@@ -118,14 +118,14 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
+            const child1: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
+            const child2: CAsteroid = new CSmallStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
@@ -134,7 +134,7 @@ module Asteroid {
 
             //if (Options.getOption(OPTION_PARTICLEFX))
             //{
-            var de: CDustEffect = new CStandardDustEffect();
+            const de: CDustEffect = new CStandardDustEffect();
             this.m_scene.addActor(de);
             de.activate();
             de.setOwner(null);
@@ -161,14 +161,14 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
+            const child1: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
+            const child2: CAsteroid = new CSmallHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
@@ -176,7 +176,7 @@ module Asteroid {
             child2.increaseScoreMultiplier(0.5);
 
             //if (Options.getOption(OPTION_PARTICLEFX)) {
-            var de: CDustEffect = new CHighDensityDustEffect();
+            const de: CDustEffect = new CHighDensityDustEffect();
             this.m_scene.addActor(de);
             de.activate();
             de.setOwner(null);
@@ -219,21 +219,21 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
+            const child1: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.5);
 
-            var child2: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
+            const child2: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
             child2.setVelocity(new gsCVector(0.0, 1.3));
             child2.increaseScoreMultiplier(0.5);
 
-            var child3: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
+            const child3: CAsteroid = new CMediumStandardAsteroid(this.m_playGameState);
             this.m_scene.addActor(child3);
             child3.activate();
             child3.setPosition(this.getPosition());
@@ -241,7 +241,7 @@ module Asteroid {
             child3.increaseScoreMultiplier(0.5);
 
             //if (Options.getOption(OPTION_PARTICLEFX)) {
-            var de: CDustEffect = new CStandardDustEffect();
+            const de: CDustEffect = new CStandardDustEffect();
             this.m_scene.addActor(de);
             de.activate();
             de.setOwner(null);
@@ -269,21 +269,21 @@ module Asteroid {
         //-------------------------------------------------------------
 
         public fragment(): void {
-            var child1: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
+            const child1: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child1);
             child1.activate();
             child1.setPosition(this.getPosition());
             child1.setVelocity(new gsCVector(-1.0, 1.0));
             child1.increaseScoreMultiplier(0.50);
 
-            var child2: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
+            const child2: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child2);
             child2.activate();
             child2.setPosition(this.getPosition());
             child2.setVelocity(new gsCVector(0.0, 1.3));
             child2.increaseScoreMultiplier(0.5);
 
-            var child3: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
+            const child3: CAsteroid = new CMediumHighDensityAsteroid(this.m_playGameState);
             this.m_scene.addActor(child3);
             child3.activate();
             child3.setPosition(this.getPosition());
@@ -291,7 +291,7 @@ module Asteroid {
             child3.increaseScoreMultiplier(0.5);
 
             //if (Options.getOption(OPTION_PARTICLEFX)) {
-            var de: CDustEffect = new CHighDensityDustEffect();
+            const de: CDustEffect = new CHighDensityDustEffect();
             this.m_scene.addActor(de);
             de.activate();
             de.setOwner(null);
