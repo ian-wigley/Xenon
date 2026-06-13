@@ -42,7 +42,7 @@ class CBossEye extends CBoss {
     //-------------------------------------------------------------
 
     public kill(): void {
-        var x: CExplosion = new CBigExplosion(this.m_playGameState);
+        const x: CExplosion = new CBigExplosion(this.m_playGameState);
         this.m_scene.addActor(x);
         x.setPosition(this.getPosition());
         x.activate();
@@ -58,7 +58,7 @@ class CBossEye extends CBoss {
             this.m_is_hit = false;
         }
         if (this.m_shield == 0) {
-            var explode = new CExplode(this);
+            const explode = new CExplode(this);
             super.kill();
             return true;
         }
