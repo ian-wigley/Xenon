@@ -8,7 +8,6 @@ import gsCMapTile = require("MapTile");
 import CBigExplosion = require("BigExplosion");
 import CBossEye = require("BossEye");
 import CBossMouth = require("BossMouth");
-import CApplication = require("Application");
 import CPlayGameState = require("PlayGameState");
 
 enum BossState {
@@ -29,10 +28,10 @@ enum BossState {
 class CBossControl extends CBoss {
 
     private m_is_started: boolean;
-    private m_yscroll: number = 0; boolean;
+    private m_yscroll: number = 0;
     private m_state: BossState;
     private m_counter: number;
-    private m_script: Array<BossScriptItem>;
+    private readonly m_script: Array<BossScriptItem>;
     private m_script_pointer: BossScriptItem;
     private m_loop_point: number;
     private m_script_pointer_count = 0;
@@ -102,7 +101,7 @@ class CBossControl extends CBoss {
             this.m_yscroll = 0;
             this.m_active_eyes = this.BOSS_EYES_TOTAL;
 
-            for (var i = 0; i < this.BOSS_EYES_TOTAL; i++) {
+            for (let i = 0; i < this.BOSS_EYES_TOTAL; i++) {
                 this.m_eye = new CBossEye(this.m_playGameState);
             }
 
@@ -138,8 +137,7 @@ class CBossControl extends CBoss {
         }
         if (this.m_state == BossState.BOSS_DESTROY) {
             this.updateDestructionSequence();
-        }
-        else {
+        } else {
             if (this.m_counter <= 0)
                 this.interpretScript();
 
@@ -171,7 +169,7 @@ class CBossControl extends CBoss {
         }
 
         if (this.m_script_pointer == null || this.m_script_pointer == undefined) {
-            var stopHere = true;
+            const stopHere = true;
         }
 
         if (this.m_script_pointer.m_state == BossState.BOSS_TRIGGER) {
@@ -234,8 +232,8 @@ class CBossControl extends CBoss {
         this.m_state = BossState.BOSS_DESTROY;
         this.m_scene.findShip().setCloak(1000.0);
         this.m_yscroll = 1;
-        var epicentre: gsCVector = this.m_mouth.getPosition();
-        var tile_size: gsCPoint = this.m_scene.getMap().getImage().getTileSize();
+        const epicentre: gsCVector = this.m_mouth.getPosition();
+        const tile_size: gsCPoint = this.m_scene.getMap().getImage().getTileSize();
         this.m_tile_pos = <gsCPoint>(epicentre).divide(tile_size);
         this.m_size = 1;
         this.m_destruction_timer.start();
@@ -247,7 +245,7 @@ class CBossControl extends CBoss {
         if (this.m_destruction_timer.getTime() > 0.1) {
             this.m_destruction_timer.start();
 
-            for (var x = 0; x < this.m_size; x++) {
+            for (let x = 0; x < this.m_size; x++) {
                 this.explodeTile(this.m_tile_pos.add(new gsCPoint(x, 0)));
                 this.explodeTile(this.m_tile_pos.add(new gsCPoint(x, this.m_size - 1)));
                 this.explodeTile(this.m_tile_pos.add(new gsCPoint(0, x)));
@@ -266,20 +264,20 @@ class CBossControl extends CBoss {
     //-------------------------------------------------------------
 
     public explodeTile(pos: gsCPoint): void {
-        var map = this.m_scene.getMap();
+        const map = this.m_scene.getMap();
 
-        var tile: gsCMapTile = map.getMapTile(pos);
+        const tile: gsCMapTile = map.getMapTile(pos);
 
         if (tile) {
             if (!tile.isEmpty() && !tile.isHidden()) {
                 tile.setHidden(true); //?
-                var exp: CBigExplosion = new CBigExplosion(this.m_playGameState);
+                const exp: CBigExplosion = new CBigExplosion(this.m_playGameState);
                 this.m_scene.addActor(exp);
-                var tile_size: gsCPoint = map.getImage().getTileSize();
+                const tile_size: gsCPoint = map.getImage().getTileSize();
                 //var tile_centre: gsCPoint = tile_size / new gsCPoint(2, 2);
-                var tile_centre: gsCPoint = tile_size.divide(new gsCPoint(2, 2));
+                const tile_centre: gsCPoint = tile_size.divide(new gsCPoint(2, 2));
                 //var p: gsCPoint = pos * tile_size + tile_centre;
-                var p: gsCPoint = pos.multiply(tile_size.add(tile_centre));
+                const p: gsCPoint = pos.multiply(tile_size.add(tile_centre));
                 exp.setPosition(new gsCVector(p.X, p.Y));
                 exp.activate();
             }
