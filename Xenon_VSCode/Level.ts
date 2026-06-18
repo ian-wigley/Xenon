@@ -164,6 +164,8 @@ class CLevel {
 
     private parseLevel(): void {
 
+        const m_blocks = new Array<BLKSTR>(this.m_header.numblockstr);
+        let size = 24;
         let id = this.readUDWORD();
 
         //if (id != CHUNK_FORM)
@@ -188,14 +190,12 @@ class CLevel {
             let chunk_length = 0;
             chunk_length = this.readUDWORD();
             const currentFilePos = this.LevelCounter;
-            var chunk_end = currentFilePos + chunk_length;
+            const chunk_end = currentFilePos + chunk_length;
 
             switch (id) {
                 case this.CHUNK_MPHD:
                     this.m_header = new MPHD();
-                    var size = 24;
                     this.FileRead(this.m_header, size);
-
                     if (this.m_header.blockdepth != 24) {
                         //this.error();
                     }
@@ -205,9 +205,8 @@ class CLevel {
                     break;
 
                 case this.CHUNK_BKDT: {
-                    var m_blocks = new Array<BLKSTR>(this.m_header.numblockstr);
 
-                    for (var i = 0; i < this.m_header.numblockstr; i++) {
+                    for (let i = 0; i < this.m_header.numblockstr; i++) {
                         size = this.m_header.blockstrsize;
                         m_blocks[i] = this.FileRead2(m_blocks[i], size);
 
@@ -219,7 +218,7 @@ class CLevel {
                     break;
 
                 case this.CHUNK_BGFX:
-                    this.m_image = new gsCTiledImage(this.m_imageTiles);//, this.m_font);
+                    this.m_image = new gsCTiledImage(this.m_imageTiles);
                     console.log("Creating tile for : " + this.m_image.Image.id);
                     this.m_image.setTileSize(new Point(32, 32));
                     this.m_image.enableColourKey();//gsCColour(gsMAGENTA));
@@ -231,16 +230,16 @@ class CLevel {
                     break;
                 case this.CHUNK_BODY:
                 case this.CHUNK_LYR1: {
-                    var tile = 0;
+                    let tile = 0;
 
                     // Create a new tile
-                    //var mt: gsCMapTile = new gsCMapTile();
+                    //let mt: gsCMapTile = new gsCMapTile();
                     //gsCMapTile[] mt = m_back_layer.getListOfMapTiles();
 
-                    var count = 0;
+                    let count = 0;
 
-                    for (var y = 0; y < this.m_header.mapheight; y++) {
-                        for (var x = 0; x < this.m_header.mapwidth; x++) {
+                    for (let y = 0; y < this.m_header.mapheight; y++) {
+                        for (let x = 0; x < this.m_header.mapwidth; x++) {
 
                             // Create a new tile
                             const mt: gsCMapTile = new gsCMapTile();
@@ -263,9 +262,9 @@ class CLevel {
 
                             count += 1;
 
-                            var sizeBLKSTR = 32;  //sizeBLKSTR /= 2;
-                            var block: BLKSTR = m_blocks[tile / sizeBLKSTR];
-                            var tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
+                            const sizeBLKSTR = 32;  //sizeBLKSTR /= 2;
+                            const block: BLKSTR = m_blocks[tile / sizeBLKSTR];
+                            const tilesize = this.m_header.blockheight * this.m_header.blockwidth * this.m_header.blockdepth / 8;
                             tile = block.bgoff / tilesize;
                             mt.setTile(tile);
 
@@ -278,7 +277,7 @@ class CLevel {
                                 mt.setUserData(1, (block.user2 & 0xFF));
                                 mt.setUserData(2, (block.user3 & 0xFF));
                                 mt.setUserData(3, (block.user4 & 0xFF));
-                                var cflags: number = 0;
+                                let cflags: number = 0;
                                 if (block.tl != 0) {
                                     cflags |= this.COLLIDE_WITH_SHIP;
                                 }
@@ -402,8 +401,8 @@ class CLevel {
     //-------------------------------------------------------------
 
     private FileRead2(blocks: BLKSTR, size: number): BLKSTR {
-        var m_blocks = new BLKSTR();
-        var bytes = new Array<string>(4);
+        const m_blocks = new BLKSTR();
+        let bytes = new Array<string>(4);
         bytes[0] = this.LevelBytes[this.LevelCounter++];
         bytes[1] = this.LevelBytes[this.LevelCounter++];
         bytes[2] = this.LevelBytes[this.LevelCounter++];
@@ -542,16 +541,16 @@ class CLevel {
 
     //-------------------------------------------------------------
 
-    public scanForNewActors(scene: CScene, playGameState): void {
+    public scanForNewActors(scene: CScene, playGameState: CPlayGameState): void {
         this.m_playGameState = playGameState;
 
         //gsCScreen *screen = gsCApplication::getScreen();
         //if (!screen)
         //    return;
 
-        var screen_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
-        var source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
-        var dest_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);//source_rect;
+        const screen_rect: gsCRectangle = new gsCRectangle(0, 0, 640, 480);
+        const source_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
+        const dest_rect = new gsCRectangle(0, 0, this.m_front_layer.getSizeInPixels().X, this.m_front_layer.getSizeInPixels().Y);
         //dest_rect.move(m_front_layer.getPosition());
 
         dest_rect.Left += this.m_front_layer.getPosition().X;
@@ -599,9 +598,9 @@ class CLevel {
                     const id = mt.getUserData(0);
                     const type = mt.getUserData(1);
                     const grade = mt.getUserData(2);
-                    var size = mt.getUserData(3);
+                    const size = mt.getUserData(3);
 
-                    var pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
+                    const pos: gsCVector = new gsCVector(x * this.m_image.getTileSize().X, this.m_scan_y * this.m_image.getTileSize().Y);
                     pos.plusEquals(new gsCVector(this.m_image.getTileSize().X / 2.0, this.m_image.getTileSize().Y / 2.0));
 
                     switch (id) {
@@ -801,17 +800,17 @@ class CLevel {
                                     break;
 
                                 case AlienType.REVERSE_RUSHER:
-                                    r = new CRusher(this.m_playGameState);
-                                    console.log("REVERSE_RUSHER");
-                                    scene.addActor(r);
-                                    r.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
-                                    r.setVelocity(new gsCVector(0.0, -4.0));
-                                    r.activate();
+                                    const reverseRusher = new CRusher(this.m_playGameState);
+                                    // console.log("REVERSE_RUSHER");
+                                    scene.addActor(reverseRusher);
+                                    reverseRusher.setPosition(pos.plus1(new gsCVector(0.0, (screen_rect.Height + this.m_image.getTileSize().Y))));
+                                    reverseRusher.setVelocity(new gsCVector(0.0, -4.0));
+                                    reverseRusher.activate();
                                     break;
 
                                 case AlienType.RUSHER_GENERATOR_LEFT:
                                     let rG: CRusherGenerator = new CRusherGenerator(this.m_playGameState);
-                                    console.log("RusherGenerator");
+                                    // console.log("RusherGenerator");
                                     scene.addActor(rG);
                                     rG.setPosition(pos);
                                     rG.setVelocity(new gsCVector(-2.0, 0.0));
@@ -820,7 +819,7 @@ class CLevel {
 
                                 case AlienType.RUSHER_GENERATOR_RIGHT:
                                     rG = new CRusherGenerator(this.m_playGameState);
-                                    console.log("RusherGenerator");
+                                    // console.log("RusherGenerator");
                                     scene.addActor(rG);
                                     rG.setPosition(pos);
                                     rG.setVelocity(new gsCVector(2.0, 0.0));
@@ -829,7 +828,7 @@ class CLevel {
 
                                 case AlienType.ORGANIC_GUN:
                                     const oG: COrganicGun = new COrganicGun(this.m_playGameState);
-                                    console.log("OrganicGun");
+                                    // console.log("OrganicGun");
                                     scene.addActor(oG);
                                     oG.setPosition(pos);
                                     oG.setVelocity(new gsCVector(0.0, 0.0));
@@ -843,7 +842,7 @@ class CLevel {
 
                                 default:
                                     const xp: CBigExplosion = new CBigExplosion(this.m_playGameState);
-                                    console.log("BigExplosion");
+                                    // console.log("BigExplosion");
                                     scene.addActor(xp);
                                     xp.setPosition(pos);
                                     xp.activate();
@@ -865,7 +864,7 @@ class CLevel {
 
                         case TileId.ID_BOSS_MOUTH:
                             const m: CBossMouth = new CBossMouth();
-                            console.log("BossMouth");
+                            // console.log("BossMouth");
                             scene.addActor(m);
                             m.setPosition(pos);
                             m.setVelocity(new gsCVector(0.0, 0.0));
@@ -897,7 +896,7 @@ class CLevel {
 
                         case TileId.ID_BOSS_CONTROL:
                             const bC: CBossControl = new CBossControl(this.m_playGameState);
-                            console.log("BossControl");
+                            // console.log("BossControl");
                             scene.addActor(bC);
                             bC.setPosition(pos);
                             bC.setVelocity(new gsCVector(0.0, 0.0));
