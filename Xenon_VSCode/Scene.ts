@@ -4,13 +4,10 @@ import gsCTiledImage = require("TiledImage");
 import gsCVector = require("Vector");
 import gsCMap = require("Map");
 import gsCScreen = require("Screen");
-import gsCSprite = require("Sprite");
 import gsCTimer = require("Timer");
 import CActor = require("Actor");
-import CStarfield = require("Starfield");
 import CActorInfoList = require("ActorInfoList");
 import CShip = require("Ship");
-import CPlayGameState = require("PlayGameState");
 import CLevel = require("Level");
 import enums = require("Enums");
 import gsCPoint = require("Point");
@@ -25,30 +22,31 @@ class CScene {
     private readonly m_listOfActors: CActorInfoList;
     private readonly m_application: CApplication;
     private readonly lev: CLevel;
-
-    //gsCList<CActor *> m_actor_list;
-    //gsCList<ImageEntry *> m_image_list;
     private m_collision_list: gsCCollisionList;
     private m_frame_count: number;
     private m_map: gsCMap;
-    private m_screen: gsCScreen;
-
     private m_checkpoint_active: boolean;
     private m_checkpoint: gsCVector;
     private m_is_warping: boolean;
     private m_ship_is_cloaked: boolean;
     private m_actor_list: CActor[];
-    private m_even: boolean = false;
-    private time: number = 0;
-
-    //temp!
-    private m_font: HTMLImageElement;
-
 
     private COLLIDE_WITH_SHIP: number = 1;
     private COLLIDE_WITH_BULLETS: number = 2;
 
-    constructor(image: HTMLImageElement, textures: Array<HTMLImageElement>, listOfActors: CActorInfoList, application: CApplication) {
+    //gsCList<CActor *> m_actor_list;
+    //gsCList<ImageEntry *> m_image_list;
+
+    private m_screen: gsCScreen;
+    private m_even: boolean = false;
+    private time: number = 0;
+    private m_font: HTMLImageElement;
+
+    constructor(image: HTMLImageElement,
+                textures: Array<HTMLImageElement>,
+                listOfActors: CActorInfoList,
+                application: CApplication
+    ) {
         this.m_textures = textures;
         this.m_listOfActors = listOfActors;
         this.m_application = application;
@@ -69,14 +67,14 @@ class CScene {
             return null;
         }
 
-        for (var i = 0; i < this.m_textures.length; i++) {
+        for (let i = 0; i < this.m_textures.length; i++) {
             if (this.m_textures[i] != null) {
-                var name = this.m_textures[i].id;
+                let name = this.m_textures[i].id;
                 //console.log(name);
-                var temp = name.split(".")
+                let temp = name.split(".")
                 if (temp[0].toLowerCase() == filename.toLowerCase()) {
                     // gsCTiledImage tile = new gsCTiledImage(name.Value, m_font);
-                    var tile: gsCTiledImage = new gsCTiledImage(this.m_textures[i]);
+                    let tile: gsCTiledImage = new gsCTiledImage(this.m_textures[i]);
                     tile.setTileSize(new gsCPoint(this.m_listOfActors.GetTileWidth(i), this.m_listOfActors.GetTileHeight(i)));
                     //this.m_image_list.Add(tile);
                     return tile;
@@ -87,22 +85,22 @@ class CScene {
     }
 
     //-------------------------------------------------------------
-
-    loadImages() {
-        //for (var i = 0; i < ActorInfoType.INFO_TOTAL; i++) {
-        //    //gsCTiledImage image = getImage(m_listOfActors.GetFileName(i));
-        //    var image = this.getImage(m_listOfActors.GetFileName(i));
-
-        //    if (image != null) {
-        //        image.setTileSize(new Point(m_listOfActors.GetTileWidth(i),
-        //            this.m_listOfActors.GetTileHeight(i)));
-
-        //        //			image->enableColourKey(gsCColour(gsMAGENTA));       Ian test !
-        //    }
-        //}
-
-        return true;
-    }
+    // TODO tidy this up ..
+    // loadImages() {
+    //     //for (let i = 0; i < ActorInfoType.INFO_TOTAL; i++) {
+    //     //    //gsCTiledImage image = getImage(m_listOfActors.GetFileName(i));
+    //     //    let image = this.getImage(m_listOfActors.GetFileName(i));
+    //
+    //     //    if (image != null) {
+    //     //        image.setTileSize(new Point(m_listOfActors.GetTileWidth(i),
+    //     //            this.m_listOfActors.GetTileHeight(i)));
+    //
+    //     //        //			image->enableColourKey(gsCColour(gsMAGENTA));       Ian test !
+    //     //    }
+    //     //}
+    //
+    //     return true;
+    // }
 
     //-------------------------------------------------------------
 
@@ -160,15 +158,14 @@ class CScene {
     //-------------------------------------------------------------
 
     public updateActorsOfType(type: enums.ActorType, controls: gsCControls, gameTime: gsCTimer) {
-        for (var j = 0; j < this.m_actor_list.length; j++) {
-            var obj = this.m_actor_list[j];
+        for (let j = 0; j < this.m_actor_list.length; j++) {
+            let obj = this.m_actor_list[j];
             if (obj.isActive() && obj.getActorInfo().m_type == type) {
-
-                //if (obj.name == "MissileWeapon") {// "HomingMissileWeapon") {
-                if (obj.name == "Boss Mouth") {
-                    var breakhere = true;
-
-                }
+                // TODO tidy this up ..
+                // //if (obj.name == "MissileWeapon") {// "HomingMissileWeapon") {
+                // if (obj.name == "Boss Mouth") {
+                //     let breakhere = true;
+                // }
                 obj.update(controls, gameTime);
             }
         }
@@ -198,8 +195,8 @@ class CScene {
         this.m_map = map;
         this.m_frame_count++;
         this.m_collision_list.clear();
-        var total = this.m_actor_list.length;//.getSize();
-        var ship = this.findShip();
+        let total = this.m_actor_list.length;//.getSize();
+        let ship = this.findShip();
 
         this.m_ship_is_cloaked = ship && ship.isCloaked();
 
@@ -208,6 +205,7 @@ class CScene {
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_SHIP, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_UPGRADE, total, ctx);
             this.m_map.drawMap(ctx);
+            // TODO tidy this up ..
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, total, ctx);
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, total, ctx);
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_ALIEN, total, ctx);
@@ -215,8 +213,7 @@ class CScene {
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_BULLET, total, ctx);
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_WEAPON, total, ctx);
             //this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_LABEL, total, ctx);
-        }
-        else {
+        } else {
             this.m_map.drawMap(ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_EFFECT, total, ctx);
             this.drawActorsOfType(enums.ActorType.ACTOR_TYPE_PICKUP, total, ctx);
@@ -236,15 +233,20 @@ class CScene {
 
     // Main draw method for all Actors
     drawActorsOfType(type: enums.ActorType, total: number, ctx: CanvasRenderingContext2D) {
-        for (var j = 0; j < this.m_actor_list.length; j++) {
-            var act = this.m_actor_list[j];
+        for (let j = 0; j < this.m_actor_list.length; j++) {
+            let act = this.m_actor_list[j];
             if (act.isActive() && act.getActorInfo().m_type == type) {
 
-                if (act.name == "Spinner") {
-                    var breakHere = true;
-                }
+                // TODO tidy this up ..
+                // if (act.name == "Spinner") {
+                //     let breakHere = true;
+                // }
 
-                if (act.name != "MissileWeapon" && act.name != "DroneGenerator" && act.name != "SpinnerWeapon" && act.name != "HomingMissileWeapon" && act.name != "Weapon") {
+                if (act.name != "MissileWeapon" &&
+                    act.name != "DroneGenerator" &&
+                    act.name != "SpinnerWeapon" &&
+                    act.name != "HomingMissileWeapon"
+                    && act.name != "Weapon") {
                     act.Draw(ctx);
                 }
             }
@@ -255,16 +257,17 @@ class CScene {
 
     public actorCollisionCallback(object1: Object, object2: Object) {
 
-        var actor1: CActor = <CActor>object1;
-        var actor2: CActor = <CActor>object2;
+        let actor1: CActor = <CActor>object1;
+        let actor2: CActor = <CActor>object2;
 
         if (!actor1.isActive() ||
             !actor2.isActive())
             return;
 
-        if (actor1.name == "laser") {
-            var breakHere = true;
-        }
+        // TODO tidy this up ..
+        // if (actor1.name == "laser") {
+        //     let breakHere = true;
+        // }
 
         actor1.onCollisionWithActor(actor2);
     }
@@ -285,7 +288,7 @@ class CScene {
     public checkMapCollisions(map: gsCMap): void {
         let hits: number;
         let rect: gsCRectangle;
-// check for collisions between actors and map
+        // check for collisions between actors and map
         for (let i = 0; i < this.m_actor_list.length; i++) {
             const actor: CActor = this.m_actor_list[i];
             if (actor.isActive()) {
@@ -294,26 +297,25 @@ class CScene {
                     case enums.ActorType.ACTOR_TYPE_UPGRADE:
                         if (this.m_ship_is_cloaked)
                             break;
-                        {
-                            rect = actor.getCollisionRect();
-                            //rect.move(-map.getPosition());
-                            hits = map.hitBy(rect, this.COLLIDE_WITH_SHIP);
-                            if (hits > 0) {
-                                actor.onCollisionWithMap(map, hits);
-                            }
+                    {
+                        rect = actor.getCollisionRect();
+                        //rect.move(-map.getPosition());
+                        hits = map.hitBy(rect, this.COLLIDE_WITH_SHIP);
+                        if (hits > 0) {
+                            actor.onCollisionWithMap(map, hits);
                         }
+                    }
                         break;
 
                     case enums.ActorType.ACTOR_TYPE_BULLET:
-                    case enums.ActorType.ACTOR_TYPE_ALIENBULLET:
-                        {
-                            rect = actor.getCollisionRect();
-                            //rect.move(-map.getPosition());
-                            hits = map.hitBy(rect, this.COLLIDE_WITH_BULLETS);
-                            if (hits > 0) {
-                                actor.onCollisionWithMap(map, hits);
-                            }
+                    case enums.ActorType.ACTOR_TYPE_ALIENBULLET: {
+                        rect = actor.getCollisionRect();
+                        //rect.move(-map.getPosition());
+                        hits = map.hitBy(rect, this.COLLIDE_WITH_BULLETS);
+                        if (hits > 0) {
+                            actor.onCollisionWithMap(map, hits);
                         }
+                    }
                         break;
                 }
             }
@@ -324,7 +326,7 @@ class CScene {
 
     public removeDeadActors(): void {
         const temp_actor_list = [];
-        //for (var i = this.m_actor_list.length - 1; i >= 0; i--) {
+        //for (let i = this.m_actor_list.length - 1; i >= 0; i--) {
         for (let i = 0; i < this.m_actor_list.length; i++) {
             if (this.m_actor_list[i].isActive()) {
                 temp_actor_list.push(this.m_actor_list[i]);
@@ -355,6 +357,7 @@ class CScene {
     public destroyAll() {
 
         this.m_actor_list = [];
+        // TODO tidy this up ..
         //this.m_image_list = [];
 
         //for (i = 0; i < m_actor_list.getSize(); i++)
